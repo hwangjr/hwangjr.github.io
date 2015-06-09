@@ -4,8 +4,8 @@
  <g>
   <title>Layer 1</title>
   <g id="layer1">
-   <rect id="rect5674" width="101.89091" height="101.89091" x="4.05453" y="4.05456" ry="14.84695" stroke-dashoffset="0" stroke-miterlimit="4" stroke-width="8.10909" stroke="#FEF79C" fill-rule="nonzero" fill="#ffffff"/>
-   <path id="text2624" d="m34.150269,29.72534l0,50.549349l11.47485,0l0,-21.149719l18.824772,0l0,21.149719l11.399841,0l0,-50.549349l-11.399841,0l0,19.424742l-18.824772,0l0,-19.424742l-11.47485,0z" stroke-width="1px" fill="#FEF79C"/>
+   <rect fill="#ffffff" fill-rule="nonzero" stroke="#FFE508" stroke-width="8.10909" stroke-miterlimit="4" stroke-dashoffset="0" ry="14.84695" y="4.05456" x="4.05453" height="101.89091" width="101.89091" id="rect5674"/>
+   <path fill="#FFE508" stroke-width="1px" d="m34.150269,29.72534l0,50.549349l11.47485,0l0,-21.149719l18.824772,0l0,21.149719l11.399841,0l0,-50.549349l-11.399841,0l0,19.424742l-18.824772,0l0,-19.424742l-11.47485,0z" id="text2624"/>
   </g>
  </g>
 </svg>
