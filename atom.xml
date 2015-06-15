@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Life is wonderful!]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="https://hwangjr.github.io//"/>
-  <updated>2015-06-15T04:14:38.163Z</updated>
+  <updated>2015-06-15T08:11:27.735Z</updated>
   <id>https://hwangjr.github.io//</id>
   
   <author>
@@ -14,6 +14,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Hexo Basic Usage]]></title>
+    <link href="https://hwangjr.github.io/2015/06/15/Hexo-Basic-Usage/"/>
+    <id>https://hwangjr.github.io/2015/06/15/Hexo-Basic-Usage/</id>
+    <published>2015-06-15T08:10:02.000Z</published>
+    <updated>2015-06-15T08:11:27.735Z</updated>
+    <content type="html"><![CDATA[<p>This is just a tips about Hexo.</p>
+<h2 id="Installation">Installation</h2><p>Just node.js and git:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js</span></span><br><span class="line">wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br><span class="line">nvm install <span class="number">0.12</span></span><br><span class="line"><span class="comment"># hexo</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># update</span></span><br><span class="line"><span class="comment"># npm update -g hexo-cli</span></span><br><span class="line"><span class="comment"># git</span></span><br><span class="line">yum install git</span><br><span class="line"><span class="comment"># apt-get install git</span></span><br></pre></td></tr></table></figure></p>
+<p>When computer reboot, u need to reload the node.js:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvm ls</span><br><span class="line">nvm use <span class="number">0.12</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Common_Usage">Common Usage</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># new blog</span></span><br><span class="line">hexo n <span class="string">""</span></span><br><span class="line"><span class="comment"># generate</span></span><br><span class="line">hexo g</span><br><span class="line"><span class="comment"># deploy</span></span><br><span class="line">hexo d</span><br><span class="line"><span class="comment"># publish</span></span><br><span class="line">hexo p</span><br><span class="line"><span class="comment"># server</span></span><br><span class="line">hexo s</span><br><span class="line"><span class="comment"># clean</span></span><br><span class="line">hexo clean</span><br><span class="line"><span class="comment"># deploy with comment</span></span><br><span class="line">hexo d -m <span class="string">""</span></span><br></pre></td></tr></table></figure>
+<h2 id="Reference">Reference</h2><p><a href="https://hexo.io/docs/index.html" target="_blank" rel="external">Hexo Doc</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Introduction about Hexo]]>
+    
+    </summary>
+    
+      <category term="Hexo" scheme="https://hwangjr.github.io/tags/Hexo/"/>
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Hexo" scheme="https://hwangjr.github.io/categories/Hexo/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[CentOS 7 Firewalld Basic Usage]]></title>
