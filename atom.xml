@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Life is wonderful!]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="https://hwangjr.github.io//"/>
-  <updated>2015-06-12T16:16:01.934Z</updated>
+  <updated>2015-06-15T04:14:38.163Z</updated>
   <id>https://hwangjr.github.io//</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[CentOS 7 Firewalld Basic Usage]]></title>
+    <link href="https://hwangjr.github.io/2015/06/15/CentOS-7-Firewalld-Basic-Usage/"/>
+    <id>https://hwangjr.github.io/2015/06/15/CentOS-7-Firewalld-Basic-Usage/</id>
+    <published>2015-06-15T04:13:32.000Z</published>
+    <updated>2015-06-15T04:14:38.163Z</updated>
+    <content type="html"><![CDATA[<p>CentOS 7 has change its firewall manager to firewalld, this will discuss about the usage of this tool.<br>Next, i will add a jenkins and a docker registry service.</p>
+<h2 id="Usage">Usage</h2><p>The basic command:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># query port 80</span></span><br><span class="line">firewall-cmd --query-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># list all</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line">firewall-cmd --zone=public --list-services</span><br><span class="line">firewall-cmd --list-ports</span><br><span class="line"><span class="comment"># add port</span></span><br><span class="line">firewall-cmd --add-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># help</span></span><br><span class="line">firewall-cmd --help</span><br></pre></td></tr></table></figure></p>
+<h2 id="Add_Jenkins/Docker_Registry_Service">Add Jenkins/Docker Registry Service</h2><p>There is two directory need to focus: /usr/lib/firewalld/, /etc/firewalld. First dir is for lib, second dir is for setup, so let’s do it.<br><strong>STEP 1:</strong><br>Add services to /etc/firewalld/services:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cp service from lib</span></span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/jenkins.xml</span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/docker-registry.xml</span><br></pre></td></tr></table></figure></p>
+<p><strong>STEP 2:</strong><br>Modify services like this:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jenkins.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Jenkins&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Jenkins <span class="keyword">for</span> CI.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"8080"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-registry.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Docker Registry&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Docker Registry <span class="keyword">for</span> manage the images.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"5000"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>STEP 3:</strong><br>Modify the zone config:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/firewalld/zones/public.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;zone&gt;</span><br><span class="line">  &lt;short&gt;Public&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;For use <span class="keyword">in</span> public areas. You <span class="keyword">do</span> not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.&lt;/description&gt;</span><br><span class="line">  &lt;service name=<span class="string">"dhcpv6-client"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"ssh"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"jenkins"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"docker-registry"</span>/&gt;</span><br><span class="line">&lt;/zone&gt;</span><br></pre></td></tr></table></figure></p>
+<p>U also can modify the firewall config: /etc/firewalld/firewalld.conf, like default zone etc..<br><strong>STEP 4:</strong><br>Now, just reload the firewall.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure></p>
+<p>That’s all, enjoy it!</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Introduction about CentOS 7 Firewalld]]>
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://hwangjr.github.io/tags/Linux/"/>
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Linux" scheme="https://hwangjr.github.io/categories/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Install Jenkins on CentOS 7]]></title>

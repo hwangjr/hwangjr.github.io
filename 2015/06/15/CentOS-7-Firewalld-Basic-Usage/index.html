@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Install Jenkins on CentOS 7 | HwangJR&#39;s Blog</title>
+    <title>CentOS 7 Firewalld Basic Usage | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="Install jenkins on centos 7">
+    <meta name="description" content="Introduction about CentOS 7 Firewalld">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Install Jenkins on CentOS 7">
-<meta property="og:url" content="https://hwangjr.github.io/2015/06/09/hello-world/index.html">
+<meta property="og:title" content="CentOS 7 Firewalld Basic Usage">
+<meta property="og:url" content="https://hwangjr.github.io/2015/06/15/CentOS-7-Firewalld-Basic-Usage/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="Install jenkins on centos 7">
-<meta property="og:updated_time" content="2015-06-12T16:16:01.934Z">
+<meta property="og:description" content="Introduction about CentOS 7 Firewalld">
+<meta property="og:updated_time" content="2015-06-15T04:14:38.163Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Install Jenkins on CentOS 7">
-<meta name="twitter:description" content="Install jenkins on centos 7">
+<meta name="twitter:title" content="CentOS 7 Firewalld Basic Usage">
+<meta name="twitter:description" content="Introduction about CentOS 7 Firewalld">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/09/hello-world/" title="Install Jenkins on CentOS 7" itemprop="url">Install Jenkins on CentOS 7</a>
+      <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" title="CentOS 7 Firewalld Basic Usage" itemprop="url">CentOS 7 Firewalld Basic Usage</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-09T07:39:16.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
+    <time datetime="2015-06-15T04:13:32.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
     
   </p>
 </header>
@@ -97,20 +97,18 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Installation"><span class="toc-number">1.</span> <span class="toc-text">Installation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Update"><span class="toc-number">2.</span> <span class="toc-text">Update</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Errors"><span class="toc-number">3.</span> <span class="toc-text">Errors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">1.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_Jenkins/Docker_Registry_Service"><span class="toc-number">2.</span> <span class="toc-text">Add Jenkins/Docker Registry Service</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="Installation">Installation</h2><p>The Jenkins Installation is quit simple, because Jenkins has its own repo, so just show the code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key</span><br><span class="line"><span class="comment"># V 1.617-1.1</span></span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>we also need java environment:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install openjdk 1.8</span></span><br><span class="line">yum install java</span><br></pre></td></tr></table></figure></p>
-<p>or u can search java version and install:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search java | grep <span class="string">'java-'</span></span><br></pre></td></tr></table></figure></p>
-<p>Next, we should expose port 8080:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line">firewall-cmd --add-port=<span class="number">8080</span>/tcp</span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure></p>
-<p>then u can open browser and request the page:<br><a href="http://ip:8080/" target="_blank" rel="external">http://ip:8080/</a></p>
-<p>Same installation on Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -</span><br><span class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins-ci.org/debian binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Update">Update</h2><p>Just run:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Errors">Errors</h2><p>if you get the error, u can try to fix it:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># error: Delta RPMs disabled because /usr/bin/applydeltarpm not installed.</span></span><br><span class="line">yum install deltarpm</span><br></pre></td></tr></table></figure></p>
-<h2 id="Reference">Reference</h2><p><a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins" target="_blank" rel="external">Installing Jenkins</a></p>
+		<p>CentOS 7 has change its firewall manager to firewalld, this will discuss about the usage of this tool.<br>Next, i will add a jenkins and a docker registry service.</p>
+<h2 id="Usage">Usage</h2><p>The basic command:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># query port 80</span></span><br><span class="line">firewall-cmd --query-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># list all</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line">firewall-cmd --zone=public --list-services</span><br><span class="line">firewall-cmd --list-ports</span><br><span class="line"><span class="comment"># add port</span></span><br><span class="line">firewall-cmd --add-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># help</span></span><br><span class="line">firewall-cmd --help</span><br></pre></td></tr></table></figure></p>
+<h2 id="Add_Jenkins/Docker_Registry_Service">Add Jenkins/Docker Registry Service</h2><p>There is two directory need to focus: /usr/lib/firewalld/, /etc/firewalld. First dir is for lib, second dir is for setup, so let’s do it.<br><strong>STEP 1:</strong><br>Add services to /etc/firewalld/services:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cp service from lib</span></span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/jenkins.xml</span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/docker-registry.xml</span><br></pre></td></tr></table></figure></p>
+<p><strong>STEP 2:</strong><br>Modify services like this:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jenkins.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Jenkins&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Jenkins <span class="keyword">for</span> CI.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"8080"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-registry.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Docker Registry&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Docker Registry <span class="keyword">for</span> manage the images.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"5000"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>STEP 3:</strong><br>Modify the zone config:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/firewalld/zones/public.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;zone&gt;</span><br><span class="line">  &lt;short&gt;Public&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;For use <span class="keyword">in</span> public areas. You <span class="keyword">do</span> not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.&lt;/description&gt;</span><br><span class="line">  &lt;service name=<span class="string">"dhcpv6-client"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"ssh"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"jenkins"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"docker-registry"</span>/&gt;</span><br><span class="line">&lt;/zone&gt;</span><br></pre></td></tr></table></figure></p>
+<p>U also can modify the firewall config: /etc/firewalld/firewalld.conf, like default zone etc..<br><strong>STEP 4:</strong><br>Now, just reload the firewall.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure></p>
+<p>That’s all, enjoy it!</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -118,13 +116,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/CI/">CI</a>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ci/">ci</a><a href="/tags/tech/">tech</a>
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
   </div>
 
 </div>
@@ -133,7 +131,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://hwangjr.github.io/2015/06/09/hello-world/" data-title="Install Jenkins on CentOS 7 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="https://hwangjr.github.io/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" data-title="CentOS 7 Firewalld Basic Usage | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -146,14 +144,14 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" title="CentOS 7 Firewalld Basic Usage">
-  <strong>上一篇：</strong><br/>
-  <span>
-  CentOS 7 Firewalld Basic Usage</span>
+
+<div class="next">
+<a href="/2015/06/09/hello-world/"  title="Install Jenkins on CentOS 7">
+ <strong>下一篇：</strong><br/> 
+ <span>Install Jenkins on CentOS 7
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -171,7 +169,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Installation"><span class="toc-number">1.</span> <span class="toc-text">Installation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Update"><span class="toc-number">2.</span> <span class="toc-text">Update</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Errors"><span class="toc-number">3.</span> <span class="toc-text">Errors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">1.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_Jenkins/Docker_Registry_Service"><span class="toc-number">2.</span> <span class="toc-text">Add Jenkins/Docker Registry Service</span></a></li></ol>
  
   </div>
 
