@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Life is wonderful!]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="https://hwangjr.github.io//"/>
-  <updated>2015-06-15T08:11:27.735Z</updated>
+  <updated>2015-06-16T13:09:44.867Z</updated>
   <id>https://hwangjr.github.io//</id>
   
   <author>
@@ -14,6 +14,36 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android Network Library]]></title>
+    <link href="https://hwangjr.github.io/2015/06/16/Android-Network-Library/"/>
+    <id>https://hwangjr.github.io/2015/06/16/Android-Network-Library/</id>
+    <published>2015-06-16T13:09:18.000Z</published>
+    <updated>2015-06-16T13:09:44.867Z</updated>
+    <content type="html"><![CDATA[<p>There are so many android library to help us to develop the better apps:<br><a href="https://android.googlesource.com/platform/frameworks/volley" target="_blank" rel="external">Volley</a><br><a href="https://github.com/mcxiaoke/android-volley" target="_blank" rel="external">android-volley</a><br><a href="http://square.github.io/retrofit/" target="_blank" rel="external">Retrofit</a><br><a href="http://square.github.io/okhttp/" target="_blank" rel="external">OkHttp</a><br><a href="https://github.com/koush/ion" target="_blank" rel="external">ion</a><br><a href="http://loopj.com/android-async-http/" target="_blank" rel="external">Android Asynchronous Http Client</a></p>
+<p>The installation of volley is:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://android.googlesource.com/platform/frameworks/volley</span><br><span class="line"><span class="built_in">cd</span> volley</span><br><span class="line">android update project -p</span><br><span class="line">ant jar</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>Volley is encourage by google io, and google use it for many products.</li>
+<li>Retrofit is a type-safe REST client for Android and Java.</li>
+<li>Retrofit introduce the api design like twiter, separate api into many modules.</li>
+<li>Retrofit is ridiculously fast, use gson for default json parser.</li>
+<li>Retrofit meshes quite well with api architecture.<br>etc..<br>So, i decide to use Retrofit for my new project.</li>
+</ol>
+<p>Further reading:<br><a href="http://instructure.github.io/blog/2013/12/09/volley-vs-retrofit/" target="_blank" rel="external">Android Async HTTP Clients: Volley vs Retrofit</a><br><a href="http://stackoverflow.com/questions/16902716/comparison-of-android-networking-libraries-okhttp-retrofit-volley" target="_blank" rel="external">Comparison of Android Networking Libraries: OkHTTP, Retrofit, Volley</a><br><a href="https://www.bignerdranch.com/blog/solving-the-android-image-loading-problem-volley-vs-picasso/" target="_blank" rel="external">Solving the Android image loading problem: Volley vs. Picasso</a><br><a href="https://futurestud.io/blog/retrofit-getting-started-and-android-client/" target="_blank" rel="external">Retrofit — Getting Started and Create an Android Client</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Android Network Library Introduction]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Hexo Basic Usage]]></title>

@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Install Jenkins on CentOS 7 | HwangJR&#39;s Blog</title>
+    <title>Android Network Library | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="Install jenkins on centos 7">
+    <meta name="description" content="Android Network Library Introduction">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Install Jenkins on CentOS 7">
-<meta property="og:url" content="https://hwangjr.github.io/2015/06/09/hello-world/index.html">
+<meta property="og:title" content="Android Network Library">
+<meta property="og:url" content="https://hwangjr.github.io/2015/06/16/Android-Network-Library/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="Install jenkins on centos 7">
-<meta property="og:updated_time" content="2015-06-12T16:16:01.934Z">
+<meta property="og:description" content="Android Network Library Introduction">
+<meta property="og:updated_time" content="2015-06-16T13:09:44.867Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Install Jenkins on CentOS 7">
-<meta name="twitter:description" content="Install jenkins on centos 7">
+<meta name="twitter:title" content="Android Network Library">
+<meta name="twitter:description" content="Android Network Library Introduction">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/09/hello-world/" title="Install Jenkins on CentOS 7" itemprop="url">Install Jenkins on CentOS 7</a>
+      <a href="/2015/06/16/Android-Network-Library/" title="Android Network Library" itemprop="url">Android Network Library</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-09T07:39:16.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
+    <time datetime="2015-06-16T13:09:18.000Z" itemprop="datePublished"> 发表于 2015-06-16</time>
     
   </p>
 </header>
@@ -97,20 +97,20 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Installation"><span class="toc-number">1.</span> <span class="toc-text">Installation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Update"><span class="toc-number">2.</span> <span class="toc-text">Update</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Errors"><span class="toc-number">3.</span> <span class="toc-text">Errors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
+			
 		
 		</div>
 		
-		<h2 id="Installation">Installation</h2><p>The Jenkins Installation is quit simple, because Jenkins has its own repo, so just show the code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key</span><br><span class="line"><span class="comment"># V 1.617-1.1</span></span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>we also need java environment:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install openjdk 1.8</span></span><br><span class="line">yum install java</span><br></pre></td></tr></table></figure></p>
-<p>or u can search java version and install:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search java | grep <span class="string">'java-'</span></span><br></pre></td></tr></table></figure></p>
-<p>Next, we should expose port 8080:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line">firewall-cmd --add-port=<span class="number">8080</span>/tcp</span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure></p>
-<p>then u can open browser and request the page:<br><a href="http://ip:8080/" target="_blank" rel="external">http://ip:8080/</a></p>
-<p>Same installation on Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -</span><br><span class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins-ci.org/debian binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Update">Update</h2><p>Just run:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Errors">Errors</h2><p>if you get the error, u can try to fix it:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># error: Delta RPMs disabled because /usr/bin/applydeltarpm not installed.</span></span><br><span class="line">yum install deltarpm</span><br></pre></td></tr></table></figure></p>
-<h2 id="Reference">Reference</h2><p><a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins" target="_blank" rel="external">Installing Jenkins</a></p>
+		<p>There are so many android library to help us to develop the better apps:<br><a href="https://android.googlesource.com/platform/frameworks/volley" target="_blank" rel="external">Volley</a><br><a href="https://github.com/mcxiaoke/android-volley" target="_blank" rel="external">android-volley</a><br><a href="http://square.github.io/retrofit/" target="_blank" rel="external">Retrofit</a><br><a href="http://square.github.io/okhttp/" target="_blank" rel="external">OkHttp</a><br><a href="https://github.com/koush/ion" target="_blank" rel="external">ion</a><br><a href="http://loopj.com/android-async-http/" target="_blank" rel="external">Android Asynchronous Http Client</a></p>
+<p>The installation of volley is:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://android.googlesource.com/platform/frameworks/volley</span><br><span class="line"><span class="built_in">cd</span> volley</span><br><span class="line">android update project -p</span><br><span class="line">ant jar</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>Volley is encourage by google io, and google use it for many products.</li>
+<li>Retrofit is a type-safe REST client for Android and Java.</li>
+<li>Retrofit introduce the api design like twiter, separate api into many modules.</li>
+<li>Retrofit is ridiculously fast, use gson for default json parser.</li>
+<li>Retrofit meshes quite well with api architecture.<br>etc..<br>So, i decide to use Retrofit for my new project.</li>
+</ol>
+<p>Further reading:<br><a href="http://instructure.github.io/blog/2013/12/09/volley-vs-retrofit/" target="_blank" rel="external">Android Async HTTP Clients: Volley vs Retrofit</a><br><a href="http://stackoverflow.com/questions/16902716/comparison-of-android-networking-libraries-okhttp-retrofit-volley" target="_blank" rel="external">Comparison of Android Networking Libraries: OkHTTP, Retrofit, Volley</a><br><a href="https://www.bignerdranch.com/blog/solving-the-android-image-loading-problem-volley-vs-picasso/" target="_blank" rel="external">Solving the Android image loading problem: Volley vs. Picasso</a><br><a href="https://futurestud.io/blog/retrofit-getting-started-and-android-client/" target="_blank" rel="external">Retrofit — Getting Started and Create an Android Client</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -118,13 +118,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/CI/">CI</a>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ci/">ci</a><a href="/tags/tech/">tech</a>
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
   </div>
 
 </div>
@@ -133,7 +133,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://hwangjr.github.io/2015/06/09/hello-world/" data-title="Install Jenkins on CentOS 7 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="https://hwangjr.github.io/2015/06/16/Android-Network-Library/" data-title="Android Network Library | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -146,14 +146,14 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" title="CentOS 7 Firewalld Basic Usage">
-  <strong>上一篇：</strong><br/>
-  <span>
-  CentOS 7 Firewalld Basic Usage</span>
+
+<div class="next">
+<a href="/2015/06/15/Hexo-Basic-Usage/"  title="Hexo Basic Usage">
+ <strong>下一篇：</strong><br/> 
+ <span>Hexo Basic Usage
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -171,7 +171,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Installation"><span class="toc-number">1.</span> <span class="toc-text">Installation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Update"><span class="toc-number">2.</span> <span class="toc-text">Update</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Errors"><span class="toc-number">3.</span> <span class="toc-text">Errors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
+ 
  
   </div>
 
