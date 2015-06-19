@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hwangjr.github.io/2015/06/19/Android-Project-Templete/</loc>
+    <lastmod>2015-06-19T08:25:47.816Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://hwangjr.github.io/2015/06/16/Android-Network-Library/</loc>
     <lastmod>2015-06-16T13:09:44.867Z</lastmod>
   </url>
