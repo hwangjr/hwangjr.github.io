@@ -4,22 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>HwangJR&#39;s Blog</title>
+    <title>Android ToolBar Widget Usage | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="Some stuff about tech etc..">
-<meta property="og:type" content="website">
-<meta property="og:title" content="HwangJR's Blog">
-<meta property="og:url" content="https://hwangjr.github.io/index.html">
+    <meta name="description" content="ToolBar基础用法及自定义ToolBar。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android ToolBar Widget Usage">
+<meta property="og:url" content="https://hwangjr.github.io/2015/07/10/Android-ToolBar-Widget-Usage/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="Some stuff about tech etc..">
+<meta property="og:description" content="ToolBar基础用法及自定义ToolBar。">
+<meta property="og:updated_time" content="2015-07-10T08:04:10.941Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HwangJR's Blog">
-<meta name="twitter:description" content="Some stuff about tech etc..">
+<meta name="twitter:title" content="Android ToolBar Widget Usage">
+<meta name="twitter:description" content="ToolBar基础用法及自定义ToolBar。">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -74,12 +75,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/07/10/Android-ToolBar-Widget-Usage/" title="Android ToolBar Widget Usage" itemprop="url">Android ToolBar Widget Usage</a>
@@ -93,9 +92,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>从2014年Google I/O大会发表了Material Design之后，其也开始陆陆续续更新了Android APP的界面设计接口，在ActionBar之后，Android在support library里面也提供了更多的API给开发者使用。在Material Design之中有一个名称为App Bar，用来取代过去的Action Bar控件，本篇就以此为引，为大家介绍下Tool Bar的使用和自定义。<br>在推出Material Design之后，官方在某些方面也感觉到ActionBar限制了应用开发的弹性，接下来，将分为基本用法、自定义控件及针对ToolBar的总结，为大家介绍下这个控件。</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本用法"><span class="toc-number">2.</span> <span class="toc-text">基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、新增ToolBar样式"><span class="toc-number">2.1.</span> <span class="toc-text">一、新增ToolBar样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、XML布局中新增ToolBar"><span class="toc-number">2.2.</span> <span class="toc-text">二、XML布局中新增ToolBar</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、程序中替代ActionBar"><span class="toc-number">2.3.</span> <span class="toc-text">三、程序中替代ActionBar</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义ToolBar"><span class="toc-number">3.</span> <span class="toc-text">自定义ToolBar</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、自定义配色"><span class="toc-number">3.1.</span> <span class="toc-text">一、自定义配色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、ToolBar控件"><span class="toc-number">3.2.</span> <span class="toc-text">二、ToolBar控件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、自定义布局"><span class="toc-number">3.3.</span> <span class="toc-text">三、自定义布局</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结语"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">5.</span> <span class="toc-text">Ref</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="背景">背景</h2><p>从2014年Google I/O大会发表了Material Design之后，其也开始陆陆续续更新了Android APP的界面设计接口，在ActionBar之后，Android在support library里面也提供了更多的API给开发者使用。在Material Design之中有一个名称为App Bar，用来取代过去的Action Bar控件，本篇就以此为引，为大家介绍下Tool Bar的使用和自定义。<br>在推出Material Design之后，官方在某些方面也感觉到ActionBar限制了应用开发的弹性，接下来，将分为基本用法、自定义控件及针对ToolBar的总结，为大家介绍下这个控件。</p>
 <h2 id="基本用法">基本用法</h2><p>ToolBar已经集成在V7支持包中，要使用也相对较为简单，基本可分为三步：</p>
 <ol>
 <li>新增ToolBar样式</li>
@@ -135,14 +141,9 @@
 <p>ToolBarHelper.java代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ToolBarHelper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Toolbar mActionBarToolbar;</span><br><span class="line">    <span class="keyword">private</span> TextView mTitleView;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Toolbar <span class="title">getActionBarToolbar</span><span class="params">(AppCompatActivity activity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mActionBarToolbar == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mActionBarToolbar = (Toolbar) activity.findViewById(R.id.toolbar_actionbar);</span><br><span class="line">            mTitleView = (TextView) mActionBarToolbar.findViewById(R.id.toolbar_title);</span><br><span class="line">            <span class="keyword">if</span> (mActionBarToolbar != <span class="keyword">null</span>) &#123;</span><br><span class="line">                activity.setSupportActionBar(mActionBarToolbar);</span><br><span class="line">                <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    activity.getSupportActionBar().setDisplayShowTitleEnabled(<span class="keyword">false</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mActionBarToolbar;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(<span class="keyword">int</span> resid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mTitleView.setText(resid);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(CharSequence title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mTitleView.setText(title);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="结语">结语</h2><p>相比而言，ToolBar比ActionBar改进很多，而且其易用性方面也有很大提高，我们也可以不用再自己手动去制作应用标题了。</p>
 <h2 id="Ref">Ref</h2><p><a href="http://angeldevil.me/2014/12/24/toolbar-as-actionbar-and-centered-title/" target="_blank" rel="external">Toolbar作为ActionBar与标题居中</a><br><a href="http://developer.android.com/intl/zh-cn/reference/android/support/v7/widget/Toolbar.html" target="_blank" rel="external">Class Toolbar</a><br><a href="http://blog.mosil.biz/2014/10/android-toolbar/" target="_blank" rel="external">ANDROID-TOOLBAR STEP BY STEP</a><br><a href="http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html" target="_blank" rel="external">Material Design for Pre-Lollipop Devices</a><br><a href="http://www.google.com/design/spec/layout/structure.html#structure-app-bar" target="_blank" rel="external">structure-app-bar</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -160,447 +161,49 @@
 
 
 
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2015/07/10/Android-ToolBar-Widget-Usage/" data-title="Android ToolBar Widget Usage | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
 
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/10/Android-ToolBar-Widget-Usage/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
 
 </footer>
 
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
 
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/08/Android-Studio-With-SVN/" title="Android Studio With SVN" itemprop="url">Android Studio With SVN</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-08T12:17:08.000Z" itemprop="datePublished"> 发表于 2015-07-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="环境">环境</h2><p>系统使用Ubuntu 12.04，SVN版本1.8.8，AS使用最新稳定1.2.2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">svn, version <span class="number">1.8</span>.<span class="number">8</span> (r1568071)</span><br><span class="line">   compiled Aug <span class="number">13</span> <span class="number">2014</span>, <span class="number">17</span>:<span class="number">12</span>:<span class="number">39</span> on x86_64-pc-linux-gnu</span><br></pre></td></tr></table></figure></p>
-<h2 id="配置AS">配置AS</h2><p>配置AS很简单。<br>1、配置SVN执行目录：<br>File -&gt; Settings -&gt; Version Control -&gt; Subversion -&gt; General Tab里面的Use command line client，如果你已经安装SVN，AS应该默认是配置好的。<br>2、上传你的文件到SVN：<br>VCS -&gt; Import into Version Control -&gt; Import into Subversion…之后就可在线上版本查看到文件已经同步。<br>3、为项目新增SVN管理：<br>VCS -&gt; Enable Version Control Integration… 简单配置，即可在面板上有UP和CI等版本操作的图标。<br>至此，AS配置完成。</p>
-<h2 id="设置SVN_IGNORE">设置SVN IGNORE</h2><p>一直不知道SVN如何设置忽略命令，网上看的很多都是不准确或者理解有偏差。<br>1、设置全局忽略文件列表：<br>编辑~/.subversion/config文件，修改此文件中的global-ignores，里面也有提供实例。<br>当然，如果你想修改所有用户的ignore，文件目录在/etc/subversion/config。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo</span></span><br><span class="line"><span class="comment">#   *.rej *~ #*# .#* .*.swp .DS_Store</span></span><br></pre></td></tr></table></figure></p>
-<p>2、设置某目录svn ignore：<br>关键是使用svn的property set命令，此命令不可递归，只能设置当前目录下的ignore规则。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore path</span><br><span class="line"><span class="comment"># svn propedit svn:ignore path</span></span><br><span class="line">svn pd svn:ignore path</span><br><span class="line"><span class="comment"># svn propdel svn:ignore path</span></span><br><span class="line">svn ps svn:ignore path</span><br><span class="line"><span class="comment"># svn propset svn:ignore path</span></span><br></pre></td></tr></table></figure></p>
-<p>如果当前目录结构为：<br>.<br>|<br>|-Android<br>|   |<br>|   - trunk<br>|   - branches<br>|   - tags<br>|-iOS<br>想要过滤trunk目录下某些文件或目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore Android/trunk</span><br></pre></td></tr></table></figure></p>
-<p>之后会打开编辑窗口，输入下方文件即可：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>附带完整svn ignore命令（svn st命令，可以查看当前状态）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> project-path</span><br><span class="line">svn pe Android/trunk</span><br><span class="line">svn pe Android/trunk/.idea</span><br><span class="line">svn pe Android/trunk/app</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/.idea下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workspace.xml</span><br><span class="line">libraries</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/app下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build</span><br></pre></td></tr></table></figure></p>
-<p>设置完成，使用svn ci -m ‘ignore files’即可。<br>附带.ignore文件为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Built application files</span></span><br><span class="line">*.apk</span><br><span class="line">*.ap_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Files for the Dalvik VM</span></span><br><span class="line">*.dex</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java class files</span></span><br><span class="line">*.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generated files</span></span><br><span class="line">bin/</span><br><span class="line">gen/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Gradle files</span></span><br><span class="line">.gradle/</span><br><span class="line">build/</span><br><span class="line">/*/build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local configuration file (sdk path, etc)</span></span><br><span class="line">local.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># Proguard folder generated by Eclipse</span></span><br><span class="line">proguard/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Log Files</span></span><br><span class="line">*.log</span><br><span class="line"></span><br><span class="line">/.idea/workspace.xml</span><br><span class="line">/.idea/libraries</span><br><span class="line">.DS_Store</span><br><span class="line">/capture</span><br></pre></td></tr></table></figure></p>
-<p>附带命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn <span class="built_in">export</span> dir dir_bak</span><br><span class="line">svn rm dir</span><br><span class="line">svn commit -m <span class="string">'delete dir'</span></span><br><span class="line">mv dir-bak dir</span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile1</span><br><span class="line">ignorefile2</span><br><span class="line">ignorefile3'</span> dir</span><br></pre></td></tr></table></figure></p>
-<h2 id="SVN常用命令">SVN常用命令</h2><p>Show The Code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">svn co svn://xxx</span><br><span class="line">svn checkout svn://</span><br><span class="line">svn <span class="built_in">export</span> [-r version] svn://</span><br><span class="line">svn add file</span><br><span class="line">svn commit -m <span class="string">''</span></span><br><span class="line">svn ci -m <span class="string">''</span></span><br><span class="line">svn up</span><br><span class="line">svn update</span><br><span class="line">svn update -r <span class="number">200</span> file</span><br><span class="line">svn delete svn:// -m <span class="string">''</span></span><br><span class="line">svn delete file</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
+<div class="next">
+<a href="/2015/07/08/Android-Studio-With-SVN/"  title="Android Studio With SVN">
+ <strong>下一篇：</strong><br/> 
+ <span>Android Studio With SVN
+</span>
+</a>
 </div>
 
+</nav>
 
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   </div>
+</section>
 
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/08/Android-Studio-With-SVN/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/19/Android-Project-Templete/" title="Android Project Templete" itemprop="url">Android Project Templete</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-19T08:25:20.000Z" itemprop="datePublished"> 发表于 2015-06-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Android更新迭代很快，而公司业务也在不断扩张，需要这个项目模板来帮助我们快速构建新的应用程序。而且Android的库也在不断的更新换代，包括网络请求库、图片库、JSON解析库等，需要我们不断的更新自身的项目结构，与Android系统保持同步更新，在兼容适配等会更有好处。<br>本库包含了通用的网络库、图片库、内存检测库、底部TAB库等，基本满足项目的前期构建。还包括了脚本编译多渠道包等其他功能，具体可以clone下来自己把玩把玩~~<br>如果有任何建议或者意见，随时联系，也可以pull request到分支。<br><a href="https://github.com/hwangjr/AndroidProjectTemplete" target="_blank" rel="external">AndroidProjectTemplete</a><br>目前已经包含的库有：<br>1、appcompat-v7:22.2.0<br>2、<a href="https://github.com/square/retrofit" target="_blank" rel="external">retrofit:1.9.0</a><br>3、<a href="https://github.com/square/okhttp/tree/master/okhttp-urlconnection" target="_blank" rel="external">okhttp-urlconnection:2.4.0</a><br>4、<a href="https://github.com/square/okhttp" target="_blank" rel="external">okhttp:2.4.0</a><br>5、<a href="https://github.com/square/okio" target="_blank" rel="external">okio:1.4.0</a><br>6、<a href="https://github.com/OrangeGangsters/SwipyRefreshLayout" target="_blank" rel="external">swipy:1.2</a><br>7、<a href="https://github.com/wasabeef/recyclerview-animators" target="_blank" rel="external">recyclerview-animators:1.2</a><br>8、support-v4:22.2.0<br>9、<a href="https://github.com/bumptech/glide" target="_blank" rel="external">glide:3.6.0</a><br>10、<a href="https://github.com/square/leakcanary" target="_blank" rel="external">leakcanary-android:1.3.1</a><br>11、<a href="https://github.com/google/gson" target="_blank" rel="external">GSON</a><br>11、自写底部Tab库（解决Fragment嵌套等问题）</p>
-<p>build.gradle:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    compile fileTree(dir: <span class="string">'libs'</span>, include: [<span class="string">'*.jar'</span>])</span><br><span class="line">    compile <span class="string">'com.android.support:appcompat-v7:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.retrofit:retrofit:1.9.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp-urlconnection:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okio:okio:1.4.0'</span></span><br><span class="line">    compile <span class="string">'com.github.orangegangsters:swipy:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'jp.wasabeef:recyclerview-animators:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'com.android.support:support-v4:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.github.bumptech.glide:glide:3.6.0'</span></span><br><span class="line">    debugCompile <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">    releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/19/Android-Project-Templete/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/16/Android-Network-Library/" title="Android Network Library" itemprop="url">Android Network Library</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-16T13:09:18.000Z" itemprop="datePublished"> 发表于 2015-06-16</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>There are so many android library to help us to develop the better apps:<br><a href="https://android.googlesource.com/platform/frameworks/volley" target="_blank" rel="external">Volley</a><br><a href="https://github.com/mcxiaoke/android-volley" target="_blank" rel="external">android-volley</a><br><a href="http://square.github.io/retrofit/" target="_blank" rel="external">Retrofit</a><br><a href="http://square.github.io/okhttp/" target="_blank" rel="external">OkHttp</a><br><a href="https://github.com/koush/ion" target="_blank" rel="external">ion</a><br><a href="http://loopj.com/android-async-http/" target="_blank" rel="external">Android Asynchronous Http Client</a></p>
-<p>The installation of volley is:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://android.googlesource.com/platform/frameworks/volley</span><br><span class="line"><span class="built_in">cd</span> volley</span><br><span class="line">android update project -p</span><br><span class="line">ant jar</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>Volley is encourage by google io, and google use it for many products.</li>
-<li>Retrofit is a type-safe REST client for Android and Java.</li>
-<li>Retrofit introduce the api design like twiter, separate api into many modules.</li>
-<li>Retrofit is ridiculously fast, use gson for default json parser.</li>
-<li>Retrofit meshes quite well with api architecture.<br>etc..<br>So, i decide to use Retrofit for my new project.</li>
-</ol>
-<p>Further reading:<br><a href="http://instructure.github.io/blog/2013/12/09/volley-vs-retrofit/" target="_blank" rel="external">Android Async HTTP Clients: Volley vs Retrofit</a><br><a href="http://stackoverflow.com/questions/16902716/comparison-of-android-networking-libraries-okhttp-retrofit-volley" target="_blank" rel="external">Comparison of Android Networking Libraries: OkHTTP, Retrofit, Volley</a><br><a href="https://www.bignerdranch.com/blog/solving-the-android-image-loading-problem-volley-vs-picasso/" target="_blank" rel="external">Solving the Android image loading problem: Volley vs. Picasso</a><br><a href="https://futurestud.io/blog/retrofit-getting-started-and-android-client/" target="_blank" rel="external">Retrofit — Getting Started and Create an Android Client</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/16/Android-Network-Library/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/15/Hexo-Basic-Usage/" title="Hexo Basic Usage" itemprop="url">Hexo Basic Usage</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-15T08:10:02.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>This is just a tips about Hexo.</p>
-<h2 id="Installation">Installation</h2><p>Just node.js and git:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js</span></span><br><span class="line">wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br><span class="line">nvm install <span class="number">0.12</span></span><br><span class="line"><span class="comment"># hexo</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># update</span></span><br><span class="line"><span class="comment"># npm update -g hexo-cli</span></span><br><span class="line"><span class="comment"># git</span></span><br><span class="line">yum install git</span><br><span class="line"><span class="comment"># apt-get install git</span></span><br></pre></td></tr></table></figure></p>
-<p>When computer reboot, u need to reload the node.js:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvm ls</span><br><span class="line">nvm use <span class="number">0.12</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="Common_Usage">Common Usage</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># new blog</span></span><br><span class="line">hexo n <span class="string">""</span></span><br><span class="line"><span class="comment"># generate</span></span><br><span class="line">hexo g</span><br><span class="line"><span class="comment"># deploy</span></span><br><span class="line">hexo d</span><br><span class="line"><span class="comment"># publish</span></span><br><span class="line">hexo p</span><br><span class="line"><span class="comment"># server</span></span><br><span class="line">hexo s</span><br><span class="line"><span class="comment"># clean</span></span><br><span class="line">hexo clean</span><br><span class="line"><span class="comment"># deploy with comment</span></span><br><span class="line">hexo d -m <span class="string">""</span></span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><p><a href="https://hexo.io/docs/index.html" target="_blank" rel="external">Hexo Doc</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Hexo/">Hexo</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Hexo/">Hexo</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/15/Hexo-Basic-Usage/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" title="CentOS 7 Firewalld Basic Usage" itemprop="url">CentOS 7 Firewalld Basic Usage</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-15T04:13:32.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>CentOS 7 has change its firewall manager to firewalld, this will discuss about the usage of this tool.<br>Next, i will add a jenkins and a docker registry service.</p>
-<h2 id="Usage">Usage</h2><p>The basic command:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># query port 80</span></span><br><span class="line">firewall-cmd --query-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># list all</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line">firewall-cmd --zone=public --list-services</span><br><span class="line">firewall-cmd --list-ports</span><br><span class="line"><span class="comment"># add port</span></span><br><span class="line">firewall-cmd --add-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># help</span></span><br><span class="line">firewall-cmd --help</span><br></pre></td></tr></table></figure></p>
-<h2 id="Add_Jenkins/Docker_Registry_Service">Add Jenkins/Docker Registry Service</h2><p>There is two directory need to focus: /usr/lib/firewalld/, /etc/firewalld. First dir is for lib, second dir is for setup, so let’s do it.<br><strong>STEP 1:</strong><br>Add services to /etc/firewalld/services:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cp service from lib</span></span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/jenkins.xml</span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/docker-registry.xml</span><br></pre></td></tr></table></figure></p>
-<p><strong>STEP 2:</strong><br>Modify services like this:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jenkins.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Jenkins&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Jenkins <span class="keyword">for</span> CI.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"8080"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-registry.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Docker Registry&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Docker Registry <span class="keyword">for</span> manage the images.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"5000"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>STEP 3:</strong><br>Modify the zone config:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/firewalld/zones/public.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;zone&gt;</span><br><span class="line">  &lt;short&gt;Public&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;For use <span class="keyword">in</span> public areas. You <span class="keyword">do</span> not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.&lt;/description&gt;</span><br><span class="line">  &lt;service name=<span class="string">"dhcpv6-client"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"ssh"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"jenkins"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"docker-registry"</span>/&gt;</span><br><span class="line">&lt;/zone&gt;</span><br></pre></td></tr></table></figure></p>
-<p>U also can modify the firewall config: /etc/firewalld/firewalld.conf, like default zone etc..<br><strong>STEP 4:</strong><br>Now, just reload the firewall.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure></p>
-<p>That’s all, enjoy it!</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/09/hello-world/" title="Install Jenkins on CentOS 7" itemprop="url">Install Jenkins on CentOS 7</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-09T07:39:16.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Installation">Installation</h2><p>The Jenkins Installation is quit simple, because Jenkins has its own repo, so just show the code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key</span><br><span class="line"><span class="comment"># V 1.617-1.1</span></span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>we also need java environment:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install openjdk 1.8</span></span><br><span class="line">yum install java</span><br></pre></td></tr></table></figure></p>
-<p>or u can search java version and install:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search java | grep <span class="string">'java-'</span></span><br></pre></td></tr></table></figure></p>
-<p>Next, we should expose port 8080:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line">firewall-cmd --add-port=<span class="number">8080</span>/tcp</span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure></p>
-<p>then u can open browser and request the page:<br><a href="http://ip:8080/" target="_blank" rel="external">http://ip:8080/</a></p>
-<p>Same installation on Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -</span><br><span class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins-ci.org/debian binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Update">Update</h2><p>Just run:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Errors">Errors</h2><p>if you get the error, u can try to fix it:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># error: Delta RPMs disabled because /usr/bin/applydeltarpm not installed.</span></span><br><span class="line">yum install deltarpm</span><br></pre></td></tr></table></figure></p>
-<h2 id="Reference">Reference</h2><p><a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins" target="_blank" rel="external">Installing Jenkins</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/CI/">CI</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/ci/">ci</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/09/hello-world/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本用法"><span class="toc-number">2.</span> <span class="toc-text">基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、新增ToolBar样式"><span class="toc-number">2.1.</span> <span class="toc-text">一、新增ToolBar样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、XML布局中新增ToolBar"><span class="toc-number">2.2.</span> <span class="toc-text">二、XML布局中新增ToolBar</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、程序中替代ActionBar"><span class="toc-number">2.3.</span> <span class="toc-text">三、程序中替代ActionBar</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义ToolBar"><span class="toc-number">3.</span> <span class="toc-text">自定义ToolBar</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、自定义配色"><span class="toc-number">3.1.</span> <span class="toc-text">一、自定义配色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、ToolBar控件"><span class="toc-number">3.2.</span> <span class="toc-text">二、ToolBar控件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、自定义布局"><span class="toc-number">3.3.</span> <span class="toc-text">三、自定义布局</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结语"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">5.</span> <span class="toc-text">Ref</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -776,12 +379,69 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
@@ -888,4 +548,4 @@ _ts(option);
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
