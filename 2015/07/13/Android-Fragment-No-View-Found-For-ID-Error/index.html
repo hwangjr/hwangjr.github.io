@@ -1,0 +1,522 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Android Fragment - No View Found For ID Error | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="在使用Android Fragment的时候，配合新的ViewPager、FragmentPagerAdapter，会经常发生No View Found For ID Error，本文总结下此错误经常是什么原因导致。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Fragment - No View Found For ID Error">
+<meta property="og:url" content="https://hwangjr.github.io/2015/07/13/Android-Fragment-No-View-Found-For-ID-Error/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="在使用Android Fragment的时候，配合新的ViewPager、FragmentPagerAdapter，会经常发生No View Found For ID Error，本文总结下此错误经常是什么原因导致。">
+<meta property="og:updated_time" content="2015-07-13T03:27:06.948Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Fragment - No View Found For ID Error">
+<meta name="twitter:description" content="在使用Android Fragment的时候，配合新的ViewPager、FragmentPagerAdapter，会经常发生No View Found For ID Error，本文总结下此错误经常是什么原因导致。">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/13/Android-Fragment-No-View-Found-For-ID-Error/" title="Android Fragment - No View Found For ID Error" itemprop="url">Android Fragment - No View Found For ID Error</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-13T03:26:23.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#说明"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题原因"><span class="toc-number">2.</span> <span class="toc-text">问题原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IDE问题"><span class="toc-number">2.1.</span> <span class="toc-text">IDE问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#真的没ID"><span class="toc-number">2.2.</span> <span class="toc-text">真的没ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FragmentManager获取错误"><span class="toc-number">2.3.</span> <span class="toc-text">FragmentManager获取错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#找不到的ID是0xFFFFFFFF"><span class="toc-number">2.4.</span> <span class="toc-text">找不到的ID是0xFFFFFFFF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ID混乱"><span class="toc-number">2.5.</span> <span class="toc-text">ID混乱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#旋转屏幕时错误"><span class="toc-number">2.6.</span> <span class="toc-text">旋转屏幕时错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DialogFragment里有ViewPager时错误"><span class="toc-number">2.7.</span> <span class="toc-text">DialogFragment里有ViewPager时错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#视图还未建立，而ViewPager已经开始加载了"><span class="toc-number">2.8.</span> <span class="toc-text">视图还未建立，而ViewPager已经开始加载了</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">3.</span> <span class="toc-text">Ref</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="说明">说明</h2><p>项目中很经常用到TAB，TAB不可避免就用到了ViewPager和FragmentPagerAdapter，这里不讨论<a href="http://developer.android.com/intl/zh-cn/reference/android/support/v4/app/FragmentPagerAdapter.html" target="_blank" rel="external">FragmentPagerAdapter</a>和<a href="http://developer.android.com/intl/zh-cn/reference/android/support/v4/app/FragmentStatePagerAdapter.html" target="_blank" rel="external">FragmentStatePagerAdapter</a>的<a href="http://stackoverflow.com/questions/18747975/difference-between-fragmentpageradapter-and-fragmentstatepageradapter" target="_blank" rel="external">区别</a>。<br>目前我遇到的问题，是在Pager Resume之后，会导致无法找到View ID，目前确认是因为View的Resume顺序导致的问题，在pager的fragment还未resume，而fragment下面的fragment已经开始恢复，导致视图找不到。目前还未有好的解决方案，故直接Pager持有，后面再解决。</p>
+<h2 id="问题原因">问题原因</h2><h3 id="IDE问题">IDE问题</h3><p>在发生View问题时，如果是Eclipse或者是AS，都可以尝试clean下，然后再试试，特别是Eclipse比较经常发生这类问题！</p>
+<h3 id="真的没ID">真的没ID</h3><p>再确认下自身XML布局，只有在content view中有这个ID，才能找到对应的View ID。<br>另外，也需要确认就是，R.id，而不是R.layout。</p>
+<h3 id="FragmentManager获取错误">FragmentManager获取错误</h3><p>如果是在Fragment里面使用Fragment，那么要用<a href="http://developer.android.com/reference/android/app/Fragment.html#getChildFragmentManager(" target="_blank" rel="external">getChildFragmentManager()</a>)替代getSupportFragmentManager()，这会为当前Fragment创建一个FragmentManager，并与当前的Fragment生命周期相关联起来。具体可以参考<a href="http://developer.android.com/intl/zh-cn/about/versions/android-4.2.html#NestedFragments" target="_blank" rel="external">NestedFragments</a>。需要注意的是，如果使用Nested Fragments，是无法使用XML布局实现，需要在代码中动态添加Fragment。<br>如果需要其他的解决方案，网上也有一些可以参考的<a href="http://stackoverflow.com/questions/15608935/best-practice-for-nested-fragments-in-android-4-0-4-1-4-2-without-using-the" target="_blank" rel="external">事例</a>和<a href="https://gist.github.com/chrisjenx/3405429" target="_blank" rel="external">代码</a>。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You can now embed fragments inside fragments. This is useful <span class="keyword">for</span> a variety of situations <span class="keyword">in</span> <span class="built_in">which</span> you want to place dynamic and re-usable UI components into a UI component that is itself dynamic and re-usable. For example, <span class="keyword">if</span> you use ViewPager to create fragments that swipe left and right and consume a majority of the screen space, you can now insert fragments into each fragment page.</span><br></pre></td></tr></table></figure></p>
+<h3 id="找不到的ID是0xFFFFFFFF">找不到的ID是0xFFFFFFFF</h3><p>ViewPager是一定要设置ID的，如果没有设置ID就会有这个问题。具体可以参考<a href="http://setohide.blogspot.se/2012/03/no-view-found-for-id-0xffffffff-for.html" target="_blank" rel="external">这里</a>。</p>
+<h3 id="ID混乱">ID混乱</h3><p>如果你的视图中，有多个相同ID，那么也有可能会造成混乱，所以ID最好是唯一的，酱紫可以方便问题排查。</p>
+<h3 id="旋转屏幕时错误">旋转屏幕时错误</h3><p>如果是在旋转屏幕时候有这个错误，那么可以考虑是否忘记移除setRetainInstance(true)的调用了。屏幕旋转如果没有处理，会重新初始化视图，那么有可能多个视图就会找不到ID了。</p>
+<h3 id="DialogFragment里有ViewPager时错误">DialogFragment里有ViewPager时错误</h3><p>在使用Fragment的时候，如果里面有ViewPager的话，是需要传入getChildFragmentManager的，而不是getSupportFragmentManager，否则就会导致这个错误。</p>
+<h3 id="视图还未建立，而ViewPager已经开始加载了">视图还未建立，而ViewPager已经开始加载了</h3><p>这个问题比较麻烦，所以才放到最后。<br>1、放到onActivityCreated的时候再操作Fragment，而不是在onCreateView的时候操作。<br>2、如果是ViewPager里面有ViewPager的话，那么考虑延迟恢复ViewPager视图，具体可参考<a href="http://stackoverflow.com/questions/19888539/illegalargumentexception-no-view-found-for-id-for-fragment-viewpager-in-vie" target="_blank" rel="external">这里</a>，关键代码如下。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BannerViewPager</span> <span class="keyword">extends</span> <span class="title">ViewPager</span> </span>&#123;</span><br><span class="line">    PagerAdapter mPagerAdapter;</span><br><span class="line"> </span><br><span class="line">    <span class="annotation">@Override</span> </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onAttachedToWindow</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow(); </span><br><span class="line">        <span class="keyword">if</span> (mPagerAdapter != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">super</span>.setAdapter(mPagerAdapter);</span><br><span class="line">            mPageIndicator.setViewPager(<span class="keyword">this</span>);</span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">    <span class="annotation">@Override</span> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAdapter</span><span class="params">(PagerAdapter adapter)</span> </span>&#123;</span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">storeAdapter</span><span class="params">(PagerAdapter pagerAdapter)</span> </span>&#123;</span><br><span class="line">        mPagerAdapter = pagerAdapter;</span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BannerViewPager</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BannerViewPager</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125; </span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) &#123;</span><br><span class="line">        convertView = getBannerView(mParent);</span><br><span class="line">    &#125; </span><br><span class="line">    mViewPager = (ViewPager) convertView;</span><br><span class="line">    <span class="keyword">if</span> (mBanners != <span class="keyword">null</span> &amp;&amp; !mBanners.isEmpty()) &#123; </span><br><span class="line">        <span class="keyword">if</span> (mPagerAdapter == <span class="keyword">null</span>) &#123; </span><br><span class="line">            FragmentManager childFM = mFragment.getChildFragmentManager(); </span><br><span class="line">            removeOldFragment(childFM); </span><br><span class="line">            mPagerAdapter = <span class="keyword">new</span> ScreenSlidePagerAdapter(childFM, mBanners); </span><br><span class="line">            mViewPager.setAdapter(mPagerAdapter); </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> convertView;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeOldFragment</span><span class="params">(FragmentManager fm)</span> </span>&#123; </span><br><span class="line">    <span class="keyword">try</span> &#123; </span><br><span class="line">        Field added = fm.getClass().getDeclaredField(<span class="string">"mAdded"</span>);</span><br><span class="line">        added.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        added.set(fm, <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchFieldException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">try</span> &#123; </span><br><span class="line">        Field active = fm.getClass().getDeclaredField(<span class="string">"mActive"</span>);</span><br><span class="line">        active.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        active.set(fm, <span class="keyword">null</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchFieldException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Ref">Ref</h2><p><a href="http://solvedstack.com/questions/android-fragment-no-view-found-for-id" target="_blank" rel="external">android-fragment-no-view-found-for-id</a><br><a href="http://stackoverflow.com/questions/19888539/illegalargumentexception-no-view-found-for-id-for-fragment-viewpager-in-vie" target="_blank" rel="external">IllegalArgumentException: No view found for id for fragment — ViewPager in ViewPager</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2015/07/13/Android-Fragment-No-View-Found-For-ID-Error/" data-title="Android Fragment - No View Found For ID Error | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/10/Android-实现毛玻璃效果/"  title="Android 实现毛玻璃效果">
+ <strong>下一篇：</strong><br/> 
+ <span>Android 实现毛玻璃效果
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#说明"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题原因"><span class="toc-number">2.</span> <span class="toc-text">问题原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IDE问题"><span class="toc-number">2.1.</span> <span class="toc-text">IDE问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#真的没ID"><span class="toc-number">2.2.</span> <span class="toc-text">真的没ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FragmentManager获取错误"><span class="toc-number">2.3.</span> <span class="toc-text">FragmentManager获取错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#找不到的ID是0xFFFFFFFF"><span class="toc-number">2.4.</span> <span class="toc-text">找不到的ID是0xFFFFFFFF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ID混乱"><span class="toc-number">2.5.</span> <span class="toc-text">ID混乱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#旋转屏幕时错误"><span class="toc-number">2.6.</span> <span class="toc-text">旋转屏幕时错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DialogFragment里有ViewPager时错误"><span class="toc-number">2.7.</span> <span class="toc-text">DialogFragment里有ViewPager时错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#视图还未建立，而ViewPager已经开始加载了"><span class="toc-number">2.8.</span> <span class="toc-text">视图还未建立，而ViewPager已经开始加载了</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">3.</span> <span class="toc-text">Ref</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
