@@ -1,10 +1,10 @@
 
-  <!DOCTYPE HTML>
+ <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   
-    <title>归档 | HwangJR&#39;s Blog</title>
+    <title>HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
@@ -14,7 +14,7 @@
     <meta name="description" content="Some stuff about tech etc..">
 <meta property="og:type" content="website">
 <meta property="og:title" content="HwangJR's Blog">
-<meta property="og:url" content="https://hwangjr.github.io/archives/index.html">
+<meta property="og:url" content="https://hwangjr.github.io/page/2/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
 <meta property="og:description" content="Some stuff about tech etc..">
 <meta name="twitter:card" content="summary">
@@ -36,9 +36,9 @@
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
 
-    <body>
-      <header>
-        
+  <body>
+    <header>
+      
 <div>
 		
 			<div id="imglogo">
@@ -72,161 +72,173 @@
 				</ul>
 			</nav>			
 </div>
-      </header>
-      <div id="container">
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/09/hello-world/" title="Install Jenkins on CentOS 7" itemprop="url">Install Jenkins on CentOS 7</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-09T07:39:16.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
         
+        <h2 id="Installation">Installation</h2><p>The Jenkins Installation is quit simple, because Jenkins has its own repo, so just show the code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key</span><br><span class="line"><span class="comment"># V 1.617-1.1</span></span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
+<p>we also need java environment:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install openjdk 1.8</span></span><br><span class="line">yum install java</span><br></pre></td></tr></table></figure></p>
+<p>or u can search java version and install:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search java | grep <span class="string">'java-'</span></span><br></pre></td></tr></table></figure></p>
+<p>Next, we should expose port 8080:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line">firewall-cmd --add-port=<span class="number">8080</span>/tcp</span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure></p>
+<p>then u can open browser and request the page:<br><a href="http://ip:8080/" target="_blank" rel="external">http://ip:8080/</a></p>
+<p>Same installation on Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -</span><br><span class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins-ci.org/debian binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
+<h2 id="Update">Update</h2><p>Just run:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
+<p>Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
+<h2 id="Errors">Errors</h2><p>if you get the error, u can try to fix it:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># error: Delta RPMs disabled because /usr/bin/applydeltarpm not installed.</span></span><br><span class="line">yum install deltarpm</span><br></pre></td></tr></table></figure></p>
+<h2 id="Reference">Reference</h2><p><a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins" target="_blank" rel="external">Installing Jenkins</a></p>
 
-<div class="archive-title" >
-  <h2 class="archive-icon">归档</h2>
-  
-  <div class="archiveslist archive-float clearfix">
-   <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">2015 年 07 月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">2015 年 06 月</a><span class="archive-list-count">5</span></li></ul>
- </div>
-  
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/CI/">CI</a>
 </div>
-<div id="main" class="archive-part clearfix">
-  <div id="archive-page">
 
-  <section class="post" itemscope itemprop="blogPost">
+
+  <div class="article-tags">
   
-    <a href="/2015/07/29/HTML-In-TextView/" title="HTML In TextView" itemprop="url">
-  
+  <span></span> <a href="/tags/ci/">ci</a><a href="/tags/tech/">tech</a>
+  </div>
 
-    <time datetime="2015-07-29T07:50:06.000Z" itemprop="datePublished">2015-07-29</time>
-
-
-    <h1 itemprop="name">HTML In TextView</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/07/13/破解Beyond-Compare/" title="破解Beyond Compare" itemprop="url">
-  
-
-    <time datetime="2015-07-13T10:15:26.000Z" itemprop="datePublished">2015-07-13</time>
+</div>
 
 
-    <h1 itemprop="name">破解Beyond Compare</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/07/13/Android-Fragment-No-View-Found-For-ID-Error/" title="Android Fragment - No View Found For ID Error" itemprop="url">
-  
-
-    <time datetime="2015-07-13T03:26:23.000Z" itemprop="datePublished">2015-07-13</time>
 
 
-    <h1 itemprop="name">Android Fragment - No View Found For ID Error</h1>
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/09/hello-world/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
 
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/07/10/Android-实现毛玻璃效果/" title="Android 实现毛玻璃效果" itemprop="url">
-  
-
-    <time datetime="2015-07-10T12:05:22.000Z" itemprop="datePublished">2015-07-10</time>
+</footer>
 
 
-    <h1 itemprop="name">Android 实现毛玻璃效果</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/07/10/Android-ToolBar-Widget-Usage/" title="Android ToolBar Widget Usage" itemprop="url">
-  
-
-    <time datetime="2015-07-10T08:03:39.000Z" itemprop="datePublished">2015-07-10</time>
+    </article>
 
 
-    <h1 itemprop="name">Android ToolBar Widget Usage</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/07/08/Android-Studio-With-SVN/" title="Android Studio With SVN" itemprop="url">
-  
-
-    <time datetime="2015-07-08T12:17:08.000Z" itemprop="datePublished">2015-07-08</time>
 
 
-    <h1 itemprop="name">Android Studio With SVN</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/06/19/Android-Project-Templete/" title="Android Project Templete" itemprop="url">
-  
-
-    <time datetime="2015-06-19T08:25:20.000Z" itemprop="datePublished">2015-06-19</time>
 
 
-    <h1 itemprop="name">Android Project Templete</h1>
 
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/06/16/Android-Network-Library/" title="Android Network Library" itemprop="url">
-  
-
-    <time datetime="2015-06-16T13:09:18.000Z" itemprop="datePublished">2015-06-16</time>
-
-
-    <h1 itemprop="name">Android Network Library</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/06/15/Hexo-Basic-Usage/" title="Hexo Basic Usage" itemprop="url">
-  
-
-    <time datetime="2015-06-15T08:10:02.000Z" itemprop="datePublished">2015-06-15</time>
-
-
-    <h1 itemprop="name">Hexo Basic Usage</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" title="CentOS 7 Firewalld Basic Usage" itemprop="url">
-  
-
-    <time datetime="2015-06-15T04:13:32.000Z" itemprop="datePublished">2015-06-15</time>
-
-
-    <h1 itemprop="name">CentOS 7 Firewalld Basic Usage</h1>
-
-  </a>
-</section>
-
-
-  <nav id="page-nav" class="clearfix archive-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">Next<span></span></a>
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
   </nav>
 
-  </div>
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+		  
+		
+		</ul>
 </div>
 
-      </div>
-      <footer><div id="footer" >
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
 	
 	<div class="line">
 		<span></span>
@@ -279,7 +291,7 @@
 		</p>
 </div>
 </footer>
-      <script src="/js/jquery-2.0.3.min.js"></script>
+    <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
 
@@ -433,5 +445,5 @@ _ts(option);
 
 <!-- Tiny_search End -->
 
-    </body>
-   </html>
+  </body>
+ </html>

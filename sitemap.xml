@@ -2,8 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hwangjr.github.io/2015/07/29/HTML-In-TextView/</loc>
+    <lastmod>2015-07-29T07:50:24.708Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hwangjr.github.io/2015/07/10/Android-ToolBar-Widget-Usage/</loc>
+    <lastmod>2015-07-29T07:49:36.944Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://hwangjr.github.io/2015/07/13/%E7%A0%B4%E8%A7%A3Beyond-Compare/</loc>
-    <lastmod>2015-07-13T10:15:50.660Z</lastmod>
+    <lastmod>2015-07-15T16:08:15.590Z</lastmod>
   </url>
   
   <url>
@@ -14,11 +24,6 @@
   <url>
     <loc>https://hwangjr.github.io/2015/07/10/Android-%E5%AE%9E%E7%8E%B0%E6%AF%9B%E7%8E%BB%E7%92%83%E6%95%88%E6%9E%9C/</loc>
     <lastmod>2015-07-10T12:05:49.253Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://hwangjr.github.io/2015/07/10/Android-ToolBar-Widget-Usage/</loc>
-    <lastmod>2015-07-10T08:04:10.941Z</lastmod>
   </url>
   
   <url>
