@@ -1,0 +1,533 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>V8和项目SO库冲突 | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="在使用V8库的时候，发现打包完的APK里面竟然没有加入SO库（libs目录下的so库）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="V8和项目SO库冲突">
+<meta property="og:url" content="https://hwangjr.github.io/2015/08/12/V8和项目SO库冲突/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="在使用V8库的时候，发现打包完的APK里面竟然没有加入SO库（libs目录下的so库）。">
+<meta property="og:updated_time" content="2015-08-12T07:20:13.468Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="V8和项目SO库冲突">
+<meta name="twitter:description" content="在使用V8库的时候，发现打包完的APK里面竟然没有加入SO库（libs目录下的so库）。">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/12/V8和项目SO库冲突/" title="V8和项目SO库冲突" itemprop="url">V8和项目SO库冲突</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-12T07:19:46.000Z" itemprop="datePublished"> 发表于 2015-08-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初步诊断，so库加入方式冲突"><span class="toc-number">2.</span> <span class="toc-text">初步诊断，so库加入方式冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加入V8方式"><span class="toc-number">2.1.</span> <span class="toc-text">加入V8方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成SO库方式"><span class="toc-number">2.2.</span> <span class="toc-text">集成SO库方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结论"><span class="toc-number">2.3.</span> <span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方法"><span class="toc-number">3.</span> <span class="toc-text">解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改V8引入方式"><span class="toc-number">3.1.</span> <span class="toc-text">修改V8引入方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三方插件"><span class="toc-number">3.2.</span> <span class="toc-text">第三方插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gradle任务方式"><span class="toc-number">3.3.</span> <span class="toc-text">Gradle任务方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">4.</span> <span class="toc-text">Ref</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="背景">背景</h2><p>在<a href="http://blog.hwangjr.com/2015/07/10/Android-%E5%AE%9E%E7%8E%B0%E6%AF%9B%E7%8E%BB%E7%92%83%E6%95%88%E6%9E%9C/" target="_blank" rel="external">毛玻璃效果</a>中，项目加入了毛玻璃，相应的会引入V8库。V8库有加入对底层的支持，包括so库等。<br>由于项目中也有加入百度推送，包括so库，在加入V8之后，启动应用会收到一个error，加载推送的so库错误。</p>
+<h2 id="初步诊断，so库加入方式冲突">初步诊断，so库加入方式冲突</h2><h3 id="加入V8方式">加入V8方式</h3><p>如果是android studio的话：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    renderscriptTargetApi <span class="number">22</span></span><br><span class="line">    renderscriptSupportModeEnabled <span class="keyword">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="集成SO库方式">集成SO库方式</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    <span class="keyword">sourceSets</span> &#123;</span><br><span class="line">        main &#123;</span><br><span class="line">            jniLibs.srcDirs = [<span class="string">'libs'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="结论">结论</h3><p>是render script的加入方式和jniLibs.srcDirs冲突，很可能被重写了，导致没有加入。</p>
+<h2 id="解决方法">解决方法</h2><p>知道是什么原因引起的，那就很好解决了。</p>
+<h3 id="修改V8引入方式">修改V8引入方式</h3><p>既然是引入V8导致的问题，那么相应的，我们可以显示的引入V8包。V8在SDK中的位置（不同版本的V8在相应的build tools的版本下）：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/android-sdk-linux/build-tools/<span class="number">22.0</span>.1</span><br></pre></td></tr></table></figure></p>
+<p>我们拷贝lib下面的jar包和packaged下面的so库，显示导入V8包，即可解决问题。</p>
+<h3 id="第三方插件">第三方插件</h3><p>有需求就有市场，强大的GITHUB上面有了GRADLE NATIVE插件<a href="https://github.com/nhachicha/android-native-dependencies" target="_blank" rel="external">android-native-dependencies</a>，专门解决so库的集成问题，包括Maven等仓库的so库拉取等。<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line">  <span class="keyword">repositories</span> &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">classpath</span> <span class="string">'com.android.tools.build:gradle:1.0.0'</span></span><br><span class="line">    <span class="keyword">classpath</span> <span class="string">'com.nabilhachicha:android-native-dependencies:0.1.2'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'android'</span></span><br><span class="line">apply plugin: <span class="string">'android-native-dependencies'</span></span><br><span class="line"></span><br><span class="line">native_dependencies &#123;</span><br><span class="line">    artifact <span class="string">'com.snappydb:snappydb-native:0.2.+:armeabi'</span></span><br><span class="line">    artifact <span class="string">'com.snappydb:snappydb-native:0.2.+:x86'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="comment">//regular Jar dependencies ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Gradle任务方式">Gradle任务方式</h3><p>其实so库就是将so库copy到特定的目录下面，来进行打包即可，那么我们直接写copy的task执行也是可以的。但是有个问题就是随着gradle的升级，很多方法可能会丢弃，那么我们就得随着gradle升级不断升级。<br><a href="https://gist.github.com/khernyo/4226923" target="_blank" rel="external">参考代码</a>：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This hack works with com.android.tools.build:gradle:1.0.0, won't work in later version without modification</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'android'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">targetCompatibility</span> = <span class="number">1.6</span></span><br><span class="line"><span class="keyword">sourceCompatibility</span> = <span class="number">1.6</span></span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">	target = <span class="string">'android-14'</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">sourceSets</span> &#123;</span><br><span class="line">		main &#123;</span><br><span class="line">			manifest.srcFile <span class="string">'AndroidManifest.xml'</span></span><br><span class="line">			java.srcDir <span class="string">'src'</span></span><br><span class="line">			res.srcDir <span class="string">'res'</span></span><br><span class="line">			assets.srcDir <span class="string">'assets'</span></span><br><span class="line">			resources.srcDir <span class="string">'src'</span></span><br><span class="line">		&#125;</span><br><span class="line">		test &#123;</span><br><span class="line">			java.srcDir <span class="string">'tests/src'</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">	<span class="keyword">compile</span> <span class="keyword">project</span>(<span class="string">':main'</span>)</span><br><span class="line">	<span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'../main/libs'</span>, <span class="keyword">include</span>: <span class="string">'*.jar'</span>)</span><br><span class="line">	<span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'../thirdparty/actionbar-sherlock/library/libs'</span>, <span class="keyword">include</span>: <span class="string">'*.jar'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">task</span> copyNativeLibs(type: <span class="keyword">Copy</span>) &#123;</span><br><span class="line">	<span class="keyword">from</span>(<span class="keyword">new</span> <span class="keyword">File</span>(<span class="keyword">project</span>(<span class="string">':main'</span>).buildDir, <span class="string">'native-libs'</span>)) &#123; <span class="keyword">include</span> <span class="string">'**/*.so'</span> &#125;</span><br><span class="line">	<span class="keyword">into</span> <span class="keyword">new</span> <span class="keyword">File</span>(buildDir, <span class="string">'native-libs'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">tasks.withType(JavaCompile) &#123; javaCompileTask -&gt; javaCompileTask.dependsOn copyNativeLibs &#125;</span><br><span class="line"></span><br><span class="line">clean.dependsOn <span class="string">'cleanCopyNativeLibs'</span></span><br><span class="line"></span><br><span class="line">tasks.withType(com.android.build.gradle.PackageApplicationTask) &#123; pkgTask -&gt;</span><br><span class="line">	pkgTask.jniDir <span class="keyword">new</span> <span class="keyword">File</span>(buildDir, <span class="string">'native-libs'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Ref">Ref</h2><p><a href="https://github.com/nhachicha/android-native-dependencies" target="_blank" rel="external">android-native-dependencies</a><br><a href="https://nhachicha.wordpress.com/2014/05/27/android-gradle-add-native-so-dependencies/" target="_blank" rel="external">Android Gradle, add native .so dependencies</a><br><a href="http://tools.android.com/tech-docs/new-build-system" target="_blank" rel="external">New Build System - Android Tools Project Site</a><br><a href="http://tools.android.com/tech-docs/new-build-system/gradle-experimental" target="_blank" rel="external">Experimental Plugin User Guide</a><br><a href="https://github.com/googlesamples/android-ndk" target="_blank" rel="external">googlesamples/android-ndk</a><br><a href="http://zhengxiaopeng.com/2014/12/13/Android-Studio-jar%E3%80%81so%E3%80%81library%E9%A1%B9%E7%9B%AE%E4%BE%9D%E8%B5%96/" target="_blank" rel="external">Android Studio Jar、so、library项目依赖</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2015/08/12/V8和项目SO库冲突/" data-title="V8和项目SO库冲突 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/08/12/AndroidStudio-快捷键/"  title="AndroidStudio 快捷键">
+ <strong>下一篇：</strong><br/> 
+ <span>AndroidStudio 快捷键
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初步诊断，so库加入方式冲突"><span class="toc-number">2.</span> <span class="toc-text">初步诊断，so库加入方式冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加入V8方式"><span class="toc-number">2.1.</span> <span class="toc-text">加入V8方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成SO库方式"><span class="toc-number">2.2.</span> <span class="toc-text">集成SO库方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结论"><span class="toc-number">2.3.</span> <span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方法"><span class="toc-number">3.</span> <span class="toc-text">解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改V8引入方式"><span class="toc-number">3.1.</span> <span class="toc-text">修改V8引入方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三方插件"><span class="toc-number">3.2.</span> <span class="toc-text">第三方插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gradle任务方式"><span class="toc-number">3.3.</span> <span class="toc-text">Gradle任务方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">4.</span> <span class="toc-text">Ref</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>13</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
