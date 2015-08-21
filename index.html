@@ -82,6 +82,91 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/21/将SOCKET代理转化为HTTP代理/" title="将SOCKET代理转化为HTTP代理" itemprop="url">将SOCKET代理转化为HTTP代理</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-21T07:39:01.000Z" itemprop="datePublished"> 发表于 2015-08-21</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>众所周知，中国伟大的墙阻碍了很多前进的脚步，特别是ANDROID SDK的更新（node啥的都不说了）。特别是最近管控比较严，就只能使用朋友的SOCKET5的服务器代理，而ANDROID SDK是无法使用SOCKET5代理，只支持HTTP代理，类似<a href="http://www.androiddevtools.cn/" target="_blank" rel="external">AndroidDevTools</a>的站点也不是很好使了，只能寻找SOCKET5转换成HTTP的方式。</p>
+<h2 id="SOCKET转HTTP">SOCKET转HTTP</h2><h3 id="DeleGate介绍">DeleGate介绍</h3><p>这里要使用到<a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>软件，支持各个平台。<br><a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>是一个多平台的简单代理服务器软件，通过本地建立各种代理服务器，包括HTTP，FTP，SOCKET等。</p>
+<blockquote>
+<p>This is a private and voluntary site that is independent of AIST, for providing support information and redistribution of DeleGate, a general purpose proxy server software developed in AIST and, more specifically, for providing voluntary-based support for users in forums, supplementary contents for guide, some experimental services and demonstrations, as well as contents mirroring some of those in the official site of DeleGate of AIST. </p>
+</blockquote>
+<h3 id="安装软件">安装软件</h3><p>新版没有找到源码，但是<a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>提供了编译之后的可执行程序。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget ftp://delegate.hpcc.jp/pub/DeleGate/bin/linux/<span class="number">9.9</span>.<span class="number">13</span>/linux2.<span class="number">6</span>-dg9_9_13.tar.gz</span><br><span class="line">tar xzf linux2.<span class="number">6</span>-dg9_9_13.tar.gz</span><br><span class="line"><span class="built_in">cd</span> dg9_9_13</span><br><span class="line">tree .</span><br></pre></td></tr></table></figure></p>
+<p>在bin目录下就是可执行程序和配置文件，整个文件目录很简洁，在subin里面也提供了setup-subin.sh脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bin</span><br><span class="line">│   ├── dg9_9_13</span><br><span class="line">│   ├── dg9_9_13.conf</span><br><span class="line">subin</span><br><span class="line">│   ├── dgbind</span><br><span class="line">│   ├── dgchroot</span><br><span class="line">│   ├── dgcpnod</span><br><span class="line">│   ├── dgdate</span><br><span class="line">│   ├── dgforkpty</span><br><span class="line">│   ├── dgpam</span><br><span class="line">│   └── setup-subin.sh</span><br></pre></td></tr></table></figure></p>
+<p>setup-subin.sh<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span><br><span class="line"></span></span><br><span class="line">SUBINS=<span class="string">"dgpam dgbind dgchroot dgcpnod"</span></span><br><span class="line">sudo sh -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">if</span> [ $? != <span class="number">0</span> ]; <span class="keyword">then</span></span><br><span class="line">  su root -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ $? != <span class="number">0</span> ]; <span class="keyword">then</span></span><br><span class="line">  su root -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">ls <span class="operator">-l</span> <span class="variable">$SUBINS</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="使用">使用</h3><p>使用方式也很简单，通过编辑bin目录下的conf文件来完成，这里以SOCKET转HTTP为例，具体需求自己查看配置文件。<br>编辑dg9_9_13.conf，新增：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mail-address of the administrator of this DeleGat</span></span><br><span class="line">ADMIN=email@email.com</span><br><span class="line"><span class="comment"># the protocol DeleGate speaks with its clients</span></span><br><span class="line">SERVER=http</span><br><span class="line"><span class="comment"># the entrance port on which DeleGate waits clients</span></span><br><span class="line">-P8080</span><br><span class="line"><span class="comment"># forwarding to a SOCKS server</span></span><br><span class="line">SOCKS=<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">80</span></span><br></pre></td></tr></table></figure></p>
+<p>配置完成后，直接执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./dg9_9_13</span><br><span class="line"><span class="comment"># 如果没有权限，给权限即可</span></span><br><span class="line">sudo chmod +x dg9_9_13</span><br></pre></td></tr></table></figure></p>
+<p>查看是否在运行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep dg9</span><br><span class="line">hwangjr   <span class="number">4595</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">53340</span>  <span class="number">3436</span> ?        Ss   <span class="number">11</span>:<span class="number">10</span>   <span class="number">0</span>:<span class="number">00</span> ./dg9_9_13 -&#123;<span class="number">000</span>&#125;[RPM=<span class="number">0.00</span>(<span class="number">0.0</span> <span class="number">0.0</span> <span class="number">0.0</span>),IDLE=<span class="number">15</span>s]-P8080 -- --------------------</span><br><span class="line">hwangjr   <span class="number">4601</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">15952</span>   <span class="number">940</span> pts/<span class="number">14</span>   S+   <span class="number">11</span>:<span class="number">10</span>   <span class="number">0</span>:<span class="number">00</span> grep --color=auto dg9</span><br></pre></td></tr></table></figure></p>
+<p>停止运行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./dg9_9_13 -P8080 -F<span class="built_in">kill</span></span><br><span class="line"><span class="comment"># 暴力</span></span><br><span class="line"><span class="built_in">kill</span> -<span class="number">9</span> <span class="number">4595</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="配置ANDROID_SDK">配置ANDROID SDK</h3><p>回到我们的场景，配置ANDROID SDK，基本按照我们的思路，直接配置本地的路由和端口即可。<br>打开ANDROID SDK，Tools -&gt; Options，配置HTTP PROXY SERVER为：127.0.0.1，端口为8080，然后即可畅游谷歌网络。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">12</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52791</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">15</span> INFO     connecting dl-ssl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52796</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">17</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52799</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">12</span>:<span class="number">03</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52809</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">18</span>:<span class="number">57</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52821</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">50</span>:<span class="number">02</span> INFO     connecting ssl.google-analytics.com:<span class="number">443</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52962</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="ShadowSocks">ShadowSocks</h3><p>顺带简单介绍下<a href="https://github.com/shadowsocks/shadowsocks" target="_blank" rel="external">shadowsocks/shadowsocks</a>，其功能在官网已经介绍：</p>
+<blockquote>
+<p>A fast tunnel proxy that helps you bypass firewalls.<br>Features:<br>TCP &amp; UDP support<br>User management API<br>TCP Fast Open<br>Workers and graceful restart<br>Destination IP blacklist</p>
+</blockquote>
+<p>安装（ubuntu）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
+<p>使用：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">usage: sslocal [OPTION]...</span><br><span class="line">A fast tunnel proxy that helps you bypass firewalls.</span><br><span class="line"></span><br><span class="line">You can supply configurations via either config file or <span class="built_in">command</span> line arguments.</span><br><span class="line"></span><br><span class="line">Proxy options:</span><br><span class="line">  -c CONFIG              path to config file</span><br><span class="line">  <span class="operator">-s</span> SERVER_ADDR         server address</span><br><span class="line">  -p SERVER_PORT         server port, default: <span class="number">8388</span></span><br><span class="line">  -b LOCAL_ADDR          <span class="built_in">local</span> binding address, default: <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">  <span class="operator">-l</span> LOCAL_PORT          <span class="built_in">local</span> port, default: <span class="number">1080</span></span><br><span class="line">  -k PASSWORD            password</span><br><span class="line">  -m METHOD              encryption method, default: aes-<span class="number">256</span>-cfb</span><br><span class="line">  -t TIMEOUT             timeout <span class="keyword">in</span> seconds, default: <span class="number">300</span></span><br><span class="line">  --fast-open            use TCP_FASTOPEN, requires Linux <span class="number">3.7</span>+</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line">  -h, --help             show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  <span class="operator">-d</span> start/stop/restart  daemon mode</span><br><span class="line">  --pid-file PID_FILE    pid file <span class="keyword">for</span> daemon mode</span><br><span class="line">  --log-file LOG_FILE    <span class="built_in">log</span> file <span class="keyword">for</span> daemon mode</span><br><span class="line">  --user USER            username to run as</span><br><span class="line">  -v, -vv                verbose mode</span><br><span class="line">  -q, -qq                quiet mode, only show warnings/errors</span><br><span class="line">  --version              show version information</span><br><span class="line"></span><br><span class="line">Online <span class="built_in">help</span>: &lt;https://github.com/shadowsocks/shadowsocks&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">sudo sslocal <span class="operator">-s</span> SERVER_ADDR -p SERVER_PORT -b LOCAL_ADDR <span class="operator">-l</span> LOCAL_PORT -k PASSWORD -m METHOD</span><br><span class="line"></span><br><span class="line"><span class="comment"># LOG</span></span><br><span class="line">sudo less /var/<span class="built_in">log</span>/shadowsocks.log</span><br></pre></td></tr></table></figure>
+<p>更多详细可以参考文档<a href="https://github.com/shadowsocks/shadowsocks" target="_blank" rel="external">shadowsocks/shadowsocks</a>。</p>
+<h2 id="总结">总结</h2><p>伟大的墙。</p>
+<h2 id="REF">REF</h2><p><a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a><br><a href="http://www.delegate.org/documents/" target="_blank" rel="external">Documents on DeleGate</a><br><a href="ftp://ftp.delegate.org/pub/DeleGate/" target="_blank" rel="external">FTP on DeleGate</a><br><a href="http://www.delegate.org/delegate/build.shtml" target="_blank" rel="external">Building DeleGate</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/21/将SOCKET代理转化为HTTP代理/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/18/GitHub-GitBook-Markdown来写一本自己的书/" title="GitHub + GitBook + Markdown来写一本自己的书" itemprop="url">GitHub + GitBook + Markdown来写一本自己的书</a>
   </h1>
   <p class="article-author">By
@@ -1387,81 +1472,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/08/Android-Studio-With-SVN/" title="Android Studio With SVN" itemprop="url">Android Studio With SVN</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-08T12:17:08.000Z" itemprop="datePublished"> 发表于 2015-07-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="环境">环境</h2><p>系统使用Ubuntu 12.04，SVN版本1.8.8，AS使用最新稳定1.2.2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">svn, version <span class="number">1.8</span>.<span class="number">8</span> (r1568071)</span><br><span class="line">   compiled Aug <span class="number">13</span> <span class="number">2014</span>, <span class="number">17</span>:<span class="number">12</span>:<span class="number">39</span> on x86_64-pc-linux-gnu</span><br></pre></td></tr></table></figure></p>
-<h2 id="配置AS">配置AS</h2><p>配置AS很简单。<br>1、配置SVN执行目录：<br>File -&gt; Settings -&gt; Version Control -&gt; Subversion -&gt; General Tab里面的Use command line client，如果你已经安装SVN，AS应该默认是配置好的。<br>2、上传你的文件到SVN：<br>VCS -&gt; Import into Version Control -&gt; Import into Subversion…之后就可在线上版本查看到文件已经同步。<br>3、为项目新增SVN管理：<br>VCS -&gt; Enable Version Control Integration… 简单配置，即可在面板上有UP和CI等版本操作的图标。<br>至此，AS配置完成。</p>
-<h2 id="设置SVN_IGNORE">设置SVN IGNORE</h2><p>一直不知道SVN如何设置忽略命令，网上看的很多都是不准确或者理解有偏差。<br>1、设置全局忽略文件列表：<br>编辑~/.subversion/config文件，修改此文件中的global-ignores，里面也有提供实例。<br>当然，如果你想修改所有用户的ignore，文件目录在/etc/subversion/config。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo</span></span><br><span class="line"><span class="comment">#   *.rej *~ #*# .#* .*.swp .DS_Store</span></span><br></pre></td></tr></table></figure></p>
-<p>2、设置某目录svn ignore：<br>关键是使用svn的property set命令，此命令不可递归，只能设置当前目录下的ignore规则。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore path</span><br><span class="line"><span class="comment"># svn propedit svn:ignore path</span></span><br><span class="line">svn pd svn:ignore path</span><br><span class="line"><span class="comment"># svn propdel svn:ignore path</span></span><br><span class="line">svn ps svn:ignore path</span><br><span class="line"><span class="comment"># svn propset svn:ignore path</span></span><br></pre></td></tr></table></figure></p>
-<p>如果当前目录结构为：<br>.<br>|<br>|-Android<br>|   |<br>|   - trunk<br>|   - branches<br>|   - tags<br>|-iOS<br>想要过滤trunk目录下某些文件或目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore Android/trunk</span><br></pre></td></tr></table></figure></p>
-<p>之后会打开编辑窗口，输入下方文件即可：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>附带完整svn ignore命令（svn st命令，可以查看当前状态）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> project-path</span><br><span class="line">svn pe Android/trunk</span><br><span class="line">svn pe Android/trunk/.idea</span><br><span class="line">svn pe Android/trunk/app</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/.idea下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workspace.xml</span><br><span class="line">libraries</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/app下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build</span><br></pre></td></tr></table></figure></p>
-<p>设置完成，使用svn ci -m ‘ignore files’即可。<br>附带.ignore文件为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Built application files</span></span><br><span class="line">*.apk</span><br><span class="line">*.ap_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Files for the Dalvik VM</span></span><br><span class="line">*.dex</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java class files</span></span><br><span class="line">*.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generated files</span></span><br><span class="line">bin/</span><br><span class="line">gen/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Gradle files</span></span><br><span class="line">.gradle/</span><br><span class="line">build/</span><br><span class="line">/*/build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local configuration file (sdk path, etc)</span></span><br><span class="line">local.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># Proguard folder generated by Eclipse</span></span><br><span class="line">proguard/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Log Files</span></span><br><span class="line">*.log</span><br><span class="line"></span><br><span class="line">/.idea/workspace.xml</span><br><span class="line">/.idea/libraries</span><br><span class="line">.DS_Store</span><br><span class="line">/capture</span><br></pre></td></tr></table></figure></p>
-<p>附带命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn <span class="built_in">export</span> dir dir_bak</span><br><span class="line">svn rm dir</span><br><span class="line">svn commit -m <span class="string">'delete dir'</span></span><br><span class="line">mv dir-bak dir</span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile1</span><br><span class="line">ignorefile2</span><br><span class="line">ignorefile3'</span> dir</span><br></pre></td></tr></table></figure></p>
-<h2 id="SVN常用命令">SVN常用命令</h2><p>Show The Code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">svn co svn://xxx</span><br><span class="line">svn checkout svn://</span><br><span class="line">svn <span class="built_in">export</span> [-r version] svn://</span><br><span class="line">svn add file</span><br><span class="line">svn commit -m <span class="string">''</span></span><br><span class="line">svn ci -m <span class="string">''</span></span><br><span class="line">svn up</span><br><span class="line">svn update</span><br><span class="line">svn update -r <span class="number">200</span> file</span><br><span class="line">svn delete svn:// -m <span class="string">''</span></span><br><span class="line">svn delete file</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/08/Android-Studio-With-SVN/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1496,7 +1506,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>2</sup></a></li>
 		  
 		
 		  
@@ -1517,11 +1527,15 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>13</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>14</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Android/" title="Android">Android<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>2</sup></a></li>
 			
 		
 			
@@ -1538,10 +1552,6 @@
 		
 			
 				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
 			
 		
 		</ul>

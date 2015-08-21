@@ -1,0 +1,554 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>将SOCKET代理转化为HTTP代理 | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="由于ANDROID SDK只能接受HTTP代理，而我使用的只支持SOCKET5，故只能转化为HTTP代理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="将SOCKET代理转化为HTTP代理">
+<meta property="og:url" content="https://hwangjr.github.io/2015/08/21/将SOCKET代理转化为HTTP代理/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="由于ANDROID SDK只能接受HTTP代理，而我使用的只支持SOCKET5，故只能转化为HTTP代理。">
+<meta property="og:updated_time" content="2015-08-21T07:39:25.302Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="将SOCKET代理转化为HTTP代理">
+<meta name="twitter:description" content="由于ANDROID SDK只能接受HTTP代理，而我使用的只支持SOCKET5，故只能转化为HTTP代理。">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/21/将SOCKET代理转化为HTTP代理/" title="将SOCKET代理转化为HTTP代理" itemprop="url">将SOCKET代理转化为HTTP代理</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-21T07:39:01.000Z" itemprop="datePublished"> 发表于 2015-08-21</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SOCKET转HTTP"><span class="toc-number">2.</span> <span class="toc-text">SOCKET转HTTP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DeleGate介绍"><span class="toc-number">2.1.</span> <span class="toc-text">DeleGate介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装软件"><span class="toc-number">2.2.</span> <span class="toc-text">安装软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用"><span class="toc-number">2.3.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置ANDROID_SDK"><span class="toc-number">2.4.</span> <span class="toc-text">配置ANDROID SDK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ShadowSocks"><span class="toc-number">2.5.</span> <span class="toc-text">ShadowSocks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#REF"><span class="toc-number">4.</span> <span class="toc-text">REF</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="背景">背景</h2><p>众所周知，中国伟大的墙阻碍了很多前进的脚步，特别是ANDROID SDK的更新（node啥的都不说了）。特别是最近管控比较严，就只能使用朋友的SOCKET5的服务器代理，而ANDROID SDK是无法使用SOCKET5代理，只支持HTTP代理，类似<a href="http://www.androiddevtools.cn/" target="_blank" rel="external">AndroidDevTools</a>的站点也不是很好使了，只能寻找SOCKET5转换成HTTP的方式。</p>
+<h2 id="SOCKET转HTTP">SOCKET转HTTP</h2><h3 id="DeleGate介绍">DeleGate介绍</h3><p>这里要使用到<a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>软件，支持各个平台。<br><a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>是一个多平台的简单代理服务器软件，通过本地建立各种代理服务器，包括HTTP，FTP，SOCKET等。</p>
+<blockquote>
+<p>This is a private and voluntary site that is independent of AIST, for providing support information and redistribution of DeleGate, a general purpose proxy server software developed in AIST and, more specifically, for providing voluntary-based support for users in forums, supplementary contents for guide, some experimental services and demonstrations, as well as contents mirroring some of those in the official site of DeleGate of AIST. </p>
+</blockquote>
+<h3 id="安装软件">安装软件</h3><p>新版没有找到源码，但是<a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>提供了编译之后的可执行程序。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget ftp://delegate.hpcc.jp/pub/DeleGate/bin/linux/<span class="number">9.9</span>.<span class="number">13</span>/linux2.<span class="number">6</span>-dg9_9_13.tar.gz</span><br><span class="line">tar xzf linux2.<span class="number">6</span>-dg9_9_13.tar.gz</span><br><span class="line"><span class="built_in">cd</span> dg9_9_13</span><br><span class="line">tree .</span><br></pre></td></tr></table></figure></p>
+<p>在bin目录下就是可执行程序和配置文件，整个文件目录很简洁，在subin里面也提供了setup-subin.sh脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bin</span><br><span class="line">│   ├── dg9_9_13</span><br><span class="line">│   ├── dg9_9_13.conf</span><br><span class="line">subin</span><br><span class="line">│   ├── dgbind</span><br><span class="line">│   ├── dgchroot</span><br><span class="line">│   ├── dgcpnod</span><br><span class="line">│   ├── dgdate</span><br><span class="line">│   ├── dgforkpty</span><br><span class="line">│   ├── dgpam</span><br><span class="line">│   └── setup-subin.sh</span><br></pre></td></tr></table></figure></p>
+<p>setup-subin.sh<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span><br><span class="line"></span></span><br><span class="line">SUBINS=<span class="string">"dgpam dgbind dgchroot dgcpnod"</span></span><br><span class="line">sudo sh -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">if</span> [ $? != <span class="number">0</span> ]; <span class="keyword">then</span></span><br><span class="line">  su root -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ $? != <span class="number">0</span> ]; <span class="keyword">then</span></span><br><span class="line">  su root -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">ls <span class="operator">-l</span> <span class="variable">$SUBINS</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="使用">使用</h3><p>使用方式也很简单，通过编辑bin目录下的conf文件来完成，这里以SOCKET转HTTP为例，具体需求自己查看配置文件。<br>编辑dg9_9_13.conf，新增：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mail-address of the administrator of this DeleGat</span></span><br><span class="line">ADMIN=email@email.com</span><br><span class="line"><span class="comment"># the protocol DeleGate speaks with its clients</span></span><br><span class="line">SERVER=http</span><br><span class="line"><span class="comment"># the entrance port on which DeleGate waits clients</span></span><br><span class="line">-P8080</span><br><span class="line"><span class="comment"># forwarding to a SOCKS server</span></span><br><span class="line">SOCKS=<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">80</span></span><br></pre></td></tr></table></figure></p>
+<p>配置完成后，直接执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./dg9_9_13</span><br><span class="line"><span class="comment"># 如果没有权限，给权限即可</span></span><br><span class="line">sudo chmod +x dg9_9_13</span><br></pre></td></tr></table></figure></p>
+<p>查看是否在运行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep dg9</span><br><span class="line">hwangjr   <span class="number">4595</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">53340</span>  <span class="number">3436</span> ?        Ss   <span class="number">11</span>:<span class="number">10</span>   <span class="number">0</span>:<span class="number">00</span> ./dg9_9_13 -&#123;<span class="number">000</span>&#125;[RPM=<span class="number">0.00</span>(<span class="number">0.0</span> <span class="number">0.0</span> <span class="number">0.0</span>),IDLE=<span class="number">15</span>s]-P8080 -- --------------------</span><br><span class="line">hwangjr   <span class="number">4601</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">15952</span>   <span class="number">940</span> pts/<span class="number">14</span>   S+   <span class="number">11</span>:<span class="number">10</span>   <span class="number">0</span>:<span class="number">00</span> grep --color=auto dg9</span><br></pre></td></tr></table></figure></p>
+<p>停止运行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./dg9_9_13 -P8080 -F<span class="built_in">kill</span></span><br><span class="line"><span class="comment"># 暴力</span></span><br><span class="line"><span class="built_in">kill</span> -<span class="number">9</span> <span class="number">4595</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="配置ANDROID_SDK">配置ANDROID SDK</h3><p>回到我们的场景，配置ANDROID SDK，基本按照我们的思路，直接配置本地的路由和端口即可。<br>打开ANDROID SDK，Tools -&gt; Options，配置HTTP PROXY SERVER为：127.0.0.1，端口为8080，然后即可畅游谷歌网络。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">12</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52791</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">15</span> INFO     connecting dl-ssl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52796</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">17</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52799</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">12</span>:<span class="number">03</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52809</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">18</span>:<span class="number">57</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52821</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">50</span>:<span class="number">02</span> INFO     connecting ssl.google-analytics.com:<span class="number">443</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52962</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="ShadowSocks">ShadowSocks</h3><p>顺带简单介绍下<a href="https://github.com/shadowsocks/shadowsocks" target="_blank" rel="external">shadowsocks/shadowsocks</a>，其功能在官网已经介绍：</p>
+<blockquote>
+<p>A fast tunnel proxy that helps you bypass firewalls.<br>Features:<br>TCP &amp; UDP support<br>User management API<br>TCP Fast Open<br>Workers and graceful restart<br>Destination IP blacklist</p>
+</blockquote>
+<p>安装（ubuntu）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
+<p>使用：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">usage: sslocal [OPTION]...</span><br><span class="line">A fast tunnel proxy that helps you bypass firewalls.</span><br><span class="line"></span><br><span class="line">You can supply configurations via either config file or <span class="built_in">command</span> line arguments.</span><br><span class="line"></span><br><span class="line">Proxy options:</span><br><span class="line">  -c CONFIG              path to config file</span><br><span class="line">  <span class="operator">-s</span> SERVER_ADDR         server address</span><br><span class="line">  -p SERVER_PORT         server port, default: <span class="number">8388</span></span><br><span class="line">  -b LOCAL_ADDR          <span class="built_in">local</span> binding address, default: <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">  <span class="operator">-l</span> LOCAL_PORT          <span class="built_in">local</span> port, default: <span class="number">1080</span></span><br><span class="line">  -k PASSWORD            password</span><br><span class="line">  -m METHOD              encryption method, default: aes-<span class="number">256</span>-cfb</span><br><span class="line">  -t TIMEOUT             timeout <span class="keyword">in</span> seconds, default: <span class="number">300</span></span><br><span class="line">  --fast-open            use TCP_FASTOPEN, requires Linux <span class="number">3.7</span>+</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line">  -h, --help             show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  <span class="operator">-d</span> start/stop/restart  daemon mode</span><br><span class="line">  --pid-file PID_FILE    pid file <span class="keyword">for</span> daemon mode</span><br><span class="line">  --log-file LOG_FILE    <span class="built_in">log</span> file <span class="keyword">for</span> daemon mode</span><br><span class="line">  --user USER            username to run as</span><br><span class="line">  -v, -vv                verbose mode</span><br><span class="line">  -q, -qq                quiet mode, only show warnings/errors</span><br><span class="line">  --version              show version information</span><br><span class="line"></span><br><span class="line">Online <span class="built_in">help</span>: &lt;https://github.com/shadowsocks/shadowsocks&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">sudo sslocal <span class="operator">-s</span> SERVER_ADDR -p SERVER_PORT -b LOCAL_ADDR <span class="operator">-l</span> LOCAL_PORT -k PASSWORD -m METHOD</span><br><span class="line"></span><br><span class="line"><span class="comment"># LOG</span></span><br><span class="line">sudo less /var/<span class="built_in">log</span>/shadowsocks.log</span><br></pre></td></tr></table></figure>
+<p>更多详细可以参考文档<a href="https://github.com/shadowsocks/shadowsocks" target="_blank" rel="external">shadowsocks/shadowsocks</a>。</p>
+<h2 id="总结">总结</h2><p>伟大的墙。</p>
+<h2 id="REF">REF</h2><p><a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a><br><a href="http://www.delegate.org/documents/" target="_blank" rel="external">Documents on DeleGate</a><br><a href="ftp://ftp.delegate.org/pub/DeleGate/" target="_blank" rel="external">FTP on DeleGate</a><br><a href="http://www.delegate.org/delegate/build.shtml" target="_blank" rel="external">Building DeleGate</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2015/08/21/将SOCKET代理转化为HTTP代理/" data-title="将SOCKET代理转化为HTTP代理 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/08/18/GitHub-GitBook-Markdown来写一本自己的书/"  title="GitHub + GitBook + Markdown来写一本自己的书">
+ <strong>下一篇：</strong><br/> 
+ <span>GitHub + GitBook + Markdown来写一本自己的书
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SOCKET转HTTP"><span class="toc-number">2.</span> <span class="toc-text">SOCKET转HTTP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DeleGate介绍"><span class="toc-number">2.1.</span> <span class="toc-text">DeleGate介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装软件"><span class="toc-number">2.2.</span> <span class="toc-text">安装软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用"><span class="toc-number">2.3.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置ANDROID_SDK"><span class="toc-number">2.4.</span> <span class="toc-text">配置ANDROID SDK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ShadowSocks"><span class="toc-number">2.5.</span> <span class="toc-text">ShadowSocks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#REF"><span class="toc-number">4.</span> <span class="toc-text">REF</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>14</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
