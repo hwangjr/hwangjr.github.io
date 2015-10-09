@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Life is wonderful!]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="https://hwangjr.github.io//"/>
-  <updated>2015-08-21T07:39:25.302Z</updated>
+  <updated>2015-10-09T06:38:44.370Z</updated>
   <id>https://hwangjr.github.io//</id>
   
   <author>
@@ -14,6 +14,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Supervisor Basic Usage]]></title>
+    <link href="https://hwangjr.github.io/2015/10/09/Supervisor-Basic-Usage/"/>
+    <id>https://hwangjr.github.io/2015/10/09/Supervisor-Basic-Usage/</id>
+    <published>2015-10-09T06:38:05.000Z</published>
+    <updated>2015-10-09T06:38:44.370Z</updated>
+    <content type="html"><![CDATA[<p><a href="http://supervisord.org/" target="_blank" rel="external">Supervisor</a> is a process control system, it is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.</p>
+<p>It shares some of the same goals of programs like <a href="http://supervisord.org/glossary.html#term-launchd" target="_blank" rel="external">launchd</a>, <a href="http://supervisord.org/glossary.html#term-daemontools" target="_blank" rel="external">daemontools</a>, and <a href="http://supervisord.org/glossary.html#term-runit" target="_blank" rel="external">runit</a>. Unlike some of these programs, it is not meant to be run as a substitute for init as “process id 1”. Instead it is meant to be used to control processes related to a project or a customer, and is meant to start like any other program at boot time.</p>
+<h2 id="Install">Install</h2><p>Sample for centos:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Maybe u need to install python-setuptools or pip</span></span><br><span class="line"><span class="comment">## yum install python-setuptools &amp;&amp; easy_install pip</span></span><br><span class="line">easy_install supervisor</span><br><span class="line"><span class="comment">## or </span></span><br><span class="line">pip install supervisor</span><br></pre></td></tr></table></figure></p>
+<h2 id="Commands">Commands</h2><p>This is some common commands:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for all service</span></span><br><span class="line">supervisorctl start all</span><br><span class="line">supervisorctl stop all</span><br><span class="line">supervisorctl restart all</span><br><span class="line"></span><br><span class="line"><span class="comment"># for service 'ss'</span></span><br><span class="line">supervisorctl stop ss</span><br><span class="line">supervisorctl start ss</span><br><span class="line">supervisorctl restart ss</span><br></pre></td></tr></table></figure></p>
+<h2 id="Usage">Usage</h2><p><strong>STEP 1: Init the config file </strong></p>
+<p>First of all, we need a config file, supervisor provider us a sample:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## This will create a supervisord.conf file under /etc folder</span></span><br><span class="line"><span class="built_in">echo</span>_supervisord_conf &gt; /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p><strong>STEP 2: Setup config </strong></p>
+<p>Second, we need to config the file, add the code below to the end of conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># if this config is not correct, it may occur supervisor start fail</span></span><br><span class="line">[program:ss]</span><br><span class="line"><span class="built_in">command</span> = ssserver -c /etc/ss.json</span><br><span class="line">user = root</span><br><span class="line">autostart = <span class="literal">true</span></span><br><span class="line">autorestart = <span class="literal">true</span></span><br><span class="line">stderr_logfile = /var/<span class="built_in">log</span>/supervisor/ss.stderr.log</span><br><span class="line">stdout_logfile = /var/<span class="built_in">log</span>/supervisor/ss.stdout.log</span><br></pre></td></tr></table></figure></p>
+<p>More info see : <a href="http://supervisord.org/configuration.html#programx-section" target="_blank" rel="external">Configuration File — Supervisor 3.1.3 documentation</a></p>
+<p><strong>STEP 3: Run Supervisor</strong></p>
+<p>Finally, run the supervisor:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run supervisor with conf file</span></span><br><span class="line">supervisord -c /etc/supervisord.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># run without conf file, will search for the default conf file by:</span></span><br><span class="line"><span class="comment"># $CWD/supervisord.conf</span></span><br><span class="line"><span class="comment"># $CWD/etc/supervisord.conf</span></span><br><span class="line"><span class="comment"># /etc/supervisord.conf</span></span><br><span class="line">supervisord</span><br></pre></td></tr></table></figure></p>
+<p>If we modify the conf file, we also can update the conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl update</span><br></pre></td></tr></table></figure></p>
+<h2 id="Run_on_startup">Run on startup</h2><p>If you are using a distribution-packaged version of Supervisor, it should already be integrated into the service management infrastructure of your distribution.</p>
+<p>There are user-contributed scripts for various operating systems at: <a href="https://github.com/Supervisor/initscripts" target="_blank" rel="external">Supervisor/initscripts</a></p>
+<p>OR :<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/rc.local</span><br><span class="line"></span><br><span class="line"><span class="comment"># add this before exit</span></span><br><span class="line">supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<h2 id="Manage_on_web">Manage on web</h2><p>U can manage the service remote, just modify the conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[inet_http_server]         ; inet (TCP) server disabled by default</span><br><span class="line">port=<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9001</span>        ; (ip_address:port specifier, *:port <span class="keyword">for</span> all iface)</span><br><span class="line">username=user              ; (default is no username (open server))</span><br><span class="line">password=<span class="number">123</span>               ; (default is no password (open server))</span><br></pre></td></tr></table></figure></p>
+<p>and reload conf:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl reload</span><br></pre></td></tr></table></figure></p>
+<h2 id="END">END</h2><p>Just so easy, Supervisor is very fantastic, enjoy it.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Introduction about supervisor.]]>
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://hwangjr.github.io/tags/Linux/"/>
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Linux" scheme="https://hwangjr.github.io/categories/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[将SOCKET代理转化为HTTP代理]]></title>
