@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Supervisor Basic Usage | HwangJR&#39;s Blog</title>
+    <title>Gradle查询/排除依赖 | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="Introduction about supervisor.">
+    <meta name="description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Supervisor Basic Usage">
-<meta property="og:url" content="https://hwangjr.github.io/2015/10/09/Supervisor-Basic-Usage/index.html">
+<meta property="og:title" content="Gradle查询/排除依赖">
+<meta property="og:url" content="https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="Introduction about supervisor.">
-<meta property="og:updated_time" content="2015-10-09T06:38:44.370Z">
+<meta property="og:description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
+<meta property="og:updated_time" content="2015-10-23T10:30:16.389Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Supervisor Basic Usage">
-<meta name="twitter:description" content="Introduction about supervisor.">
+<meta name="twitter:title" content="Gradle查询/排除依赖">
+<meta name="twitter:description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/09/Supervisor-Basic-Usage/" title="Supervisor Basic Usage" itemprop="url">Supervisor Basic Usage</a>
+      <a href="/2015/10/23/Gradle查询-排除依赖/" title="Gradle查询/排除依赖" itemprop="url">Gradle查询/排除依赖</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-09T06:38:05.000Z" itemprop="datePublished"> 发表于 2015-10-09</time>
+    <time datetime="2015-10-23T10:29:58.000Z" itemprop="datePublished"> 发表于 2015-10-23</time>
     
   </p>
 </header>
@@ -97,28 +97,12 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install"><span class="toc-number">1.</span> <span class="toc-text">Install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Commands"><span class="toc-number">2.</span> <span class="toc-text">Commands</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">3.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Run_on_startup"><span class="toc-number">4.</span> <span class="toc-text">Run on startup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Manage_on_web"><span class="toc-number">5.</span> <span class="toc-text">Manage on web</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#END"><span class="toc-number">6.</span> <span class="toc-text">END</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p><a href="http://supervisord.org/" target="_blank" rel="external">Supervisor</a> is a process control system, it is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.</p>
-<p>It shares some of the same goals of programs like <a href="http://supervisord.org/glossary.html#term-launchd" target="_blank" rel="external">launchd</a>, <a href="http://supervisord.org/glossary.html#term-daemontools" target="_blank" rel="external">daemontools</a>, and <a href="http://supervisord.org/glossary.html#term-runit" target="_blank" rel="external">runit</a>. Unlike some of these programs, it is not meant to be run as a substitute for init as “process id 1”. Instead it is meant to be used to control processes related to a project or a customer, and is meant to start like any other program at boot time.</p>
-<h2 id="Install">Install</h2><p>Sample for centos:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Maybe u need to install python-setuptools or pip</span></span><br><span class="line"><span class="comment">## yum install python-setuptools &amp;&amp; easy_install pip</span></span><br><span class="line">easy_install supervisor</span><br><span class="line"><span class="comment">## or </span></span><br><span class="line">pip install supervisor</span><br></pre></td></tr></table></figure></p>
-<h2 id="Commands">Commands</h2><p>This is some common commands:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for all service</span></span><br><span class="line">supervisorctl start all</span><br><span class="line">supervisorctl stop all</span><br><span class="line">supervisorctl restart all</span><br><span class="line"></span><br><span class="line"><span class="comment"># for service 'ss'</span></span><br><span class="line">supervisorctl stop ss</span><br><span class="line">supervisorctl start ss</span><br><span class="line">supervisorctl restart ss</span><br></pre></td></tr></table></figure></p>
-<h2 id="Usage">Usage</h2><p><strong>STEP 1: Init the config file </strong></p>
-<p>First of all, we need a config file, supervisor provider us a sample:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## This will create a supervisord.conf file under /etc folder</span></span><br><span class="line"><span class="built_in">echo</span>_supervisord_conf &gt; /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<p><strong>STEP 2: Setup config </strong></p>
-<p>Second, we need to config the file, add the code below to the end of conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># if this config is not correct, it may occur supervisor start fail</span></span><br><span class="line">[program:ss]</span><br><span class="line"><span class="built_in">command</span> = ssserver -c /etc/ss.json</span><br><span class="line">user = root</span><br><span class="line">autostart = <span class="literal">true</span></span><br><span class="line">autorestart = <span class="literal">true</span></span><br><span class="line">stderr_logfile = /var/<span class="built_in">log</span>/supervisor/ss.stderr.log</span><br><span class="line">stdout_logfile = /var/<span class="built_in">log</span>/supervisor/ss.stdout.log</span><br></pre></td></tr></table></figure></p>
-<p>More info see : <a href="http://supervisord.org/configuration.html#programx-section" target="_blank" rel="external">Configuration File — Supervisor 3.1.3 documentation</a></p>
-<p><strong>STEP 3: Run Supervisor</strong></p>
-<p>Finally, run the supervisor:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run supervisor with conf file</span></span><br><span class="line">supervisord -c /etc/supervisord.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># run without conf file, will search for the default conf file by:</span></span><br><span class="line"><span class="comment"># $CWD/supervisord.conf</span></span><br><span class="line"><span class="comment"># $CWD/etc/supervisord.conf</span></span><br><span class="line"><span class="comment"># /etc/supervisord.conf</span></span><br><span class="line">supervisord</span><br></pre></td></tr></table></figure></p>
-<p>If we modify the conf file, we also can update the conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl update</span><br></pre></td></tr></table></figure></p>
-<h2 id="Run_on_startup">Run on startup</h2><p>If you are using a distribution-packaged version of Supervisor, it should already be integrated into the service management infrastructure of your distribution.</p>
-<p>There are user-contributed scripts for various operating systems at: <a href="https://github.com/Supervisor/initscripts" target="_blank" rel="external">Supervisor/initscripts</a></p>
-<p>OR :<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/rc.local</span><br><span class="line"></span><br><span class="line"><span class="comment"># add this before exit</span></span><br><span class="line">supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<h2 id="Manage_on_web">Manage on web</h2><p>U can manage the service remote, just modify the conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[inet_http_server]         ; inet (TCP) server disabled by default</span><br><span class="line">port=<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9001</span>        ; (ip_address:port specifier, *:port <span class="keyword">for</span> all iface)</span><br><span class="line">username=user              ; (default is no username (open server))</span><br><span class="line">password=<span class="number">123</span>               ; (default is no password (open server))</span><br></pre></td></tr></table></figure></p>
-<p>and reload conf:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl reload</span><br></pre></td></tr></table></figure></p>
-<h2 id="END">END</h2><p>Just so easy, Supervisor is very fantastic, enjoy it.</p>
+		<p>使用Gradle编译项目时，可使用此排查依赖包冲突。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查看项目库依赖</span></span><br><span class="line">gradle -q dependencies plugin_framework:dependencies —configuration compile</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -126,13 +110,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
   </div>
 
 </div>
@@ -141,7 +125,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://hwangjr.github.io/2015/10/09/Supervisor-Basic-Usage/" data-title="Supervisor Basic Usage | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/" data-title="Gradle查询/排除依赖 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -155,18 +139,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/10/23/CentOS6-5-配置Subversion/" title="CentOS6.5 配置Subversion">
+ <a href="/2015/10/23/阿里CentOS-6-iptables配置/" title="阿里CentOS 6 iptables配置">
   <strong>上一篇：</strong><br/>
   <span>
-  CentOS6.5 配置Subversion</span>
+  阿里CentOS 6 iptables配置</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/08/21/将SOCKET代理转化为HTTP代理/"  title="将SOCKET代理转化为HTTP代理">
+<a href="/2015/10/23/CentOS6-5-配置Subversion/"  title="CentOS6.5 配置Subversion">
  <strong>下一篇：</strong><br/> 
- <span>将SOCKET代理转化为HTTP代理
+ <span>CentOS6.5 配置Subversion
 </span>
 </a>
 </div>
@@ -187,7 +171,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install"><span class="toc-number">1.</span> <span class="toc-text">Install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Commands"><span class="toc-number">2.</span> <span class="toc-text">Commands</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">3.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Run_on_startup"><span class="toc-number">4.</span> <span class="toc-text">Run on startup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Manage_on_web"><span class="toc-number">5.</span> <span class="toc-text">Manage on web</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#END"><span class="toc-number">6.</span> <span class="toc-text">END</span></a></li></ol>
+ 
  
   </div>
 

@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://hwangjr.github.io/2015/06/15/CentOS-7-Firewalld-Basic-Usage/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
 <meta property="og:description" content="Introduction about CentOS 7 Firewalld">
-<meta property="og:updated_time" content="2015-06-15T04:14:38.163Z">
+<meta property="og:updated_time" content="2015-10-13T01:45:06.554Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS 7 Firewalld Basic Usage">
 <meta name="twitter:description" content="Introduction about CentOS 7 Firewalld">
@@ -102,7 +102,7 @@
 		</div>
 		
 		<p>CentOS 7 has change its firewall manager to firewalld, this will discuss about the usage of this tool.<br>Next, i will add a jenkins and a docker registry service.</p>
-<h2 id="Usage">Usage</h2><p>The basic command:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># query port 80</span></span><br><span class="line">firewall-cmd --query-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># list all</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line">firewall-cmd --zone=public --list-services</span><br><span class="line">firewall-cmd --list-ports</span><br><span class="line"><span class="comment"># add port</span></span><br><span class="line">firewall-cmd --add-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># help</span></span><br><span class="line">firewall-cmd --help</span><br></pre></td></tr></table></figure></p>
+<h2 id="Usage">Usage</h2><p>The basic command:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># query port 80</span></span><br><span class="line">firewall-cmd --query-port=<span class="number">80</span>/tcp</span><br><span class="line">iptables -L -n | grep <span class="number">80</span></span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># list all</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line">firewall-cmd --zone=public --list-services</span><br><span class="line">firewall-cmd --list-ports</span><br><span class="line"><span class="comment"># add port</span></span><br><span class="line">firewall-cmd --add-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># help</span></span><br><span class="line">firewall-cmd --help</span><br></pre></td></tr></table></figure></p>
 <h2 id="Add_Jenkins/Docker_Registry_Service">Add Jenkins/Docker Registry Service</h2><p>There is two directory need to focus: /usr/lib/firewalld/, /etc/firewalld. First dir is for lib, second dir is for setup, so let’s do it.<br><strong>STEP 1:</strong><br>Add services to /etc/firewalld/services:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cp service from lib</span></span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/jenkins.xml</span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/docker-registry.xml</span><br></pre></td></tr></table></figure></p>
 <p><strong>STEP 2:</strong><br>Modify services like this:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jenkins.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Jenkins&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Jenkins <span class="keyword">for</span> CI.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"8080"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-registry.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Docker Registry&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Docker Registry <span class="keyword">for</span> manage the images.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"5000"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
@@ -191,7 +191,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/Android/" title="Android">Android<sup>9</sup></a></li>
+			<li><a href="/categories/Android/" title="Android">Android<sup>10</sup></a></li>
 		  
 		
 		  
@@ -207,7 +207,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>3</sup></a></li>
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>5</sup></a></li>
 		  
 		
 		  
@@ -228,15 +228,15 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>15</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>18</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Android/" title="Android">Android<sup>9</sup></a></li>
+				<li><a href="/tags/Android/" title="Android">Android<sup>10</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>3</sup></a></li>
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>5</sup></a></li>
 			
 		
 			
