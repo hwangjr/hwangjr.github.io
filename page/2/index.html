@@ -82,6 +82,91 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/07/29/HTML-In-TextView/" title="HTML In TextView" itemprop="url">HTML In TextView</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-29T07:50:06.000Z" itemprop="datePublished"> 发表于 2015-07-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>往往我们会遇到效果图中需要展示多个颜色的文字，不同的大小，甚至有可能会遇到多个排版，这时候，如果我们全部用TextView，有时候一个字就因为颜色不同就得新建一个TextView，是很浪费。这时候，我们可以适当考虑HTML来排版并显示在TextView中。<br>目前在GITHUB上面已经开源一个Html TextView库，有学习价值，有兴趣可以参考：<a href="https://github.com/sufficientlysecure/html-textview" target="_blank" rel="external">html-textview</a></p>
+<h2 id="HTML在string-xml中">HTML在string.xml中</h2><p>在string.xml中是无法直接写html，下面实例包括字符替换和HTML示例。<br>string.xml<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;string name=<span class="string">"format_temp"</span>&gt;&lt;![CDATA[&lt;font color=\<span class="string">"#9d9d9d\"&gt;%1<span class="variable">$s</span>&lt;/font&gt; 收到@&lt;font color=\"#dd3a37\"&gt;%2<span class="variable">$s</span>&lt;/font&gt;的示例]]&gt;&lt;/string&gt;</span><br><span class="line">// 或者使用转意</span><br><span class="line">&lt;string name="</span>format_temp<span class="string">"&gt;Text: &amp;lt;b&gt;%s&amp;lt;/b&gt;&lt;/string&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>使用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String.format(getString(R.string.format_temp)), <span class="string">"刚刚"</span>, <span class="string">"大胖"</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="在TextView中的使用">在TextView中的使用</h2><h3 id="文本展示">文本展示</h3><p>单纯文本展示直接使用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 滚动</span></span><br><span class="line">TextView.setMovementMethod(ScrollingMovementMethod.getInstance());</span><br><span class="line">TextView.setText(Html.fromHtml(html));</span><br></pre></td></tr></table></figure></p>
+<h3 id="超链接展示">超链接展示</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TextView.setMovementMethod(LinkMovementMethod.getInstance());</span><br><span class="line">TextView.setText(Html.fromHtml(html));</span><br></pre></td></tr></table></figure>
+<p>或者设置TextView的autoLink为all<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;TextView</span><br><span class="line">	android:id=<span class="string">"@+id/textView"</span></span><br><span class="line">	android:layout_width=<span class="string">"wrap_content"</span></span><br><span class="line">	android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">	android:autoLink=<span class="string">"all"</span> /&gt;</span><br><span class="line"></span><br><span class="line">&lt;TextView</span><br><span class="line">	android:id=<span class="string">"@+id/textView"</span></span><br><span class="line">	android:layout_width=<span class="string">"wrap_content"</span></span><br><span class="line">	android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">	android:autoLink=<span class="string">"web|email"</span> /&gt;</span><br><span class="line"></span><br><span class="line">TextView.setAutoLinkMask(Linkify.ALL);</span><br><span class="line">TextView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES|Linkify.WEB_URLS);</span><br></pre></td></tr></table></figure></p>
+<h3 id="图片展示">图片展示</h3><p>在Html的fromHtml方法中，可以传入Html的ImageGetter。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TextView.setText(Html.fromHtml(html, <span class="keyword">new</span> ImageGetter(), <span class="keyword">null</span>));</span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageGetter</span> <span class="keyword">implements</span> <span class="title">Html</span>.<span class="title">ImageGetter</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Drawable <span class="title">getDrawable</span><span class="params">(String source)</span> </span>&#123;</span><br><span class="line">		Drawable d = getResources().getDrawable(R.drawable.ic_launch);</span><br><span class="line">		d.setBounds(<span class="number">0</span>,<span class="number">0</span>,d.getIntrinsicWidth(),d.getIntrinsicHeight());</span><br><span class="line">		<span class="keyword">return</span> d;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义TAG展示">自定义TAG展示</h3><p>这时，我们需要用到我们最后一个传入参数，<a href="http://developer.android.com/intl/zh-cn/reference/android/text/Html.TagHandler.html" target="_blank" rel="external">Html.TagHandler</a>。简单示例一个size的标签。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SizeLabel</span> <span class="keyword">implements</span> <span class="title">TagHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SizeLabel</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.size = size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleTag</span><span class="params">(<span class="keyword">boolean</span> opening, String tag, Editable output,</span><br><span class="line">                          XMLReader xmlReader)</span> </span>&#123;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * 参数： </span><br><span class="line">         * opening：为true时表示开始解析,为false时表示解析完 </span><br><span class="line">         * tag:当前解析的标签 </span><br><span class="line">         * output:文本中的内容 </span><br><span class="line">         * xmlReader:xml解析器 </span><br><span class="line">         */</span></span><br><span class="line">        <span class="comment">// 判断当前解析的tag是否为size,并且已经解析完毕(在没有解析完毕之前output中没有数据)  </span></span><br><span class="line">        <span class="keyword">if</span> (tag.toLowerCase().equals(<span class="string">"size"</span>) &amp;&amp; !opening) &#123;</span><br><span class="line">            <span class="comment">// 通过output调用setSpan方法,改变文本的0下标到最后的下标的大小;  </span></span><br><span class="line">            <span class="comment">// 最后的参数用来标识在span范围内的文本前后输入新的字符时是否也改变它们的效果;  </span></span><br><span class="line">            output.setSpan(<span class="keyword">new</span> AbsoluteSizeSpan(size), <span class="number">0</span>, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="支持的HTML标签">支持的HTML标签</h2><p>并不是所有的HTML标签都支持，目前支持的标签分为两类：<br>1 . 静态string资源中，解析是通过<a href="https://android.googlesource.com/platform/frameworks/base.git/+/android-5.1.1_r8/core/java/android/content/res/StringBlock.java" target="_blank" rel="external">android.content.res.StringBlock</a>类来进行，目前支持的有：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">a</span>&gt;</span>：支持href属性</span><br><span class="line"><span class="tag">&lt;<span class="title">annotation</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">big</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">font</span>&gt;</span>：支持height, size, fgcolor和bicolor</span><br><span class="line"><span class="tag">&lt;<span class="title">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">marquee</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">small</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">strike</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">tt</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">u</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>2 . Html.fromHtml方法中支持是通过<a href="https://android.googlesource.com/platform/frameworks/base.git/+/android-5.1.1_r8/core/java/android/text/Html.java" target="_blank" rel="external">Html.java</a>来进行，目前支持的有：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">a</span>&gt;</span>：href</span><br><span class="line"><span class="tag">&lt;<span class="title">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">big</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">blockquote</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">cite</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">dfn</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">em</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">font</span>&gt;</span>：color和face属性</span><br><span class="line"><span class="tag">&lt;<span class="title">h1</span>&gt;</span> - <span class="tag">&lt;<span class="title">h6</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">img</span>&gt;</span>：支持src属性，需要实现ImageGetter接口</span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">small</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">strike</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">strong</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">tt</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">u</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>另外，font的color属性除了直接支持颜色色值之外，还支持一些颜色的直接名字，<a href="https://android.googlesource.com/platform/frameworks/base.git/+/android-5.1.1_r8/graphics/java/android/graphics/Color.java" target="_blank" rel="external">Color.java</a>的getHtmlColor方法：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">black</span><br><span class="line">darkgray</span><br><span class="line">gray</span><br><span class="line">lightgray</span><br><span class="line">white</span><br><span class="line">red</span><br><span class="line">green</span><br><span class="line">blue</span><br><span class="line">yellow</span><br><span class="line">cyan</span><br><span class="line">magenta</span><br><span class="line">aqua</span><br><span class="line">fuchsia</span><br><span class="line">darkgrey</span><br><span class="line">grey</span><br><span class="line">lightgrey</span><br><span class="line">lime</span><br><span class="line">maroon</span><br><span class="line">navy</span><br><span class="line">olive</span><br><span class="line">purple</span><br><span class="line">silver</span><br><span class="line">teal</span><br></pre></td></tr></table></figure></p>
+<h2 id="简单原理剖析">简单原理剖析</h2><p>其实这主要是用到了<a href="http://developer.android.com/intl/zh-cn/reference/android/text/Spannable.html" target="_blank" rel="external">Spannable</a>接口。里面已经实现了SpannableString及setSpan即可得到我们想要的风格。</p>
+<h3 id="简单使用">简单使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SpannableString text = <span class="keyword">new</span> SpannableString(<span class="string">"Test"</span>);</span><br><span class="line">TextView.setText(text);</span><br></pre></td></tr></table></figure>
+<h3 id="字体样式">字体样式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// setSpan会将start到end这间的文本设置成创建的span格式。span可以是图片格式。</span></span><br><span class="line"><span class="comment">// 设置字体(default,default-bold,monospace,serif,sans-serif)</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> TypefaceSpan(<span class="string">"monospace"</span>), <span class="number">0</span>, <span class="number">2</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 等宽字体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> TypefaceSpan(<span class="string">"serif"</span>), <span class="number">2</span>, <span class="number">4</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 衬线字体</span></span><br></pre></td></tr></table></figure>
+<h3 id="字体绝对大小">字体绝对大小</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体绝对大小（绝对值,单位：像素）</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> AbsoluteSizeSpan(<span class="number">20</span>), <span class="number">4</span>, <span class="number">6</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line"><span class="comment">// 第二个参数boolean dip，如果为true，表示前面的字体大小单位为dip，否则为像素，同上。</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> AbsoluteSizeSpan(<span class="number">20</span>, <span class="keyword">true</span>), <span class="number">6</span>, <span class="number">8</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br></pre></td></tr></table></figure>
+<h3 id="字体相对大小">字体相对大小</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体相对大小（相对值,单位：像素） 参数表示为默认字体大小的多少倍</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> RelativeSizeSpan(<span class="number">0.5f</span>), <span class="number">8</span>, <span class="number">10</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 0.5f表示默认字体大小的一半</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> RelativeSizeSpan(<span class="number">2.0f</span>), <span class="number">10</span>, <span class="number">12</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 2.0f表示默认字体大小的两倍</span></span><br></pre></td></tr></table></figure>
+<h3 id="前景色和背景色">前景色和背景色</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体前景色 ，Color.MAGENTA为紫红</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> ForegroundColorSpan(Color.MAGENTA), <span class="number">12</span>, <span class="number">15</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 设置前景色为洋红色</span></span><br><span class="line"><span class="comment">// 设置字体背景色 ，Color.CYAN为青绿色</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> BackgroundColorSpan(Color.CYAN), <span class="number">15</span>, <span class="number">18</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 设置背景色为青色</span></span><br></pre></td></tr></table></figure>
+<h3 id="设置字体粗体、斜体、粗斜体">设置字体粗体、斜体、粗斜体</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体样式正常，粗体，斜体，粗斜体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.NORMAL), <span class="number">18</span>, <span class="number">20</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 正常</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.BOLD), <span class="number">20</span>, <span class="number">22</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 粗体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.ITALIC), <span class="number">22</span>, <span class="number">24</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 斜体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.BOLD_ITALIC), <span class="number">24</span>, <span class="number">27</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 粗斜体</span></span><br></pre></td></tr></table></figure>
+<h3 id="设置下划线和删除线">设置下划线和删除线</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置下划线</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> UnderlineSpan(), <span class="number">27</span>, <span class="number">30</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line"><span class="comment">// 设置删除线</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StrikethroughSpan(), <span class="number">30</span>, <span class="number">33</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br></pre></td></tr></table></figure>
+<h3 id="设置下标和上标">设置下标和上标</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">text.setSpan(<span class="keyword">new</span> SubscriptSpan(), <span class="number">34</span>, <span class="number">35</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 下标</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> SuperscriptSpan(), <span class="number">36</span>, <span class="number">37</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 上标</span></span><br></pre></td></tr></table></figure>
+<h3 id="设置超链接">设置超链接</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 超级链接（需要添加setMovementMethod方法附加响应）</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"tel:13888888888"</span>), <span class="number">37</span>, <span class="number">39</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 电话</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"mailto:google@google.com"</span>), <span class="number">39</span>, <span class="number">41</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 邮件</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"http://www.google.com"</span>), <span class="number">41</span>, <span class="number">43</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// URL</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"sms:13888888888"</span>), <span class="number">43</span>, <span class="number">45</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 短信，使用sms:或者smsto:</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"mms:13888888888"</span>), <span class="number">45</span>, <span class="number">47</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 彩信，使用mms:或者mmsto:</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"geo:38.899533,-77.036476"</span>), <span class="number">47</span>, <span class="number">49</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 地图</span></span><br></pre></td></tr></table></figure>
+<h3 id="拉伸字体">拉伸字体</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体大小（相对值,单位：像素） 参数表示为默认字体宽度的多少倍</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> ScaleXSpan(<span class="number">2.0f</span>), <span class="number">49</span>, <span class="number">51</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 2.0f表示默认字体宽度的两倍，即X轴方向放大为默认字体的两倍，而高度不变</span></span><br></pre></td></tr></table></figure>
+<h2 id="Ref">Ref</h2><p><a href="http://aichixihongshi.iteye.com/blog/1207503" target="_blank" rel="external">android中用Spannable在TextView中设置超链接、颜色、字体</a><br><a href="https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html" target="_blank" rel="external">HTML Tags Supported By TextView</a><br><a href="http://daniel-codes.blogspot.com/2011/04/html-in-textviews.html" target="_blank" rel="external">HTML in TextViews</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/29/HTML-In-TextView/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/07/13/破解Beyond-Compare/" title="破解Beyond Compare" itemprop="url">破解Beyond Compare</a>
   </h1>
   <p class="article-author">By
@@ -752,81 +837,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/09/hello-world/" title="Install Jenkins on CentOS 7" itemprop="url">Install Jenkins on CentOS 7</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-09T07:39:16.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Installation">Installation</h2><p>The Jenkins Installation is quit simple, because Jenkins has its own repo, so just show the code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key</span><br><span class="line"><span class="comment"># V 1.617-1.1</span></span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>we also need java environment:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install openjdk 1.8</span></span><br><span class="line">yum install java</span><br></pre></td></tr></table></figure></p>
-<p>or u can search java version and install:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search java | grep <span class="string">'java-'</span></span><br></pre></td></tr></table></figure></p>
-<p>Next, we should expose port 8080:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line">firewall-cmd --add-port=<span class="number">8080</span>/tcp</span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure></p>
-<p>then u can open browser and request the page:<br><a href="http://ip:8080/" target="_blank" rel="external">http://ip:8080/</a></p>
-<p>Same installation on Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -</span><br><span class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins-ci.org/debian binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Update">Update</h2><p>Just run:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Errors">Errors</h2><p>if you get the error, u can try to fix it:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># error: Delta RPMs disabled because /usr/bin/applydeltarpm not installed.</span></span><br><span class="line">yum install deltarpm</span><br></pre></td></tr></table></figure></p>
-<h2 id="Reference">Reference</h2><p><a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins" target="_blank" rel="external">Installing Jenkins</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/CI/">CI</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/ci/">ci</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/09/hello-world/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
@@ -858,7 +871,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>5</sup></a></li>
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>6</sup></a></li>
 		  
 		
 		  
@@ -879,7 +892,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>18</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>19</sup></a></li>
 			
 		
 			
@@ -887,7 +900,7 @@
 			
 		
 			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>5</sup></a></li>
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>6</sup></a></li>
 			
 		
 			
