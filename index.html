@@ -82,6 +82,127 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/27/Crontabs-Guide/" title="Crontabs Guide" itemprop="url">Crontabs Guide</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-27T04:05:24.000Z" itemprop="datePublished"> 发表于 2015-10-27</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Introduction">Introduction</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man crontab</span><br></pre></td></tr></table></figure>
+<p>—-&gt;</p>
+<blockquote>
+<p>Crontab  is the program used to install, remove or list the tables used to drive the cron(8) daemon.  Each user can have their own crontab, and though these are files in /var/spool/ , they are not intended to be edited directly. For SELinux in mls mode can be even more crontabs - for each range. For more see selinux(8).</p>
+<p>The  cron  jobs  could  be allow or disallow for different users. For classical crontab there exists cron.allow and cron.deny files.  If cron.allow file exists, then you must be listed therein in order to be allowed to use this command.  If the cron.allow file does not exist but the cron.deny file does exist,  then  you must  not  be listed in the cron.deny file in order to use this command.  If neither of these files exists, only the super user will be allowed to use this com-mand. The second option is using PAM authentication, where you set up users, which could or couldn’t use crontab and also system cron jobs from /etc/cron.d/.</p>
+<p>The temporary directory could be set in enviroment variables. If it’s not set by user than /tmp is used.</p>
+</blockquote>
+<h2 id="Installation">Installation</h2><p>Just the commands:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># check installation</span></span><br><span class="line">rpm -ql crontabs</span><br><span class="line">rpm -qa crontabs</span><br><span class="line"><span class="comment"># install</span></span><br><span class="line">yum install crontabs</span><br><span class="line"><span class="comment"># start service on boot</span></span><br><span class="line">chkconfig crond on</span><br><span class="line"><span class="comment"># start service now</span></span><br><span class="line">service crond start</span><br><span class="line">service crond status</span><br><span class="line">service crond restart</span><br><span class="line">service crond reload</span><br><span class="line">service crond stop</span><br></pre></td></tr></table></figure></p>
+<p>Also, you can check the service by:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntsysv</span><br></pre></td></tr></table></figure></p>
+<h2 id="Usage">Usage</h2><h3 id="Basic_Usage">Basic Usage</h3><p>Also, <code>man</code> is our best friend :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man crontab</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<ul>
+<li>NAME<br>crontab - maintain crontab files for individual users</li>
+<li>SYNOPSIS<br>crontab [-u user] file<br>crontab [-u user] [-l | -r | -e] [-i] [-s]</li>
+<li>OPTIONS<pre><code>**-u**     Append <span class="keyword">the</span> <span class="property">name</span> <span class="keyword">of</span> <span class="keyword">the</span> user <span class="keyword">whose</span> crontab <span class="keyword">is</span> <span class="keyword">to</span> be tweaked.  If this option <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">given</span>, crontab examines <span class="string">"your"</span> crontab, i.e., <span class="keyword">the</span> crontab <span class="keyword">of</span> <span class="keyword">the</span>  person  executing  <span class="keyword">the</span>  command.   Note  <span class="keyword">that</span>  su(<span class="number">8</span>) can confuse crontab <span class="keyword">and</span> <span class="keyword">that</span> <span class="keyword">if</span> you are <span class="property">running</span> inside <span class="keyword">of</span> su(<span class="number">8</span>) you should always use <span class="keyword">the</span> -u option <span class="keyword">for</span> safety’s sake.  The <span class="keyword">first</span> form <span class="keyword">of</span> this command <span class="keyword">is</span> used <span class="keyword">to</span> install a new crontab <span class="keyword">from</span> <span class="keyword">some</span> named <span class="type">file</span> <span class="keyword">or</span> standard input  <span class="keyword">if</span>  <span class="keyword">the</span>  pseudo-filename  <span class="string">"-"</span>  <span class="keyword">is</span> <span class="keyword">given</span>.
+**-l**     The current crontab will be displayed <span class="function_start"><span class="keyword">on</span></span> standard output.
+**-r**     The current crontab will be removed.
+**-e**     This  option  <span class="keyword">is</span> used <span class="keyword">to</span> edit <span class="keyword">the</span> current crontab using <span class="keyword">the</span> editor specified <span class="keyword">by</span> <span class="keyword">the</span> VISUAL <span class="keyword">or</span> EDITOR environment variables.  After you <span class="keyword">exit</span> <span class="keyword">from</span> <span class="keyword">the</span> editor, <span class="keyword">the</span> modified crontab will be installed automatically.
+**-i**     This option modifies <span class="keyword">the</span> -r option <span class="keyword">to</span> prompt <span class="keyword">the</span> user <span class="keyword">for</span> a ’y/Y’ response <span class="keyword">before</span> actually removing <span class="keyword">the</span> crontab.
+**-s**     It will append <span class="keyword">the</span> current SELinux security context <span class="type">string</span> <span class="keyword">as</span> an MLS_LEVEL setting <span class="keyword">to</span> <span class="keyword">the</span> crontab <span class="type">file</span> <span class="keyword">before</span> editing / replacement occurs - see <span class="keyword">the</span> doc-umentation <span class="keyword">of</span> MLS_LEVEL <span class="keyword">in</span> crontab(<span class="number">5</span>).
+</code></pre></li>
+<li>FILES<pre><code><span class="regexp">/etc/</span>cron.allow
+<span class="regexp">/etc/</span>cron.deny
+</code></pre></li>
+</ul>
+</blockquote>
+<p>Shortly for this :<br>&gt;</p>
+<ul>
+<li>usage:<br>  crontab [-u user] file<br>  crontab [-u user] [ -e | -l | -r ]<pre><code>(<span class="keyword">default</span> operation <span class="keyword">is</span> <span class="built_in">replace</span>, per <span class="number">1003.2</span>)
+</code></pre>  -e    (edit user’s crontab)<br>  -l    (list user’s crontab)<br>  -r    (delete user’s crontab)<br>  -i    (prompt before deleting user’s crontab)<br>  -s    (selinux context)</li>
+</ul>
+<p>The format of <code>-e</code> command is:<br><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">  *    *    *    *    *   command</span><br><span class="line">minus <span class="built_in">hour</span> <span class="built_in">day</span> <span class="built_in">month</span> week command</span><br><span class="line"></span><br><span class="line">minus: <span class="number">1</span>~<span class="number">59</span> minus, * <span class="keyword">or</span> */<span class="number">1</span> <span class="keyword">for</span> per minus</span><br><span class="line"><span class="built_in">hour</span>: <span class="number">1</span>~<span class="number">23</span>, <span class="number">0</span> means <span class="number">0</span> o<span class="comment">'clock</span></span><br><span class="line"><span class="built_in">day</span>: <span class="number">1</span>~<span class="number">31</span></span><br><span class="line"><span class="built_in">month</span>: <span class="number">1</span>~<span class="number">12</span></span><br><span class="line">week: <span class="number">0</span>~<span class="number">6</span>, <span class="number">0</span> means sunday</span><br><span class="line">command: the command u want <span class="keyword">to</span> run</span><br></pre></td></tr></table></figure></p>
+<h3 id="Examples">Examples</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># every night at <span class="number">21</span>:<span class="number">31</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每晚的<span class="number">21</span>:<span class="number">30</span></span></span><br><span class="line"><span class="number">30</span> <span class="number">21</span> * * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">1</span>, <span class="number">10</span>, <span class="number">22</span> per month at <span class="number">4</span>:<span class="number">45</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每月<span class="number">1</span>、<span class="number">10</span>、<span class="number">22</span>日的<span class="number">4</span>:<span class="number">45</span></span></span><br><span class="line"><span class="number">45</span> <span class="number">4</span> <span class="number">1</span>,<span class="number">10</span>,<span class="number">22</span> * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># saturday and sunday per week at <span class="number">1</span>:<span class="number">10</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每周六、周日的<span class="number">1</span>:<span class="number">10</span></span></span><br><span class="line"><span class="number">10</span> <span class="number">1</span> * * <span class="number">6</span>,<span class="number">0</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">18</span>:<span class="number">00</span> ~ <span class="number">23</span>:<span class="number">00</span> per <span class="number">30</span> minus everyday reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每天<span class="number">18</span>:<span class="number">00</span>至<span class="number">23</span>:<span class="number">00</span>之间每隔<span class="number">30</span>分钟</span></span><br><span class="line"><span class="number">0</span>,<span class="number">30</span> <span class="number">18</span>-<span class="number">23</span> * * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># saturday per week at <span class="number">23</span>:<span class="number">00</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每星期六的<span class="number">23</span>:<span class="number">00</span></span></span><br><span class="line"><span class="number">0</span> <span class="number">23</span> * * <span class="number">6</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">23</span>:<span class="number">00</span> ~ <span class="number">7</span>:<span class="number">00</span> per hour</span></span><br><span class="line"><span class="preprocessor"># <span class="number">23</span>点到<span class="number">7</span>点之间，每隔一小时</span></span><br><span class="line"><span class="number">0</span> <span class="number">23</span>-<span class="number">7</span>/<span class="number">1</span> * * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># per hour</span></span><br><span class="line"><span class="comment"># 每一小时</span></span><br><span class="line"><span class="keyword">*</span> <span class="keyword">*</span>/1 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">4</span> every month and monday to wednesday every week at <span class="number">11</span>:<span class="number">00</span></span></span><br><span class="line"><span class="preprocessor"># 每月的<span class="number">4</span>号与每周一到周三的<span class="number">11</span>点</span></span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * mon-wed /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">1</span> january at <span class="number">4</span>:<span class="number">00</span></span></span><br><span class="line"><span class="preprocessor"># 一月一号的<span class="number">4</span>点</span></span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> jan * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># per 30 minus</span></span><br><span class="line"><span class="comment"># 每半小时</span></span><br><span class="line"><span class="keyword">*</span>/30 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<h3 id="Advanced_Usage">Advanced Usage</h3><p>For the files:</p>
+<ul>
+<li>/etc/cron.allow : list the user who can use crontab</li>
+<li>/etc/cron.deny : list the user who cannot use crontab</li>
+<li>/var/spool/cron : all users and their crontab will be store here</li>
+<li>/var/log/cron : cron log per job</li>
+<li>/etc/crontab : for system jobs, <code>crontab -e</code> is for current user</li>
+<li>/etc/cron.d/* : seperated cron file</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ls /etc/cron.d</span><br><span class="line"><span class="number">0</span>hourly  raid-check</span><br><span class="line"></span><br><span class="line">cat /etc/cron.d/<span class="number">0</span>hourly </span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=/</span><br><span class="line"><span class="number">01</span> * * * * root run-parts /etc/cron.hourly</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ls /etc/cron.hourly/</span><br><span class="line"><span class="number">0</span>anacron</span><br><span class="line"></span><br><span class="line">cat /etc/cron.hourly/<span class="number">0</span>anacron </span><br><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Skip excecution unless the date has changed from the previous run </span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> -r /var/spool/anacron/cron.daily; <span class="keyword">then</span></span><br><span class="line">    day=`cat /var/spool/anacron/cron.daily`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ `date +%Y%m%d` = <span class="string">"<span class="variable">$day</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">exit</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Skip excecution unless AC powered</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> -x /usr/bin/on_ac_power; <span class="keyword">then</span></span><br><span class="line">    /usr/bin/on_ac_power &amp;&gt; /dev/null</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">test</span> $? <span class="operator">-eq</span> <span class="number">1</span>; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">exit</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">/usr/sbin/anacron <span class="operator">-s</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/anacrontab </span><br><span class="line"><span class="comment"># /etc/anacrontab: configuration file for anacron</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># See anacron(8) and anacrontab(5) for details.</span></span><br><span class="line"></span><br><span class="line">SHELL=/bin/sh</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line"><span class="comment"># the maximal random delay added to the base delay of the jobs</span></span><br><span class="line">RANDOM_DELAY=<span class="number">45</span></span><br><span class="line"><span class="comment"># the jobs will be started during the following hours only</span></span><br><span class="line">START_HOURS_RANGE=<span class="number">3</span>-<span class="number">22</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#period in days   delay in minutes   job-identifier   command</span></span><br><span class="line"><span class="number">1</span>	<span class="number">5</span>	cron.daily		nice run-parts /etc/cron.daily</span><br><span class="line"><span class="number">7</span>	<span class="number">25</span>	cron.weekly		nice run-parts /etc/cron.weekly</span><br><span class="line">@monthly <span class="number">45</span>	cron.monthly		nice run-parts /etc/cron.monthly</span><br></pre></td></tr></table></figure>
+<p><a href="http://linux.vbird.org/linux_basic/0430cron.php" target="_blank" rel="external">More Info</a>.</p>
+<h2 id="Practice">Practice</h2><p>I want to backup my svn daily, so i must have a script to backup:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">cd</span> /home/svn/repos</span><br><span class="line">now=`/bin/date +%Y%m%d`</span><br><span class="line">/bin/tar czvf <span class="string">"kk_backup_<span class="variable">$now</span>.tar.gz"</span> kk/ &amp;&amp; rm -rf /home/svn/backup/* &amp;&amp; /bin/mv kk_backup_*.tar.gz /home/svn/backup/</span><br><span class="line"><span class="keyword">if</span> [ $? == <span class="number">0</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">result=<span class="string">"backup svn OK!!"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">result=<span class="string">"backup svn False!!"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$result</span></span><br></pre></td></tr></table></figure></p>
+<p>then just give the script to <code>/etc/cron.daily</code>:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp scripts/backup.sh /etc/cron.daily/svn_backup.sh</span><br><span class="line">chmod +x /etc/cron.daily/svn_backup.sh</span><br></pre></td></tr></table></figure></p>
+<p>That’s all.</p>
+<h1 id="REF">REF</h1><p><a href="http://linux.vbird.org/linux_basic/0430cron.php" target="_blank" rel="external">鳥哥的 Linux 私房菜 — 第十五章、例行性工作排程(crontab)</a><br><a href="http://www.cnblogs.com/ccdc/archive/2012/06/01/2529471.html" target="_blank" rel="external">centos中crontab（计时器）用法详解 - 长城的草 - 博客园</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/27/Crontabs-Guide/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/24/CentOS6-5使用RSYNC发布程序/" title="CentOS6.5使用RSYNC发布程序" itemprop="url">CentOS6.5使用RSYNC发布程序</a>
   </h1>
   <p class="article-author">By
@@ -1555,99 +1676,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/05/创业团队股权分配/" title="创业团队股权分配" itemprop="url">创业团队股权分配</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-05T07:33:39.000Z" itemprop="datePublished"> 发表于 2015-08-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>团队分配股权，根本上来说，是需要创始人在分配和讨论过程中，整个团队感觉到合理、公平的一个分配方案，需要让各方达成共识。但是股权分配肯定无法替代信任的建立。<br>另外，股权分配一旦确定，很多在执行力上不足，这也是很多创业团队现有的问题，这时大家必须坐到一块，兑现股权约定。<br>本文从互联网资料参考，并进行总结，希望能让大家有所收获。</p>
-<h2 id="阶梯分配">阶梯分配</h2><p>将其取名为阶梯，是因为这个分配是从进入团队的不同时期来进行分配，越迟加入公司的员工风险越低。</p>
-<h3 id="原则">原则</h3><p>为了简单，假设所有创始人都全职创业。<br>随着公司的不断壮大，新员工不断加入，公司的也将一批一批的加入新员工，当你进行第一批招人时，很可能你已经获取到现金流（投资或者客户），所以除了创始人（第一批）之外，其他都不是创始人，他们是加入公司打工，因为他们不需要冒很大风险且从工作第一天就开始拿工资了。<br>那么当你的公司大到可以上市或者其他，这时你的公司也许已经有了6批，员工大约5批，第二批有5个，第三批25个，第四批200，ETC。<br>综上：创始人应该最终拿整个公司大约50%的股份，首批下面的5批员工每一批最终都分别分到大约10%的公司股份，每一批员工都将平分这10%股份。<br>基本思路就是，你设立不同的资历，最高的员工承受最大风险，最低员工风险最低，每批员工平均分配给这个这批股份，也就是让越早加入员工获得越多股份。<br>现在，你还需用执行一个重要的原则：股份绑定（vesting）。绑定期最好是4-5年，任何人在公司起码1年才可持有股份（包括创始人）。一般头一年25%，接下来每月落实2%。没有股份绑定条款，派股给任何人都是不靠谱的！<br>最后需要解决一个问题，当有新的投资进来时，将如何分割股份？答案很简单：新的投资将稀释所有人的股份。<br>另外，千万不要用分配股权来解决一些薪资或其他问题，比如：</p>
-<ol>
-<li>创业构想提出者，需要多拿股份吗？</li>
-<li>创始人之一不是全职投入？（那创始人就不是创始人了）</li>
-<li>为公司提供设备或其他有价值（专利等）东西，如何处理？<br>这些问题，都可通过类似补发工资等方式来解决，在公司现金流运转正常之后，对每个创始人薪资进行补发，避免因此引起的纠纷。<br>投资人、创始人和雇员分别拥有多少股份？这个需要市场来确定，现实地看，如果投资人最终获得50%以上，创始人重要性将被削弱，从而丧失动力。而如果创始人和员工如果持有100%股份，也会给投资人带来很大的压力，以平衡投资人和创始人/员工之间分配。正常公司上市时，投资人将拥有50%股份，创始人+员工将拥有50%股份。<h3 id="总结">总结</h3>虽然创业公司股权分配原则没有一刀切的解决方案，但是尽可能简单化、透明化、公平化！</li>
-</ol>
-<h2 id="常规分配">常规分配</h2><p>股权分配最错误的做法是股权五五分，五五分的结果是没有分配决定权。在开始的蜜月期可能不会产生争执，正所谓可以共患难，难以同甘苦。到了一定阶段，出现分歧的时候，如果有没有一个人拥有绝对的控制权，可能谁也不服气谁，最终的结果就是分道扬镳，创业失败。基于公司法规定的的股权1/2的决议规则和2/3的特别决议规则，相对理想的股权分配是持1/2以上股权，更理想是2/3以上。<br>这边分为三个部分。<br>一是创始人的股权。<br>二是员工的股权。<br>三是众筹的股权。</p>
-<h3 id="创始人的股权">创始人的股权</h3><h4 id="确定创始人">确定创始人</h4><p>创始人是承担了风险的人。判断创始人的简单方法是拿不拿工资，如果在最开始，都不能支付工资给你，那你就是创始人。<br>按照下面标准来进行股权增减：</p>
-<ol>
-<li>初始(每人均分100份股权)。</li>
-<li>召集人(股权增加5%)。</li>
-<li>创业点子及执行很重要(股权增加5%)。提供了最初的创业点子并执行成功。</li>
-<li>迈出第一步最难(股权增加5%-25%)。如果某个创始人提出的概念已经着手实施，比如已经开始申请专利、已经有一个演示原型、已经有一个产品的早期版本，或者其他对吸引投资或贷款有利的事情，那么这个创始人额外可以得到的股权，从5%到 25%不等。</li>
-<li>CEO，即总经理应该持股更多(股权增加5%)。</li>
-<li>全职创业是最最有价值的(股权增加200%)。</li>
-<li>信誉是最重要的资产(股权增加50-500%)。如果创始人是第一次创业，而他的合伙人里有人曾经参与过风投投资成功了的项目，那么这个合伙人比创始人更有投资价值。在某些极端情况 下，某些创始人会让投资人觉得非常值得投资，这些超级合伙人基本上消除了“创办阶段”的所有风险，所以最好让他们在这个阶段获得最多的股权。</li>
-<li>现金投入参照投资人投资。很可能是某个合伙人投入的资金相对而言多的多。这样的投资应该获较多的股权，因为最早期的投资，风险也往往最大，所以应该获得更多的股权。</li>
-<li>最后进行计算。假设最后计算的三个创始人的股份是为200/150/250，那么将他们的股份数相加(即为600份)作为总数，再计算他们每个人的持股比例：33%/25%/42%。<h4 id="创始人股权的退出机制">创始人股权的退出机制</h4>作为创业企业，如果创始人离开创业团队就涉及股权的退出机制。如果不设定退出机制，允许中途退出的合伙人带走股权，对退出合伙人的公平，但却是对其它长期参与创业的合伙人最大的不公平，对其它合伙人也没有安全感。<br>对于退出的合伙人，一方面，可以全部或部分收回股权；另一方面，必须承认合伙人的历史贡献，按照一定溢价/或折价回购股权。对于如何确定具体的退出价格，涉及两个因素，一个是退出价格基数，一个是溢价/或折价倍数。可以考虑按照：</li>
-<li>合伙人掏钱买股权的购买价格的一定溢价回购</li>
-<li>退出合伙人按照其持股比例可参与分配公司净资产或净利润的一定溢价</li>
-<li>按照公司最近一轮融资估值的一定折扣价回购</li>
-<li>有些退出价格是当时投入的本金，加合理利息回报。至于退出价格，不同公司会存在差异。<h4 id="股权与分红权的分离">股权与分红权的分离</h4>分红权和股权可以分离，表决权理论上也可以分离。对于出资较大的合伙人，可以给与较大的分红权，但对于承担风险较大的，应给与较大的股权。<h4 id="股权协议的约定">股权协议的约定</h4>一些公司出现拥有股权的合伙人在创业过程中出现了，违背创业企业利益的行为，比如泄密或者携带知识产权另立门户等，为了保护创业企业其他合伙人的利益，最好在协议中约定这些对股权的限制条款。还可制定股权实现的考核标准，不达到考核标准不拥有股权。<h3 id="员工的股权">员工的股权</h3>什么是员工？谁是员工的判断标准是看其是否是具有员工心态的人。在创业企业，有些合伙人希望把员工当做合伙人，也给与股权激励。这样的做法，负面作用是：</li>
-<li>过早的分散了股权</li>
-<li>拥有员工心态的人，希望得到的是稳定的现金收入，而不是未来可能增值的股权。<br>因此，即使是作为激励作用的股权也不应当份额过大。员工管理问题不应单纯利用股权解决。一般来说，VC会要求员工持股计划在VC投资进来之前执行，这样VC就可以减少稀释。不过不能认为这是A轮VC自私，要知道B轮VC到时候也会要求在他们进来之前再执行一次员工持股计划，这时A轮VC和创始股东将一起稀释。 员工的期权比例应该留多少？一般来说是5-15%。<h3 id="众筹的股权">众筹的股权</h3><strong>众筹从概念逐渐变为实践，“股权众筹是否构成非法集资”已经不再是法律角度的焦点。</strong>股权众筹，既然是“众”筹，就说明股东数量非常多。不过，公司法规定，有限责任公司的股东不超过50人，非上市的股份有限公司股东不超过200人。法律对公司股东人数的限制，导致大部分众筹股东不能直接出现在企业工商登记的股东名册中。这一问题的解决方案一般有两种：</li>
-<li><strong>委托持股，或者说是代持股。</strong>一个实名股东分别与几个乃至几十个隐名的众筹股东签订代持股协议，代表众筹股东持有众筹公司股份。在这种模式下，众筹股东并不亲自持有股份，而是由某一个实名股东持有，并且在工商登记里只体现出该实名股东的身份。中国国内法律已经认可了保护真实股东的合法利益，也就是即使股东名册里面没有出现众筹股东的名字，只要有协议证明真实股东是真实的出资人，其权益也是被保障的。</li>
-<li><strong>持股平台持股。</strong>比如，先设立一个持股平台，五十个众筹股东作为这个持股平台的投资人，把资金投入持股平台。然后，持股平台把这笔款再投入众筹公司，由持股平台作为众筹公司的股东。这样五十个众筹股东在众筹公司里只体现为一个股东，即持股平台。持股平台可以是有限责任公司，也可以是有限合伙。两者对于众筹股东来说都是有限责任的。按照合伙企业法，通常有限合伙人不参与管理，由普通合伙人负责管理。这样，众筹发起人就可以其普通合伙人的身份，管理和控制持股平台，进而控制持股平台在众筹公司的股份，也就实际上控制了众筹股东的投资及股份。<br><strong>期权池</strong>是在融资前为未来引进高级人才而预留的一部分股份，用于激励员工(包括创始人自己、高管、骨干、普通员工)，是初创企业实施股权激励计划(Equity Incentive Plan)最普通采用的形式，在欧美等国家被认为是驱动初创企业发展必要的关键要素之一。硅谷的惯例是预留公司全部股份的10%-20%作为期权池，较大的期权池对员工和VC具更大吸引力。 VC一般要求期权池在它进入前设立，并要求在它进入后达到一定比例。由于每轮融资都会稀释期权池的股权比例，因此一般在每次融资时均调整(扩大)期权池，以不断吸引新的人才。<h3 id="案例">案例</h3>苹果，起始阶段的股权比例是乔布斯和沃兹尼亚克各45%，韦恩10%；谷歌，佩吉和布林一人一半；Facebook，扎克伯格65%，萨维林30%，莫斯科维茨5%。<br>苹果电脑是沃兹尼亚克开发的，但乔布斯和沃兹股份一样（沃兹的父亲对此非常不满），因为乔布斯不仅是个营销天才，而且拥有领导力，对公司未来意志坚定激情四射。而沃兹生性内敛，习惯于一个人工作，并且只愿意兼职为新公司工作，乔布斯和他的朋友家人百般劝说才同意全职。至于韦恩，他拥有10%是因为其他两人在运营公司方面完全是新手，需要他的经验。由于厌恶风险，韦恩很快就退股了，他一直声称自己从未后悔过。<br>Facebook是扎克伯格开发的，他又是个意志坚定的领导者，因此占据65%，萨维林懂得怎样把产品变成钱，莫斯科维茨则在增加用户上贡献卓著。不过，Facebook起始阶段的股权安排埋下了日后隐患。由于萨维林不愿意和其他人一样中止学业全情投入新公司，而他又占有1/3的股份。因此，当莫斯科维茨和新加入但创业经验丰富的帕克贡献与日俱增时，就只能稀释萨维林的股份来增加后两者的持股，而萨维林则以冻结公司账号作为回应。A轮融资完成后，萨维林的股份降至不到10%，怒火中烧的他干脆将昔日伙伴们告上了法庭。萨维林之所以拿那么高股份是因为他能为公司赚到钱，而公司每天都得花钱。但扎克伯格的理念是“让网站有趣比让它赚钱更重要”，萨维林想的则是如何满足广告商要求从而多赚钱。短期看萨维林是对的，但这么做不可能成就一家伟大的公司，扎克伯格对此心知肚明。Facebook正确的办法应当是早一点寻找天使投资，就像苹果和谷歌曾经做过的那样。在新公司确定产品方向之后，就需要天使投资来帮助自己把产品和商业模式稳定下，避免立即赚钱的压力将公司引入歧途。Facebook的天使投资人是帕克的朋友介绍的彼得·泰尔，他注资50万美元，获得 10%股份。这之后，Facebook的发展可谓一帆风顺，不到一年就拿到了A轮融资——阿克塞尔公司投资1270万美元，公司估值1亿美元。7年后的2012年，Facebook上市，此时公司8岁。谷歌从天使到A轮的时间差不多是一年。硅谷著名风投公司KPCB和红杉资本各注入谷歌125万美元，分别获得10%股份。5后的2004年，也就是公司创立6年后，谷歌上市，近2000名员工获得配股。 苹果公司在马库拉投资后没有经历后续融资，4年之后上市，上百名员工成了百万富翁，此时公司5岁。<h3 id="总结-1">总结</h3>创业团队在组建过程中需要制定股权分配方案。随着公司逐渐变大，资本需求会越来越旺，后续融资不可避免，引进经验丰富的运营人才也必须授予其股权或期权，这些都会稀释创始人的股权。事实上，创始人在公司长大之后如何不被董事会踢出自己创办的公司，早已是硅谷的经典话题之一。乔布斯在苹果上市4年半后被赶出了苹果公司，没有一个创始人愿意失去自己的公司，而他们也有办法做到这一点，那就是采用双层股权结构（就是前文提到的表决权和分红权分离的做法）。<br>苹果当年是单一股权结构，同股同权，苹果上市后，乔布斯的股权下降到11%，董事会里也没有他的铁杆盟友（他本以为马库拉会是），触犯众怒后的结局可想而知。 谷歌则在上市时重拾美国资本市场消失已久的AB股模式，佩吉、布林、施密特等公司创始人和高管持有B类股票，每股表决权等于A类股票10股的表决权。2012年，谷歌又增加了不含投票权的C类股用于增发新股。这样，即使总股本继续扩大，即使创始人减持了股票，他们也不会丧失对公司的控制力。预计到2015年，佩吉、布林、施密特持有谷歌股票将低于总股本的20%，但仍拥有近60%的投票权。Facebook前年上市时同样使用了投票权1：10的AB股模式，这样扎克伯格一人就拥有28.2的表决权。此外，扎克伯格还和主要股东签订了表决权代理协议，在特定情况下，扎克伯格可代表这些股东行使表决权，这意味着他掌握了56.9%的表决权。<br>在中国，公司法规定同股同权，不允许直接实施双层或三层股权结构，但公司法允许公司章程对投票权进行特别约定（有限责任公司），允许股东在股东大会上将自己的投票权授予其他股东代为行使（股份有限公司）。</li>
-</ol>
-<h2 id="总结-2">总结</h2><p>股权分配问题是一种博弈，是不同角色之间的讨价还价，也取决于不同人的性格，没有一个标准答案。</p>
-<h2 id="Ref">Ref</h2><p><a href="http://www.zhihu.com/question/19551070" target="_blank" rel="external">几个朋友合伙创业，如何分配股权？ - 知乎</a><br><a href="http://zhuanlan.zhihu.com/duguodong/19906816" target="_blank" rel="external">杜国栋：联合创始人退出，他手里的股权怎么办？ - 创思舍 - 知乎专栏</a><br><a href="http://zhuanlan.zhihu.com/duguodong/19970947" target="_blank" rel="external">创始人之间如何分股权：按贡献估值 - 创思舍 - 知乎专栏</a><br><a href="http://wenku.baidu.com/view/cd30202c453610661ed9f410.html" target="_blank" rel="external">华为股权分配政策(幻灯片)_百度文库</a><br><a href="http://www.tmtpost.com/172112.html" target="_blank" rel="external">联合创始人股权分配，五五分是最糟糕的做法</a><br><a href="http://blog.sina.com.cn/s/blog_61b925fa0100foie.html" target="_blank" rel="external">(3)11.18.09 期权：为什么给，给多少，怎么给？<em>邵亦波</em>新浪博客</a><br><a href="http://36kr.com/p/22890.html" target="_blank" rel="external">Joel Spolsky: 创业公司如何公平分配股权？</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/创业/">创业</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/创业/">创业</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/05/创业团队股权分配/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1682,7 +1710,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>6</sup></a></li>
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>7</sup></a></li>
 		  
 		
 		  
@@ -1703,7 +1731,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>19</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>20</sup></a></li>
 			
 		
 			
@@ -1711,7 +1739,7 @@
 			
 		
 			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>6</sup></a></li>
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>7</sup></a></li>
 			
 		
 			
