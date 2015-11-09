@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>GitHub + GitBook + Markdown来写一本自己的书 | HwangJR&#39;s Blog</title>
+    <title>CentOS如何移除依赖 | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="如何用Gitbook和Github，再利用Markdown来写一本属于自己的书，方便在线阅读或下载等。">
+    <meta name="description" content="在使用CentOS时，会安装很多软件，自动解析依赖并安装，然而在卸载时候，仅仅只是卸载当前包，如何清除包及其依赖呢？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="GitHub + GitBook + Markdown来写一本自己的书">
-<meta property="og:url" content="https://hwangjr.github.io/2015/08/18/GitHub-GitBook-Markdown来写一本自己的书/index.html">
+<meta property="og:title" content="CentOS如何移除依赖">
+<meta property="og:url" content="https://hwangjr.github.io/2015/11/09/CentOS如何移除依赖/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="如何用Gitbook和Github，再利用Markdown来写一本属于自己的书，方便在线阅读或下载等。">
-<meta property="og:updated_time" content="2015-08-18T09:33:22.890Z">
+<meta property="og:description" content="在使用CentOS时，会安装很多软件，自动解析依赖并安装，然而在卸载时候，仅仅只是卸载当前包，如何清除包及其依赖呢？">
+<meta property="og:updated_time" content="2015-11-09T02:44:38.879Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GitHub + GitBook + Markdown来写一本自己的书">
-<meta name="twitter:description" content="如何用Gitbook和Github，再利用Markdown来写一本属于自己的书，方便在线阅读或下载等。">
+<meta name="twitter:title" content="CentOS如何移除依赖">
+<meta name="twitter:description" content="在使用CentOS时，会安装很多软件，自动解析依赖并安装，然而在卸载时候，仅仅只是卸载当前包，如何清除包及其依赖呢？">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/18/GitHub-GitBook-Markdown来写一本自己的书/" title="GitHub + GitBook + Markdown来写一本自己的书" itemprop="url">GitHub + GitBook + Markdown来写一本自己的书</a>
+      <a href="/2015/11/09/CentOS如何移除依赖/" title="CentOS如何移除依赖" itemprop="url">CentOS如何移除依赖</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-18T09:32:23.000Z" itemprop="datePublished"> 发表于 2015-08-18</time>
+    <time datetime="2015-11-09T02:44:12.000Z" itemprop="datePublished"> 发表于 2015-11-09</time>
     
   </p>
 </header>
@@ -97,26 +97,14 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#作案工具准备"><span class="toc-number">2.</span> <span class="toc-text">作案工具准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GitHub配置"><span class="toc-number">2.1.</span> <span class="toc-text">GitHub配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GitBook配置"><span class="toc-number">2.2.</span> <span class="toc-text">GitBook配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#将代码托管到GitHub上"><span class="toc-number">2.2.1.</span> <span class="toc-text">将代码托管到GitHub上</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#绑定自定义域名"><span class="toc-number">2.2.2.</span> <span class="toc-text">绑定自定义域名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GitBook软件安装"><span class="toc-number">2.2.3.</span> <span class="toc-text">GitBook软件安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Markdown配置"><span class="toc-number">2.3.</span> <span class="toc-text">Markdown配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">2.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#自带清除技能"><span class="toc-number">1.</span> <span class="toc-text">自带清除技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三方技能"><span class="toc-number">2.</span> <span class="toc-text">第三方技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回滚安装技能"><span class="toc-number">3.</span> <span class="toc-text">回滚安装技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="背景">背景</h2><p>近期想要自己沉淀，而且也有意学习下如何贡献自己的知识，给更多人分享我的所得，所以就萌生自己写一个系列的入门书。<br>本次主要通过GitHub上面来进行源码托管，通过GitBook来进行排版及线上阅读下载等，利用Markdown语法来进行撰写。所以最好有一些GitHub及Markdown使用经验最嘉。</p>
-<h2 id="作案工具准备">作案工具准备</h2><p>很简单：</p>
-<ol>
-<li>GitHub帐号</li>
-<li>GitBook帐号（可利用GitHub帐号登录，也可申请）</li>
-</ol>
-<h3 id="GitHub配置">GitHub配置</h3><p>新建一个repo，比如<a href="https://github.com/hwangjr/simple-android" target="_blank" rel="external">hwangjr/simple-android</a>，ignore可以选择git book，READ ME等自己可以配置。</p>
-<h3 id="GitBook配置">GitBook配置</h3><p>新建一本书籍<a href="https://www.gitbook.com/book/hwangjr/simple-android/welcome" target="_blank" rel="external">简易Android</a>。</p>
-<h4 id="将代码托管到GitHub上">将代码托管到GitHub上</h4><p>点击Settings，选择右侧GitHub，会让你先与你的GitHub帐号进行关联（如果还未进行关联的话），然后设置成你在GitHub上新建的项目即可，即hwangjr/simple-android。</p>
-<h4 id="绑定自定义域名">绑定自定义域名</h4><p>你可以绑定自己的自定义域名来进行解析到你的书籍。<br>1.在GitBook上设置你的域名。<br>点击右侧的Domains设置，即/settings/domains，然后输入你的HomePage及content的domain，这边设置为：<br>For homepage: simple-android.hwangjr.com<br>For content: content.simple-android.hwangjr.com</p>
-<p>2.在域名解析商那边进行解析配置。<br>这里主要以万网解析进行配置，其他配置可参考，大同小异。<br>新增两条解析规则：<br>CNAME   simple-android   默认   www.gitbook.com<br>CNAME   content.simple-android   默认   www.gitbook.com<br>这里需要注意，记录值需要设置为www.gitbook.com，不能设置为gitbook.com等其他。<br>绑定完可以测试下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">nslookup simple-android.hwangjr.com</span><br><span class="line">Server:		<span class="number">192.168</span>.<span class="number">1.1</span></span><br><span class="line">Address:	<span class="number">192.168</span>.<span class="number">1.1</span><span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">simple-android.hwangjr.com	canonical name = www.gitbook.com.</span><br><span class="line">www.gitbook.com	canonical name = saga-<span class="number">4658</span>.herokussl.com.</span><br><span class="line">saga-<span class="number">4658</span>.herokussl.com	canonical name = elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com.</span><br><span class="line">Name:	elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com</span><br><span class="line">Address: <span class="number">54.83</span>.<span class="number">21.67</span></span><br><span class="line">Name:	elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com</span><br><span class="line">Address: <span class="number">54.243</span>.<span class="number">203.15</span></span><br><span class="line">Name:	elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com</span><br><span class="line">Address: <span class="number">54.197</span>.<span class="number">223.43</span></span><br></pre></td></tr></table></figure></p>
-<p>具体也可参考：<a href="http://help.gitbook.com/platform/domains.html" target="_blank" rel="external">Custom Domains</a></p>
-<h4 id="GitBook软件安装">GitBook软件安装</h4><p>首先需要Node.js环境，才能安装GitBook软件。简单说明下软件安装。<br>安装Node.js最好用<a href="https://github.com/creationix/nvm" target="_blank" rel="external">creationix/nvm</a>来进行版本管理。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br><span class="line">nvm install <span class="number">0.12</span></span><br><span class="line">nvm use <span class="number">0.12</span></span><br><span class="line">npm install gitbook -g</span><br></pre></td></tr></table></figure></p>
-<p>NPM较慢可以参考：<a href="https://npm.taobao.org/" target="_blank" rel="external">淘宝 NPM 镜像</a><br>之后即可用git book在本地进行书籍调试。</p>
-<h3 id="Markdown配置">Markdown配置</h3><p>Markdown目前一般用stackedit.io进行编写，之后进行同步~也有很多其他的软件，类似MarkdownPad等，都可以进行本地编写，VIM也有相应的Markdown插件。</p>
-<h3 id="总结">总结</h3><p>这里还可以设置书籍主题(/theme)等操作，这里就不详细说明了。<br>接下来就可以用Markdown进行书籍编写了~</p>
+		<h2 id="自带清除技能">自带清除技能</h2><p>从Fedora 18之后，yum有自带清除：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum autoremove</span><br><span class="line">yum autoremove &lt;package&gt;</span><br><span class="line"><span class="comment"># 一般不用</span></span><br><span class="line">yum remove --setopt=clean_requerements_on_remove=<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="第三方技能">第三方技能</h2><p>安装<code>yum-utils</code>也是可以自动清理依赖：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install yum-utils</span><br><span class="line"><span class="comment"># 清理</span></span><br><span class="line">package-cleanup --leaves</span><br><span class="line">package-cleanup --leaves --all</span><br><span class="line">package-cleanup -q --leaves | xargs <span class="operator">-l</span>1 yum -y remove</span><br></pre></td></tr></table></figure></p>
+<h2 id="回滚安装技能">回滚安装技能</h2><p>自然，我们是在安装的时候安装了依赖，那如果我们回滚本次安装，也一样可以卸载这些依赖：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install &lt;package&gt;</span><br><span class="line">yum <span class="built_in">history</span> list &lt;package&gt;</span><br><span class="line">yum <span class="built_in">history</span> undo &lt;ID&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结">总结</h2><p>相比而言，现在对包管理还是简单方便的，当然更高深的还需要自己摸索。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -124,13 +112,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Books/">Books</a>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Books/">Books</a>
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
   </div>
 
 </div>
@@ -139,7 +127,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://hwangjr.github.io/2015/08/18/GitHub-GitBook-Markdown来写一本自己的书/" data-title="GitHub + GitBook + Markdown来写一本自己的书 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="https://hwangjr.github.io/2015/11/09/CentOS如何移除依赖/" data-title="CentOS如何移除依赖 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -152,19 +140,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/21/将SOCKET代理转化为HTTP代理/" title="将SOCKET代理转化为HTTP代理">
-  <strong>上一篇：</strong><br/>
-  <span>
-  将SOCKET代理转化为HTTP代理</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/12/V8和项目SO库冲突/"  title="V8和项目SO库冲突">
+<a href="/2015/10/27/Crontabs-Guide/"  title="Crontabs Guide">
  <strong>下一篇：</strong><br/> 
- <span>V8和项目SO库冲突
+ <span>Crontabs Guide
 </span>
 </a>
 </div>
@@ -185,7 +165,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#作案工具准备"><span class="toc-number">2.</span> <span class="toc-text">作案工具准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GitHub配置"><span class="toc-number">2.1.</span> <span class="toc-text">GitHub配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GitBook配置"><span class="toc-number">2.2.</span> <span class="toc-text">GitBook配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#将代码托管到GitHub上"><span class="toc-number">2.2.1.</span> <span class="toc-text">将代码托管到GitHub上</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#绑定自定义域名"><span class="toc-number">2.2.2.</span> <span class="toc-text">绑定自定义域名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GitBook软件安装"><span class="toc-number">2.2.3.</span> <span class="toc-text">GitBook软件安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Markdown配置"><span class="toc-number">2.3.</span> <span class="toc-text">Markdown配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">2.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#自带清除技能"><span class="toc-number">1.</span> <span class="toc-text">自带清除技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三方技能"><span class="toc-number">2.</span> <span class="toc-text">第三方技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回滚安装技能"><span class="toc-number">3.</span> <span class="toc-text">回滚安装技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
  
   </div>
 
