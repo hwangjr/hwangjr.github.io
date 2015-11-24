@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Life is wonderful!]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="https://hwangjr.github.io//"/>
-  <updated>2015-11-09T02:44:38.879Z</updated>
+  <updated>2015-11-24T07:30:44.759Z</updated>
   <id>https://hwangjr.github.io//</id>
   
   <author>
@@ -14,6 +14,53 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[应用内存泄露排查]]></title>
+    <link href="https://hwangjr.github.io/2015/11/13/%E5%BA%94%E7%94%A8%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%8E%92%E6%9F%A5/"/>
+    <id>https://hwangjr.github.io/2015/11/13/应用内存泄露排查/</id>
+    <published>2015-11-13T03:26:23.000Z</published>
+    <updated>2015-11-24T07:30:44.759Z</updated>
+    <content type="html"><![CDATA[<h2 id="内存泄露">内存泄露</h2><p>用到神器<a href="https://github.com/square/leakcanary" target="_blank" rel="external">square/leakcanary</a>：</p>
+<blockquote>
+<p>A memory leak detection library for Android and Java.<br>“A small leak will sink a great ship.”    - Benjamin Franklin<br>千里之堤，毁于蚁穴。 — 《韩非子.喻老》</p>
+</blockquote>
+<h3 id="LeakCanary完整集成">LeakCanary完整集成</h3><p><strong>配置build.gradle</strong><br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line">    <span class="keyword">repositories</span> &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">dependencies</span> &#123;</span><br><span class="line">	    <span class="keyword">classpath</span> <span class="string">'com.android.tools.build:gradle:1.2.3'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">apply plugin: <span class="string">'android-library'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">allprojects</span> &#123;</span><br><span class="line">	<span class="keyword">repositories</span>&#123;</span><br><span class="line">		jcenter()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">   debugCompile <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">   releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>配置代码</strong><br>在你的APPLICATION中：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class ExampleApplication extends Application &#123;&#10;  @Override public void onCreate() &#123;&#10;&#9;super.onCreate();&#10;&#9;if (BuildConfig.DEBUG) &#123;&#10;&#9;    refWatcher = LeakCanary.install(this, LeakLogService.class,&#10;&#9;            AndroidExcludedRefs.createAndroidDefaults().build());&#10;&#9;&#125; else &#123;&#10;&#9;    refWatcher = RefWatcher.DISABLED;&#10;&#9;&#125;&#10;&#10;&#9;public static RefWatcher getRefWatcher(Context context) &#123;&#10;        ExampleApplication application = (ExampleApplication) context.getApplicationContext();&#10;        return application.refWatcher;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后在需要检测的地方进行监听即可：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseFragment extends Fragment &#123;&#10;&#10;  @Override public void onDestroy() &#123;&#10;    super.onDestroy();&#10;    RefWatcher refWatcher = ExampleApplication.getRefWatcher(getActivity());&#10;    refWatcher.watch(this);&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="简易集成">简易集成</h3><p>参考<a href="https://github.com/GavinCT/SimpleLeakCanary" target="_blank" rel="external">GavinCT/SimpleLeakCanary</a>。<br>拷贝库文件到项目下：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AndroidWatchExecutor<span class="class">.java</span></span><br><span class="line">GcTrigger<span class="class">.java</span></span><br><span class="line">KeyedWeakReference<span class="class">.java</span></span><br><span class="line">RefWatcher.java</span><br></pre></td></tr></table></figure></p>
+<p>在需要监听的地方添加监听代码：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protected void onDestroy() &#123;&#10;&#9;super.onDestroy();&#10;&#9;getApplicationContext().getRefWatcher().watch(this);&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="排查内存泄露">排查内存泄露</h2><p>利用Eclipse的Memory Analyzer（<a href="http://www.eclipse.org/mat/" target="_blank" rel="external">Eclipse Memory Analyzer Open Source Project</a>）可以方便的分析内存泄露原因。</p>
+<p><strong>使用Studio帮助我们排查泄露</strong><br>通过Studio我们可以：</p>
+<ol>
+<li>查看内存堆栈情况</li>
+<li>手动/强制垃圾回收，排除LeakCanary误报</li>
+<li>导出Heap信息（Dump Java Heap）</li>
+</ol>
+<p>内存信息导出后，可用MAT打开.hprof文件进行分析，可能需要进行转换：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hprof-conv source.hprof dist.hprof</span><br></pre></td></tr></table></figure></p>
+<p>打开QQL查询当前内存信息（快捷键CTRL + ENTER执行QQL语句）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from instanceof android.app.Activity</span><br></pre></td></tr></table></figure></p>
+<p>查看内存信息，如果有多个相同对象即为可疑泄露对象：<br><code>右键 -&gt; Merge Shortest Paths to GC Roots -&gt; exclude all phantom/weak/soft etc. refrences</code><br>具体排查类，即可发现泄露对象。</p>
+<h2 id="解决内存泄露">解决内存泄露</h2><p>针对可疑泄露对象，进行代码排查，即可解决。</p>
+<h2 id="避免内存泄露">避免内存泄露</h2><p>良好编码习惯！</p>
+<ol>
+<li>匿名内部类</li>
+<li>非静态内部类</li>
+<li>单例对象持有Activity或Context对象<br>ETC…</li>
+</ol>
+<h2 id="REF">REF</h2><p><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-ecl-ma/index.html" target="_blank" rel="external">使用 Eclipse Memory Analyzer 进行堆转储文件分析</a><br><a href="https://github.com/square/leakcanary" target="_blank" rel="external">square/leakcanary</a><br><a href="http://droidyue.com/blog/2014/11/02/note-for-google-io-memory-management-for-android-chinese-edition/" target="_blank" rel="external">Google IO：Android内存管理主题演讲记录 - 技术小黑屋</a><br><a href="http://jiajixin.cn/2015/01/06/memory_leak/" target="_blank" rel="external">Android内存泄漏研究 | Jason’s Blog</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[调试内存泄露方法，监控应用是否正常使用内存并回收。]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[CentOS如何移除依赖]]></title>
@@ -1361,53 +1408,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[在使用Android Fragment的时候，配合新的ViewPager、FragmentPagerAdapter，会经常发生No View Found For ID Error，本文总结下此错误经常是什么原因导致。]]>
-    
-    </summary>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
-    
-      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[应用内存泄露排查]]></title>
-    <link href="https://hwangjr.github.io/2015/07/13/%E5%BA%94%E7%94%A8%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%8E%92%E6%9F%A5/"/>
-    <id>https://hwangjr.github.io/2015/07/13/应用内存泄露排查/</id>
-    <published>2015-07-13T03:26:23.000Z</published>
-    <updated>2015-11-24T07:26:11.371Z</updated>
-    <content type="html"><![CDATA[<h2 id="内存泄露">内存泄露</h2><p>用到神器<a href="https://github.com/square/leakcanary" target="_blank" rel="external">square/leakcanary</a>：</p>
-<blockquote>
-<p>A memory leak detection library for Android and Java.<br>“A small leak will sink a great ship.”    - Benjamin Franklin<br>千里之堤，毁于蚁穴。 — 《韩非子.喻老》</p>
-</blockquote>
-<h3 id="LeakCanary完整集成">LeakCanary完整集成</h3><p><strong>配置build.gradle</strong><br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line">    <span class="keyword">repositories</span> &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">dependencies</span> &#123;</span><br><span class="line">	    <span class="keyword">classpath</span> <span class="string">'com.android.tools.build:gradle:1.2.3'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">apply plugin: <span class="string">'android-library'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">allprojects</span> &#123;</span><br><span class="line">	<span class="keyword">repositories</span>&#123;</span><br><span class="line">		jcenter()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">   debugCompile <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">   releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
-<p><strong>配置代码</strong><br>在你的APPLICATION中：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class ExampleApplication extends Application &#123;&#10;  @Override public void onCreate() &#123;&#10;&#9;super.onCreate();&#10;&#9;if (BuildConfig.DEBUG) &#123;&#10;&#9;    refWatcher = LeakCanary.install(this, LeakLogService.class,&#10;&#9;            AndroidExcludedRefs.createAndroidDefaults().build());&#10;&#9;&#125; else &#123;&#10;&#9;    refWatcher = RefWatcher.DISABLED;&#10;&#9;&#125;&#10;&#10;&#9;public static RefWatcher getRefWatcher(Context context) &#123;&#10;        ExampleApplication application = (ExampleApplication) context.getApplicationContext();&#10;        return application.refWatcher;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后在需要检测的地方进行监听即可：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseFragment extends Fragment &#123;&#10;&#10;  @Override public void onDestroy() &#123;&#10;    super.onDestroy();&#10;    RefWatcher refWatcher = ExampleApplication.getRefWatcher(getActivity());&#10;    refWatcher.watch(this);&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="简易集成">简易集成</h3><p>参考<a href="https://github.com/GavinCT/SimpleLeakCanary" target="_blank" rel="external">GavinCT/SimpleLeakCanary</a>。<br>拷贝库文件到项目下：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AndroidWatchExecutor<span class="class">.java</span></span><br><span class="line">GcTrigger<span class="class">.java</span></span><br><span class="line">KeyedWeakReference<span class="class">.java</span></span><br><span class="line">RefWatcher.java</span><br></pre></td></tr></table></figure></p>
-<p>在需要监听的地方添加监听代码：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protected void onDestroy() &#123;&#10;&#9;super.onDestroy();&#10;&#9;getApplicationContext().getRefWatcher().watch(this);&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="排查内存泄露">排查内存泄露</h2><p>利用Eclipse的Memory Analyzer（<a href="http://www.eclipse.org/mat/" target="_blank" rel="external">Eclipse Memory Analyzer Open Source Project</a>）可以方便的分析内存泄露原因。</p>
-<p><strong>使用Studio帮助我们排查泄露</strong><br>通过Studio我们可以：</p>
-<ol>
-<li>查看内存堆栈情况</li>
-<li>手动/强制垃圾回收，排除LeakCanary误报</li>
-<li>导出Heap信息（Dump Java Heap）</li>
-</ol>
-<p>内存信息导出后，可用MAT打开.hprof文件进行分析，可能需要进行转换：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hprof-conv source.hprof dist.hprof</span><br></pre></td></tr></table></figure></p>
-<p>打开QQL查询当前内存信息（快捷键CTRL + ENTER执行QQL语句）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from instanceof android.app.Activity</span><br></pre></td></tr></table></figure></p>
-<p>查看内存信息，如果有多个相同对象即为可疑泄露对象：<br><code>右键 -&gt; Merge Shortest Paths to GC Roots -&gt; exclude all phantom/weak/soft etc. refrences</code><br>具体排查类，即可发现泄露对象。</p>
-<h2 id="解决内存泄露">解决内存泄露</h2><p>针对可疑泄露对象，进行代码排查，即可解决。</p>
-<h2 id="避免内存泄露">避免内存泄露</h2><p>良好编码习惯！</p>
-<ol>
-<li>匿名内部类</li>
-<li>非静态内部类</li>
-<li>单例对象持有Activity或Context对象<br>ETC…</li>
-</ol>
-<h2 id="REF">REF</h2><p><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-ecl-ma/index.html" target="_blank" rel="external">使用 Eclipse Memory Analyzer 进行堆转储文件分析</a><br><a href="https://github.com/square/leakcanary" target="_blank" rel="external">square/leakcanary</a><br><a href="http://droidyue.com/blog/2014/11/02/note-for-google-io-memory-management-for-android-chinese-edition/" target="_blank" rel="external">Google IO：Android内存管理主题演讲记录 - 技术小黑屋</a><br><a href="http://jiajixin.cn/2015/01/06/memory_leak/" target="_blank" rel="external">Android内存泄漏研究 | Jason’s Blog</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[调试内存泄露方法，监控应用是否正常使用内存并回收。]]>
     
     </summary>
     

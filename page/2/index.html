@@ -82,6 +82,78 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/12/V8和项目SO库冲突/" title="V8和项目SO库冲突" itemprop="url">V8和项目SO库冲突</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-12T07:19:46.000Z" itemprop="datePublished"> 发表于 2015-08-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>在<a href="http://blog.hwangjr.com/2015/07/10/Android-%E5%AE%9E%E7%8E%B0%E6%AF%9B%E7%8E%BB%E7%92%83%E6%95%88%E6%9E%9C/" target="_blank" rel="external">毛玻璃效果</a>中，项目加入了毛玻璃，相应的会引入V8库。V8库有加入对底层的支持，包括so库等。<br>由于项目中也有加入百度推送，包括so库，在加入V8之后，启动应用会收到一个error，加载推送的so库错误。</p>
+<h2 id="初步诊断，so库加入方式冲突">初步诊断，so库加入方式冲突</h2><h3 id="加入V8方式">加入V8方式</h3><p>如果是android studio的话：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    renderscriptTargetApi <span class="number">22</span></span><br><span class="line">    renderscriptSupportModeEnabled <span class="keyword">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="集成SO库方式">集成SO库方式</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    <span class="keyword">sourceSets</span> &#123;</span><br><span class="line">        main &#123;</span><br><span class="line">            jniLibs.srcDirs = [<span class="string">'libs'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="结论">结论</h3><p>是render script的加入方式和jniLibs.srcDirs冲突，很可能被重写了，导致没有加入。</p>
+<h2 id="解决方法">解决方法</h2><p>知道是什么原因引起的，那就很好解决了。</p>
+<h3 id="修改V8引入方式">修改V8引入方式</h3><p>既然是引入V8导致的问题，那么相应的，我们可以显示的引入V8包。V8在SDK中的位置（不同版本的V8在相应的build tools的版本下）：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/android-sdk-linux/build-tools/<span class="number">22.0</span>.1</span><br></pre></td></tr></table></figure></p>
+<p>我们拷贝lib下面的jar包和packaged下面的so库，显示导入V8包，即可解决问题。</p>
+<h3 id="第三方插件">第三方插件</h3><p>有需求就有市场，强大的GITHUB上面有了GRADLE NATIVE插件<a href="https://github.com/nhachicha/android-native-dependencies" target="_blank" rel="external">android-native-dependencies</a>，专门解决so库的集成问题，包括Maven等仓库的so库拉取等。<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line">  <span class="keyword">repositories</span> &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">classpath</span> <span class="string">'com.android.tools.build:gradle:1.0.0'</span></span><br><span class="line">    <span class="keyword">classpath</span> <span class="string">'com.nabilhachicha:android-native-dependencies:0.1.2'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'android'</span></span><br><span class="line">apply plugin: <span class="string">'android-native-dependencies'</span></span><br><span class="line"></span><br><span class="line">native_dependencies &#123;</span><br><span class="line">    artifact <span class="string">'com.snappydb:snappydb-native:0.2.+:armeabi'</span></span><br><span class="line">    artifact <span class="string">'com.snappydb:snappydb-native:0.2.+:x86'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="comment">//regular Jar dependencies ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Gradle任务方式">Gradle任务方式</h3><p>其实so库就是将so库copy到特定的目录下面，来进行打包即可，那么我们直接写copy的task执行也是可以的。但是有个问题就是随着gradle的升级，很多方法可能会丢弃，那么我们就得随着gradle升级不断升级。<br><a href="https://gist.github.com/khernyo/4226923" target="_blank" rel="external">参考代码</a>：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This hack works with com.android.tools.build:gradle:1.0.0, won't work in later version without modification</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'android'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">targetCompatibility</span> = <span class="number">1.6</span></span><br><span class="line"><span class="keyword">sourceCompatibility</span> = <span class="number">1.6</span></span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">	target = <span class="string">'android-14'</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">sourceSets</span> &#123;</span><br><span class="line">		main &#123;</span><br><span class="line">			manifest.srcFile <span class="string">'AndroidManifest.xml'</span></span><br><span class="line">			java.srcDir <span class="string">'src'</span></span><br><span class="line">			res.srcDir <span class="string">'res'</span></span><br><span class="line">			assets.srcDir <span class="string">'assets'</span></span><br><span class="line">			resources.srcDir <span class="string">'src'</span></span><br><span class="line">		&#125;</span><br><span class="line">		test &#123;</span><br><span class="line">			java.srcDir <span class="string">'tests/src'</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">	<span class="keyword">compile</span> <span class="keyword">project</span>(<span class="string">':main'</span>)</span><br><span class="line">	<span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'../main/libs'</span>, <span class="keyword">include</span>: <span class="string">'*.jar'</span>)</span><br><span class="line">	<span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'../thirdparty/actionbar-sherlock/library/libs'</span>, <span class="keyword">include</span>: <span class="string">'*.jar'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">task</span> copyNativeLibs(type: <span class="keyword">Copy</span>) &#123;</span><br><span class="line">	<span class="keyword">from</span>(<span class="keyword">new</span> <span class="keyword">File</span>(<span class="keyword">project</span>(<span class="string">':main'</span>).buildDir, <span class="string">'native-libs'</span>)) &#123; <span class="keyword">include</span> <span class="string">'**/*.so'</span> &#125;</span><br><span class="line">	<span class="keyword">into</span> <span class="keyword">new</span> <span class="keyword">File</span>(buildDir, <span class="string">'native-libs'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">tasks.withType(JavaCompile) &#123; javaCompileTask -&gt; javaCompileTask.dependsOn copyNativeLibs &#125;</span><br><span class="line"></span><br><span class="line">clean.dependsOn <span class="string">'cleanCopyNativeLibs'</span></span><br><span class="line"></span><br><span class="line">tasks.withType(com.android.build.gradle.PackageApplicationTask) &#123; pkgTask -&gt;</span><br><span class="line">	pkgTask.jniDir <span class="keyword">new</span> <span class="keyword">File</span>(buildDir, <span class="string">'native-libs'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Ref">Ref</h2><p><a href="https://github.com/nhachicha/android-native-dependencies" target="_blank" rel="external">android-native-dependencies</a><br><a href="https://nhachicha.wordpress.com/2014/05/27/android-gradle-add-native-so-dependencies/" target="_blank" rel="external">Android Gradle, add native .so dependencies</a><br><a href="http://tools.android.com/tech-docs/new-build-system" target="_blank" rel="external">New Build System - Android Tools Project Site</a><br><a href="http://tools.android.com/tech-docs/new-build-system/gradle-experimental" target="_blank" rel="external">Experimental Plugin User Guide</a><br><a href="https://github.com/googlesamples/android-ndk" target="_blank" rel="external">googlesamples/android-ndk</a><br><a href="http://zhengxiaopeng.com/2014/12/13/Android-Studio-jar%E3%80%81so%E3%80%81library%E9%A1%B9%E7%9B%AE%E4%BE%9D%E8%B5%96/" target="_blank" rel="external">Android Studio Jar、so、library项目依赖</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/12/V8和项目SO库冲突/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/12/AndroidStudio-快捷键/" title="AndroidStudio 快捷键" itemprop="url">AndroidStudio 快捷键</a>
   </h1>
   <p class="article-author">By
@@ -1045,95 +1117,6 @@
 	
 	  	<span></span>
 		<a href="/2015/07/13/Android-Fragment-No-View-Found-For-ID-Error/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/应用内存泄露排查/" title="应用内存泄露排查" itemprop="url">应用内存泄露排查</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T03:26:23.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="内存泄露">内存泄露</h2><p>用到神器<a href="https://github.com/square/leakcanary" target="_blank" rel="external">square/leakcanary</a>：</p>
-<blockquote>
-<p>A memory leak detection library for Android and Java.<br>“A small leak will sink a great ship.”    - Benjamin Franklin<br>千里之堤，毁于蚁穴。 — 《韩非子.喻老》</p>
-</blockquote>
-<h3 id="LeakCanary完整集成">LeakCanary完整集成</h3><p><strong>配置build.gradle</strong><br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line">    <span class="keyword">repositories</span> &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">dependencies</span> &#123;</span><br><span class="line">	    <span class="keyword">classpath</span> <span class="string">'com.android.tools.build:gradle:1.2.3'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">apply plugin: <span class="string">'android-library'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">allprojects</span> &#123;</span><br><span class="line">	<span class="keyword">repositories</span>&#123;</span><br><span class="line">		jcenter()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">   debugCompile <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">   releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
-<p><strong>配置代码</strong><br>在你的APPLICATION中：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class ExampleApplication extends Application &#123;&#10;  @Override public void onCreate() &#123;&#10;&#9;super.onCreate();&#10;&#9;if (BuildConfig.DEBUG) &#123;&#10;&#9;    refWatcher = LeakCanary.install(this, LeakLogService.class,&#10;&#9;            AndroidExcludedRefs.createAndroidDefaults().build());&#10;&#9;&#125; else &#123;&#10;&#9;    refWatcher = RefWatcher.DISABLED;&#10;&#9;&#125;&#10;&#10;&#9;public static RefWatcher getRefWatcher(Context context) &#123;&#10;        ExampleApplication application = (ExampleApplication) context.getApplicationContext();&#10;        return application.refWatcher;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>之后在需要检测的地方进行监听即可：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseFragment extends Fragment &#123;&#10;&#10;  @Override public void onDestroy() &#123;&#10;    super.onDestroy();&#10;    RefWatcher refWatcher = ExampleApplication.getRefWatcher(getActivity());&#10;    refWatcher.watch(this);&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="简易集成">简易集成</h3><p>参考<a href="https://github.com/GavinCT/SimpleLeakCanary" target="_blank" rel="external">GavinCT/SimpleLeakCanary</a>。<br>拷贝库文件到项目下：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AndroidWatchExecutor<span class="class">.java</span></span><br><span class="line">GcTrigger<span class="class">.java</span></span><br><span class="line">KeyedWeakReference<span class="class">.java</span></span><br><span class="line">RefWatcher.java</span><br></pre></td></tr></table></figure></p>
-<p>在需要监听的地方添加监听代码：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protected void onDestroy() &#123;&#10;&#9;super.onDestroy();&#10;&#9;getApplicationContext().getRefWatcher().watch(this);&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="排查内存泄露">排查内存泄露</h2><p>利用Eclipse的Memory Analyzer（<a href="http://www.eclipse.org/mat/" target="_blank" rel="external">Eclipse Memory Analyzer Open Source Project</a>）可以方便的分析内存泄露原因。</p>
-<p><strong>使用Studio帮助我们排查泄露</strong><br>通过Studio我们可以：</p>
-<ol>
-<li>查看内存堆栈情况</li>
-<li>手动/强制垃圾回收，排除LeakCanary误报</li>
-<li>导出Heap信息（Dump Java Heap）</li>
-</ol>
-<p>内存信息导出后，可用MAT打开.hprof文件进行分析，可能需要进行转换：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hprof-conv source.hprof dist.hprof</span><br></pre></td></tr></table></figure></p>
-<p>打开QQL查询当前内存信息（快捷键CTRL + ENTER执行QQL语句）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from instanceof android.app.Activity</span><br></pre></td></tr></table></figure></p>
-<p>查看内存信息，如果有多个相同对象即为可疑泄露对象：<br><code>右键 -&gt; Merge Shortest Paths to GC Roots -&gt; exclude all phantom/weak/soft etc. refrences</code><br>具体排查类，即可发现泄露对象。</p>
-<h2 id="解决内存泄露">解决内存泄露</h2><p>针对可疑泄露对象，进行代码排查，即可解决。</p>
-<h2 id="避免内存泄露">避免内存泄露</h2><p>良好编码习惯！</p>
-<ol>
-<li>匿名内部类</li>
-<li>非静态内部类</li>
-<li>单例对象持有Activity或Context对象<br>ETC…</li>
-</ol>
-<h2 id="REF">REF</h2><p><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-ecl-ma/index.html" target="_blank" rel="external">使用 Eclipse Memory Analyzer 进行堆转储文件分析</a><br><a href="https://github.com/square/leakcanary" target="_blank" rel="external">square/leakcanary</a><br><a href="http://droidyue.com/blog/2014/11/02/note-for-google-io-memory-management-for-android-chinese-edition/" target="_blank" rel="external">Google IO：Android内存管理主题演讲记录 - 技术小黑屋</a><br><a href="http://jiajixin.cn/2015/01/06/memory_leak/" target="_blank" rel="external">Android内存泄漏研究 | Jason’s Blog</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/应用内存泄露排查/#disqus_thread" class="comments-count-link">Comments</a>
 	
 </div>
 
