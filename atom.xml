@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Life is wonderful!]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="https://hwangjr.github.io//"/>
-  <updated>2015-11-24T07:30:44.759Z</updated>
+  <updated>2015-11-24T10:43:47.007Z</updated>
   <id>https://hwangjr.github.io//</id>
   
   <author>
@@ -14,6 +14,85 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[发布开源项目到Maven（Gradle + Sonatype）]]></title>
+    <link href="https://hwangjr.github.io/2015/11/24/%E5%8F%91%E5%B8%83%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%B0Maven%EF%BC%88Gradle-Sonatype%EF%BC%89/"/>
+    <id>https://hwangjr.github.io/2015/11/24/发布开源项目到Maven（Gradle-Sonatype）/</id>
+    <published>2015-11-24T10:43:22.000Z</published>
+    <updated>2015-11-24T10:43:47.007Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>最近整理Android开发工具，想跟其他人分享，就有了将其发布到maven想法，所以考虑将库发布到maven，目前Android官方使用jCenter，比这个简单，后续补充（jCenter会自动同步Maven Center中的库）。<br>顺带避免：</p>
+<blockquote>
+<p>Download the source to use it as library project</p>
+</blockquote>
+<h2 id="流程">流程</h2><p>整个流程很清晰：</p>
+<ol>
+<li>获取JIRA Ticket，简单说就是去<a href="https://issues.sonatype.org/browse/" target="_blank" rel="external">Issues Sonatype</a>注册并提交issue</li>
+<li>GPG密钥，要上传到maven，需要GPG密钥</li>
+<li>本地配置POM，即配置项目信息</li>
+<li>Gradle提交到Sonatype，通过脚本提交到Sonatype</li>
+<li>发布版本，分为SNAPSHOT和Release版本</li>
+</ol>
+<p>整个流程就是酱紫。OVER。</p>
+<h2 id="获取JIRA_Ticket">获取JIRA Ticket</h2><h3 id="注册JIRA帐号">注册JIRA帐号</h3><p>提交项目到Sonatype，首先需要注册。打开<a href="https://issues.sonatype.org/" target="_blank" rel="external">(Issue Sonatype)</a>注册JIRA帐号。</p>
+<h3 id="创建Issue">创建Issue</h3><p>在导航上Create按钮，创建一个新的Issue。其中特别注意：</p>
+<ol>
+<li>Issue Type默认是new Project，按照默认就好</li>
+<li>Summer和Description填写你要创建项目的描述即可</li>
+<li>Group id特别关键，最好创建顶级Group ID，比如我需要<code>com.hwangjr.xxx</code>，那么Group ID填写为<code>com.hwangjr</code>，这样其他的库也可发布</li>
+<li>Project URL和SCM URL填GIT HUB项目地址即可</li>
+<li>其他基本都懂</li>
+</ol>
+<p>填写完毕，等待！工作人员会让你提交你的项目到Sonatype。</p>
+<h2 id="GPG密钥">GPG密钥</h2><p>密钥是为了上传文件的加密和签名。如果有安装git，那么应该是已经安装GPG了，以下默认命令为Linux下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成密钥</span></span><br><span class="line">gpg --gen-key</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">gpg --list-key</span><br></pre></td></tr></table></figure></p>
+<p>其中姓名、邮箱和备注需要认真填写下，最后输入的Passphase，是密码，上传maven需要使用。</p>
+<blockquote>
+<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x68;&#x75;&#97;&#x6e;&#x67;&#x6a;&#105;&#97;&#x6e;&#114;&#x6f;&#x6e;&#x67;&#50;&#x30;&#49;&#48;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#x68;&#x75;&#97;&#x6e;&#x67;&#x6a;&#105;&#97;&#x6e;&#114;&#x6f;&#x6e;&#x67;&#50;&#x30;&#49;&#48;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a><br>sub   2048R/2F11E234 2015-11-24</p>
+</blockquote>
+<p>B53A8137是KEY ID。上传公钥到服务器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --keyserver hkp://pool.sks-keyservers.net --send-keys B53A8137</span><br></pre></td></tr></table></figure></p>
+<h2 id="本地配置POM">本地配置POM</h2><p>Chris Banes大神已经写完Gradle插件<a href="https://github.com/chrisbanes/gradle-mvn-push" target="_blank" rel="external">chrisbanes/gradle-mvn-push</a>，可直接使用<a href="https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle" target="_blank" rel="external">gradle-mvn-push.gradle</a>，上面有详细的配置和使用方式。简要步骤为：</p>
+<ol>
+<li>项目，保证是可以用Gradle编译。</li>
+<li>更新<code>HOME gradle.properties</code>，修改<code>USER_HOME/.gradle/gradle.properties</code>文件。</li>
+<li>在项目根目录下，创建文件<code>gradle.properties</code>。</li>
+<li>在想要上传的子模块下，分别创建<code>gradle.properties</code>。</li>
+<li>在子模块下，应用Gradle插件，即在<code>build.gradle</code>末尾加上<code>apply from: &#39;https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle&#39;</code> 或者下载gradle-mvn-push.gradle文件，放到根目录的<code>gradle</code>文件夹下，在<code>build.gradle</code>末尾加上<code>apply from: rootProject.file(&#39;gradle/gradle-mvn-push.gradle&#39;)</code>。</li>
+<li>编译并上传<code>gradle clean build uploadArchives</code>。</li>
+</ol>
+<p>其他属性：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RELEASE_REPOSITORY_URL (defaults to Maven Central's staging server)</span><br><span class="line">SNAPSHOT_REPOSITORY_URL (defaults to Maven Central's snapshot server)</span><br></pre></td></tr></table></figure></p>
+<p>USER_HOME/.gradle/gradle.properties文件新增，内容修改为自身用户名密码，下面的就是创建的GPG密钥：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NEXUS_USERNAME=chrisbanes</span><br><span class="line">NEXUS_PASSWORD=g00dtry</span><br><span class="line"></span><br><span class="line">signing.keyId=ABCDEF12</span><br><span class="line">signing.password=n1c3try</span><br><span class="line">signing.secretKeyRingFile=<span class="regexp">/home/u</span>ser<span class="regexp">/.gnupg/</span>secring.gpg</span><br></pre></td></tr></table></figure></p>
+<p>项目根目录下的gradle.properties文件内容为，需要根据具体项目情况进行修改：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">VERSION_NAME=0.9.2-SNAPSHOT</span><br><span class="line">VERSION_CODE=92</span><br><span class="line">GROUP=com.github.chrisbanes.actionbarpulltorefresh</span><br><span class="line"></span><br><span class="line">POM_DESCRIPTION=A modern implementation of the pull-to-refresh for Android</span><br><span class="line">POM_URL=https://github.com/chrisbanes/ActionBar-PullToRefresh</span><br><span class="line">POM_SCM_URL=https://github.com/chrisbanes/ActionBar-PullToRefresh</span><br><span class="line">POM_SCM_CONNECTION=scm:git@github.com:chrisbanes/ActionBar-PullToRefresh.git</span><br><span class="line">POM_SCM_DEV_CONNECTION=scm:git@github.com:chrisbanes/ActionBar-PullToRefresh.git</span><br><span class="line">POM_LICENCE_NAME=The Apache Software License, Version 2.0</span><br><span class="line">POM_LICENCE_URL=http://www.apache.org/licenses/LICENSE-2.0.txt</span><br><span class="line">POM_LICENCE_DIST=repo</span><br><span class="line">POM_DEVELOPER_ID=chrisbanes</span><br><span class="line">POM_DEVELOPER_NAME=Chris Banes</span><br></pre></td></tr></table></figure></p>
+<p>子模块的gradle.properties文件内容为：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">POM_NAME=ActionBar-PullToRefresh Library</span><br><span class="line">POM_ARTIFACT_ID=library</span><br><span class="line">POM_PACKAGING=aar</span><br></pre></td></tr></table></figure></p>
+<p><strong>其中</strong>VERSION_NAME后面如果带<code>SNAPSHOT</code>会提交到<a href="https://oss.sonatype.org/content/repositories/snapshots" target="_blank" rel="external">Snapshots</a>，这个不需要同步即可下载jar和源码，如果不加则为RELEASE版本，会同步到MAVEN CENTER。</p>
+<h2 id="Gradle脚本提交到Sonatype">Gradle脚本提交到Sonatype</h2><p>运行命令：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gradle clean build uploadArchives</span><br></pre></td></tr></table></figure></p>
+<p>即会执行clean，并重新编译，上传到Sonatype。</p>
+<h2 id="发布版本">发布版本</h2><p>版本分为<code>SNAPSHOT</code>版本和<code>RELEASE</code>版本。<br>如果<code>VERSION_NAME</code>有加入<code>SNAPSHOT</code>，即为<code>SNAPSHOT</code>版本，不会同步到MAVEN。<br>如果没有<code>SNAPSHOT</code>，则会同步到MAVEN。</p>
+<p>首次提交之后，登陆<a href="https://oss.sonatype.org/index.html#welcome" target="_blank" rel="external">Sonatype Nexus Professional</a>，查看<code>Staging Repositories</code>，找到提交的包，选择并close并Release，再到<code>issue sonatype</code>上提交的JIRA TICKET后面评论告知版本已经staged并released，可以进行sync，工作人员会进行同步。<br>同步成功之后，即可在<a href="http://search.maven.org/" target="_blank" rel="external">maven center</a>搜索到项目，可通过gradle添加依赖。</p>
+<h2 id="常规发布步骤">常规发布步骤</h2><ol>
+<li>发布<code>SNAPSHOT</code>版本是否查看是否正常</li>
+<li>发布<code>RELEASE</code>版本到线上，并进行同步</li>
+<li>修改为下个<code>SNAPSHOT</code>版本</li>
+</ol>
+<h2 id="TIPS">TIPS</h2><h3 id="发布JAR">发布JAR</h3><p>如果想发布JAR，在<a href="#本地配置POM">本地配置POM</a>时，修改<a href="https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle" target="_blank" rel="external">gradle-mvn-push.gradle</a>，在脚本中加入：<br>``` gradle<br>artifacts {<br>    archives packageReleaseJar<br>}</p>
+<h3 id="发布时返回401">发布时返回401</h3><p>401为没有权限错误，检查：</p>
+<ol>
+<li>用户名密码，可在gradle-mvn-push中打印日志查看用户名密码是否正确</li>
+<li>检查Sonatype是否有权限</li>
+</ol>
+<h2 id="REFS">REFS</h2><p><a href="http://central.sonatype.org/pages/ossrh-guide.html" target="_blank" rel="external">OSSRH Guide</a><br><a href="http://www.ruanyifeng.com/blog/2013/07/gpg.html" target="_blank" rel="external">GPG入门教程</a><br><a href="https://github.com/chrisbanes/gradle-mvn-push" target="_blank" rel="external">gradle-mvn-push</a><br><a href="https://oss.sonatype.org/" target="_blank" rel="external">Sonatype Nexus Professional</a><br><a href="http://afoo.me/posts/2013-07-18-publishing-oss-release-to-maven-central-repo.html" target="_blank" rel="external">发布开源项目到Maven Central</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[在使用自己构建库的同时，是否有强烈的分享欲，那么，就开源上传到Maven Center让别人一起开森吧。]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[应用内存泄露排查]]></title>
@@ -1536,28 +1615,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[使用Android Studio来管理SVN版本，进行协同工作。]]>
-    
-    </summary>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
-    
-      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android Project Templete]]></title>
-    <link href="https://hwangjr.github.io/2015/06/19/Android-Project-Templete/"/>
-    <id>https://hwangjr.github.io/2015/06/19/Android-Project-Templete/</id>
-    <published>2015-06-19T08:25:20.000Z</published>
-    <updated>2015-06-19T08:25:47.816Z</updated>
-    <content type="html"><![CDATA[<p>Android更新迭代很快，而公司业务也在不断扩张，需要这个项目模板来帮助我们快速构建新的应用程序。而且Android的库也在不断的更新换代，包括网络请求库、图片库、JSON解析库等，需要我们不断的更新自身的项目结构，与Android系统保持同步更新，在兼容适配等会更有好处。<br>本库包含了通用的网络库、图片库、内存检测库、底部TAB库等，基本满足项目的前期构建。还包括了脚本编译多渠道包等其他功能，具体可以clone下来自己把玩把玩~~<br>如果有任何建议或者意见，随时联系，也可以pull request到分支。<br><a href="https://github.com/hwangjr/AndroidProjectTemplete" target="_blank" rel="external">AndroidProjectTemplete</a><br>目前已经包含的库有：<br>1、appcompat-v7:22.2.0<br>2、<a href="https://github.com/square/retrofit" target="_blank" rel="external">retrofit:1.9.0</a><br>3、<a href="https://github.com/square/okhttp/tree/master/okhttp-urlconnection" target="_blank" rel="external">okhttp-urlconnection:2.4.0</a><br>4、<a href="https://github.com/square/okhttp" target="_blank" rel="external">okhttp:2.4.0</a><br>5、<a href="https://github.com/square/okio" target="_blank" rel="external">okio:1.4.0</a><br>6、<a href="https://github.com/OrangeGangsters/SwipyRefreshLayout" target="_blank" rel="external">swipy:1.2</a><br>7、<a href="https://github.com/wasabeef/recyclerview-animators" target="_blank" rel="external">recyclerview-animators:1.2</a><br>8、support-v4:22.2.0<br>9、<a href="https://github.com/bumptech/glide" target="_blank" rel="external">glide:3.6.0</a><br>10、<a href="https://github.com/square/leakcanary" target="_blank" rel="external">leakcanary-android:1.3.1</a><br>11、<a href="https://github.com/google/gson" target="_blank" rel="external">GSON</a><br>11、自写底部Tab库（解决Fragment嵌套等问题）</p>
-<p>build.gradle:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    compile fileTree(dir: <span class="string">'libs'</span>, include: [<span class="string">'*.jar'</span>])</span><br><span class="line">    compile <span class="string">'com.android.support:appcompat-v7:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.retrofit:retrofit:1.9.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp-urlconnection:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okio:okio:1.4.0'</span></span><br><span class="line">    compile <span class="string">'com.github.orangegangsters:swipy:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'jp.wasabeef:recyclerview-animators:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'com.android.support:support-v4:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.github.bumptech.glide:glide:3.6.0'</span></span><br><span class="line">    debugCompile <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">    releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[利用Android Studio开发出一个项目模板，包括常用类库、底部TAB、左滑返回、下拉刷新、上拉更多、内存溢出排查、自动化构建等操作，为后续项目做筹备。]]>
     
     </summary>
     
