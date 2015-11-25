@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Supervisor Basic Usage | HwangJR&#39;s Blog</title>
+    <title>搞定Android Proguard | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="Introduction about supervisor.">
+    <meta name="description" content="引用各种库，然后各种的混淆，心好累。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Supervisor Basic Usage">
-<meta property="og:url" content="https://hwangjr.github.io/2015/10/09/Supervisor-Basic-Usage/index.html">
+<meta property="og:title" content="搞定Android Proguard">
+<meta property="og:url" content="https://hwangjr.github.io/2015/11/25/搞定Android-Proguard/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="Introduction about supervisor.">
-<meta property="og:updated_time" content="2015-10-09T06:38:44.370Z">
+<meta property="og:description" content="引用各种库，然后各种的混淆，心好累。">
+<meta property="og:updated_time" content="2015-11-25T10:23:44.277Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Supervisor Basic Usage">
-<meta name="twitter:description" content="Introduction about supervisor.">
+<meta name="twitter:title" content="搞定Android Proguard">
+<meta name="twitter:description" content="引用各种库，然后各种的混淆，心好累。">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/09/Supervisor-Basic-Usage/" title="Supervisor Basic Usage" itemprop="url">Supervisor Basic Usage</a>
+      <a href="/2015/11/25/搞定Android-Proguard/" title="搞定Android Proguard" itemprop="url">搞定Android Proguard</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-09T06:38:05.000Z" itemprop="datePublished"> 发表于 2015-10-09</time>
+    <time datetime="2015-11-25T10:23:19.000Z" itemprop="datePublished"> 发表于 2015-11-25</time>
     
   </p>
 </header>
@@ -97,28 +97,24 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install"><span class="toc-number">1.</span> <span class="toc-text">Install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Commands"><span class="toc-number">2.</span> <span class="toc-text">Commands</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">3.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Run_on_startup"><span class="toc-number">4.</span> <span class="toc-text">Run on startup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Manage_on_web"><span class="toc-number">5.</span> <span class="toc-text">Manage on web</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#END"><span class="toc-number">6.</span> <span class="toc-text">END</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆设置"><span class="toc-number">2.</span> <span class="toc-text">混淆设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#build-gradle"><span class="toc-number">2.1.</span> <span class="toc-text">build.gradle</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proguard-rules-pro"><span class="toc-number">2.2.</span> <span class="toc-text">proguard-rules.pro</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#consumerProguardFiles"><span class="toc-number">2.3.</span> <span class="toc-text">consumerProguardFiles</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
 		
 		</div>
 		
-		<p><a href="http://supervisord.org/" target="_blank" rel="external">Supervisor</a> is a process control system, it is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.</p>
-<p>It shares some of the same goals of programs like <a href="http://supervisord.org/glossary.html#term-launchd" target="_blank" rel="external">launchd</a>, <a href="http://supervisord.org/glossary.html#term-daemontools" target="_blank" rel="external">daemontools</a>, and <a href="http://supervisord.org/glossary.html#term-runit" target="_blank" rel="external">runit</a>. Unlike some of these programs, it is not meant to be run as a substitute for init as “process id 1”. Instead it is meant to be used to control processes related to a project or a customer, and is meant to start like any other program at boot time.</p>
-<h2 id="Install">Install</h2><p>Sample for centos:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Maybe u need to install python-setuptools or pip</span></span><br><span class="line"><span class="comment">## yum install python-setuptools &amp;&amp; easy_install pip</span></span><br><span class="line">easy_install supervisor</span><br><span class="line"><span class="comment">## or </span></span><br><span class="line">pip install supervisor</span><br></pre></td></tr></table></figure></p>
-<h2 id="Commands">Commands</h2><p>This is some common commands:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for all service</span></span><br><span class="line">supervisorctl start all</span><br><span class="line">supervisorctl stop all</span><br><span class="line">supervisorctl restart all</span><br><span class="line"></span><br><span class="line"><span class="comment"># for service 'ss'</span></span><br><span class="line">supervisorctl stop ss</span><br><span class="line">supervisorctl start ss</span><br><span class="line">supervisorctl restart ss</span><br></pre></td></tr></table></figure></p>
-<h2 id="Usage">Usage</h2><p><strong>STEP 1: Init the config file </strong></p>
-<p>First of all, we need a config file, supervisor provider us a sample:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## This will create a supervisord.conf file under /etc folder</span></span><br><span class="line"><span class="built_in">echo</span>_supervisord_conf &gt; /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<p><strong>STEP 2: Setup config </strong></p>
-<p>Second, we need to config the file, add the code below to the end of conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># if this config is not correct, it may occur supervisor start fail</span></span><br><span class="line">[program:ss]</span><br><span class="line"><span class="built_in">command</span> = ssserver -c /etc/ss.json</span><br><span class="line">user = root</span><br><span class="line">autostart = <span class="literal">true</span></span><br><span class="line">autorestart = <span class="literal">true</span></span><br><span class="line">stderr_logfile = /var/<span class="built_in">log</span>/supervisor/ss.stderr.log</span><br><span class="line">stdout_logfile = /var/<span class="built_in">log</span>/supervisor/ss.stdout.log</span><br></pre></td></tr></table></figure></p>
-<p>More info see : <a href="http://supervisord.org/configuration.html#programx-section" target="_blank" rel="external">Configuration File — Supervisor 3.1.3 documentation</a></p>
-<p><strong>STEP 3: Run Supervisor</strong></p>
-<p>Finally, run the supervisor:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run supervisor with conf file</span></span><br><span class="line">supervisord -c /etc/supervisord.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># run without conf file, will search for the default conf file by:</span></span><br><span class="line"><span class="comment"># $CWD/supervisord.conf</span></span><br><span class="line"><span class="comment"># $CWD/etc/supervisord.conf</span></span><br><span class="line"><span class="comment"># /etc/supervisord.conf</span></span><br><span class="line">supervisord</span><br></pre></td></tr></table></figure></p>
-<p>If we modify the conf file, we also can update the conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl update</span><br></pre></td></tr></table></figure></p>
-<h2 id="Run_on_startup">Run on startup</h2><p>If you are using a distribution-packaged version of Supervisor, it should already be integrated into the service management infrastructure of your distribution.</p>
-<p>There are user-contributed scripts for various operating systems at: <a href="https://github.com/Supervisor/initscripts" target="_blank" rel="external">Supervisor/initscripts</a></p>
-<p>OR :<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/rc.local</span><br><span class="line"></span><br><span class="line"><span class="comment"># add this before exit</span></span><br><span class="line">supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<h2 id="Manage_on_web">Manage on web</h2><p>U can manage the service remote, just modify the conf file:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[inet_http_server]         ; inet (TCP) server disabled by default</span><br><span class="line">port=<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9001</span>        ; (ip_address:port specifier, *:port <span class="keyword">for</span> all iface)</span><br><span class="line">username=user              ; (default is no username (open server))</span><br><span class="line">password=<span class="number">123</span>               ; (default is no password (open server))</span><br></pre></td></tr></table></figure></p>
-<p>and reload conf:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl reload</span><br></pre></td></tr></table></figure></p>
-<h2 id="END">END</h2><p>Just so easy, Supervisor is very fantastic, enjoy it.</p>
+		<h2 id="背景">背景</h2><p>各种引用库，各种混淆，心好累。<br>所以，有了<a href="https://github.com/AndroidKnife/proguard-config" target="_blank" rel="external">AndroidKnife/proguard-config</a>。</p>
+<h2 id="混淆设置">混淆设置</h2><p>Android中采用Proguard进行代码混淆。每次混淆，都会开始找寻混淆配置，在此开源库中，你可以找到你想要的，如果没找到，没关系，可以PULL REQUEST。</p>
+<h3 id="build-gradle">build.gradle</h3><p>正常在<code>build.gradle</code>中加入混淆配置文件即可：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled <span class="keyword">true</span></span><br><span class="line">            zipAlignEnabled <span class="keyword">true</span></span><br><span class="line">            shrinkResources <span class="keyword">true</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// specific proguard files</span></span><br><span class="line">            proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span>, <span class="string">'proguard-gson.pro'</span></span><br><span class="line">            proguardFile <span class="string">'proguard-square-okio.pro'</span></span><br><span class="line">            ...</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// As of Gradle Android plugin 1.1.0, the test APK has a separate config</span></span><br><span class="line">            testProguardFile <span class="string">'proguard-rules-test.pro'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="proguard-rules-pro">proguard-rules.pro</h3><p>将混淆设置加入<code>proguard-rules.pro</code>文件也是一种方式：<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"><span class="keyword">include</span> xxx</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="consumerProguardFiles">consumerProguardFiles</h3><p>开源库中可以依赖此标志来指定库的混淆方式，此会将<code>*.pro</code>文件打包进入<code>aar</code>中，库混淆时候会自动使用此混淆配置文件。</p>
+<p>需要注意的是，以<code>consumerProguardFiles</code>方式加入的混淆具有以下特性：</p>
+<ul>
+<li><code>*.pro</code>文件会包含在<code>aar</code>文件中</li>
+<li>这些<code>pro</code>配置会在混淆的时候被使用</li>
+<li>此配置针对此<code>aar</code>进行混淆配置</li>
+<li>此配置只对库文件有效，对应用程序无效</li>
+</ul>
+<p>所以以<a href="https://github.com/AndroidKnife/proguard-config" target="_blank" rel="external">AndroidKnife/proguard-config</a>开源库，只要一行代码即可搞定外部混淆：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.hwangjr.proguard:proguardconfig:1.0.1@aar'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结">总结</h2><p>使用此库大善，欢迎pull request。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -126,13 +122,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
   </div>
 
 </div>
@@ -141,7 +137,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://hwangjr.github.io/2015/10/09/Supervisor-Basic-Usage/" data-title="Supervisor Basic Usage | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="https://hwangjr.github.io/2015/11/25/搞定Android-Proguard/" data-title="搞定Android Proguard | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -154,19 +150,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/10/23/CentOS6-5-配置Subversion/" title="CentOS6.5 配置Subversion">
-  <strong>上一篇：</strong><br/>
-  <span>
-  CentOS6.5 配置Subversion</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/21/将SOCKET代理转化为HTTP代理/"  title="将SOCKET代理转化为HTTP代理">
+<a href="/2015/11/24/发布开源项目到Maven（Gradle-Sonatype）/"  title="发布开源项目到Maven（Gradle + Sonatype）">
  <strong>下一篇：</strong><br/> 
- <span>将SOCKET代理转化为HTTP代理
+ <span>发布开源项目到Maven（Gradle + Sonatype）
 </span>
 </a>
 </div>
@@ -187,7 +175,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install"><span class="toc-number">1.</span> <span class="toc-text">Install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Commands"><span class="toc-number">2.</span> <span class="toc-text">Commands</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">3.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Run_on_startup"><span class="toc-number">4.</span> <span class="toc-text">Run on startup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Manage_on_web"><span class="toc-number">5.</span> <span class="toc-text">Manage on web</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#END"><span class="toc-number">6.</span> <span class="toc-text">END</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆设置"><span class="toc-number">2.</span> <span class="toc-text">混淆设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#build-gradle"><span class="toc-number">2.1.</span> <span class="toc-text">build.gradle</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proguard-rules-pro"><span class="toc-number">2.2.</span> <span class="toc-text">proguard-rules.pro</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#consumerProguardFiles"><span class="toc-number">2.3.</span> <span class="toc-text">consumerProguardFiles</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
  
   </div>
 

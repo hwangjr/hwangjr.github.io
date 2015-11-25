@@ -82,6 +82,82 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/25/搞定Android-Proguard/" title="搞定Android Proguard" itemprop="url">搞定Android Proguard</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-25T10:23:19.000Z" itemprop="datePublished"> 发表于 2015-11-25</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>各种引用库，各种混淆，心好累。<br>所以，有了<a href="https://github.com/AndroidKnife/proguard-config" target="_blank" rel="external">AndroidKnife/proguard-config</a>。</p>
+<h2 id="混淆设置">混淆设置</h2><p>Android中采用Proguard进行代码混淆。每次混淆，都会开始找寻混淆配置，在此开源库中，你可以找到你想要的，如果没找到，没关系，可以PULL REQUEST。</p>
+<h3 id="build-gradle">build.gradle</h3><p>正常在<code>build.gradle</code>中加入混淆配置文件即可：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled <span class="keyword">true</span></span><br><span class="line">            zipAlignEnabled <span class="keyword">true</span></span><br><span class="line">            shrinkResources <span class="keyword">true</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// specific proguard files</span></span><br><span class="line">            proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span>, <span class="string">'proguard-gson.pro'</span></span><br><span class="line">            proguardFile <span class="string">'proguard-square-okio.pro'</span></span><br><span class="line">            ...</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// As of Gradle Android plugin 1.1.0, the test APK has a separate config</span></span><br><span class="line">            testProguardFile <span class="string">'proguard-rules-test.pro'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="proguard-rules-pro">proguard-rules.pro</h3><p>将混淆设置加入<code>proguard-rules.pro</code>文件也是一种方式：<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"><span class="keyword">include</span> xxx</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="consumerProguardFiles">consumerProguardFiles</h3><p>开源库中可以依赖此标志来指定库的混淆方式，此会将<code>*.pro</code>文件打包进入<code>aar</code>中，库混淆时候会自动使用此混淆配置文件。</p>
+<p>需要注意的是，以<code>consumerProguardFiles</code>方式加入的混淆具有以下特性：</p>
+<ul>
+<li><code>*.pro</code>文件会包含在<code>aar</code>文件中</li>
+<li>这些<code>pro</code>配置会在混淆的时候被使用</li>
+<li>此配置针对此<code>aar</code>进行混淆配置</li>
+<li>此配置只对库文件有效，对应用程序无效</li>
+</ul>
+<p>所以以<a href="https://github.com/AndroidKnife/proguard-config" target="_blank" rel="external">AndroidKnife/proguard-config</a>开源库，只要一行代码即可搞定外部混淆：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.hwangjr.proguard:proguardconfig:1.0.1@aar'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结">总结</h2><p>使用此库大善，欢迎pull request。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/25/搞定Android-Proguard/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/24/发布开源项目到Maven（Gradle-Sonatype）/" title="发布开源项目到Maven（Gradle + Sonatype）" itemprop="url">发布开源项目到Maven（Gradle + Sonatype）</a>
   </h1>
   <p class="article-author">By
@@ -121,7 +197,7 @@
 <h2 id="GPG密钥">GPG密钥</h2><p>密钥是为了上传文件的加密和签名。如果有安装git，那么应该是已经安装GPG了，以下默认命令为Linux下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成密钥</span></span><br><span class="line">gpg --gen-key</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">gpg --list-key</span><br></pre></td></tr></table></figure></p>
 <p>其中姓名、邮箱和备注需要认真填写下，最后输入的Passphase，是密码，上传maven需要使用。</p>
 <blockquote>
-<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x68;&#x75;&#97;&#x6e;&#x67;&#x6a;&#105;&#97;&#x6e;&#114;&#x6f;&#x6e;&#x67;&#50;&#x30;&#49;&#48;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#x68;&#x75;&#97;&#x6e;&#x67;&#x6a;&#105;&#97;&#x6e;&#114;&#x6f;&#x6e;&#x67;&#50;&#x30;&#49;&#48;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a><br>sub   2048R/2F11E234 2015-11-24</p>
+<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#104;&#x75;&#x61;&#110;&#103;&#x6a;&#x69;&#97;&#110;&#114;&#111;&#110;&#x67;&#x32;&#48;&#x31;&#48;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;">&#104;&#x75;&#x61;&#110;&#103;&#x6a;&#x69;&#97;&#110;&#114;&#111;&#110;&#x67;&#x32;&#48;&#x31;&#48;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a><br>sub   2048R/2F11E234 2015-11-24</p>
 </blockquote>
 <p>B53A8137是KEY ID。上传公钥到服务器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --keyserver hkp://pool.sks-keyservers.net --send-keys B53A8137</span><br></pre></td></tr></table></figure></p>
 <h2 id="本地配置POM">本地配置POM</h2><p>Chris Banes大神已经写完Gradle插件<a href="https://github.com/chrisbanes/gradle-mvn-push" target="_blank" rel="external">chrisbanes/gradle-mvn-push</a>，可直接使用<a href="https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle" target="_blank" rel="external">gradle-mvn-push.gradle</a>，上面有详细的配置和使用方式。简要步骤为：</p>
@@ -1062,91 +1138,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/21/将SOCKET代理转化为HTTP代理/" title="将SOCKET代理转化为HTTP代理" itemprop="url">将SOCKET代理转化为HTTP代理</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-21T07:39:01.000Z" itemprop="datePublished"> 发表于 2015-08-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>众所周知，中国伟大的墙阻碍了很多前进的脚步，特别是ANDROID SDK的更新（node啥的都不说了）。特别是最近管控比较严，就只能使用朋友的SOCKET5的服务器代理，而ANDROID SDK是无法使用SOCKET5代理，只支持HTTP代理，类似<a href="http://www.androiddevtools.cn/" target="_blank" rel="external">AndroidDevTools</a>的站点也不是很好使了，只能寻找SOCKET5转换成HTTP的方式。</p>
-<h2 id="SOCKET转HTTP">SOCKET转HTTP</h2><h3 id="DeleGate介绍">DeleGate介绍</h3><p>这里要使用到<a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>软件，支持各个平台。<br><a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>是一个多平台的简单代理服务器软件，通过本地建立各种代理服务器，包括HTTP，FTP，SOCKET等。</p>
-<blockquote>
-<p>This is a private and voluntary site that is independent of AIST, for providing support information and redistribution of DeleGate, a general purpose proxy server software developed in AIST and, more specifically, for providing voluntary-based support for users in forums, supplementary contents for guide, some experimental services and demonstrations, as well as contents mirroring some of those in the official site of DeleGate of AIST. </p>
-</blockquote>
-<h3 id="安装软件">安装软件</h3><p>新版没有找到源码，但是<a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a>提供了编译之后的可执行程序。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget ftp://delegate.hpcc.jp/pub/DeleGate/bin/linux/<span class="number">9.9</span>.<span class="number">13</span>/linux2.<span class="number">6</span>-dg9_9_13.tar.gz</span><br><span class="line">tar xzf linux2.<span class="number">6</span>-dg9_9_13.tar.gz</span><br><span class="line"><span class="built_in">cd</span> dg9_9_13</span><br><span class="line">tree .</span><br></pre></td></tr></table></figure></p>
-<p>在bin目录下就是可执行程序和配置文件，整个文件目录很简洁，在subin里面也提供了setup-subin.sh脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bin</span><br><span class="line">│   ├── dg9_9_13</span><br><span class="line">│   ├── dg9_9_13.conf</span><br><span class="line">subin</span><br><span class="line">│   ├── dgbind</span><br><span class="line">│   ├── dgchroot</span><br><span class="line">│   ├── dgcpnod</span><br><span class="line">│   ├── dgdate</span><br><span class="line">│   ├── dgforkpty</span><br><span class="line">│   ├── dgpam</span><br><span class="line">│   └── setup-subin.sh</span><br></pre></td></tr></table></figure></p>
-<p>setup-subin.sh<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span><br><span class="line"></span></span><br><span class="line">SUBINS=<span class="string">"dgpam dgbind dgchroot dgcpnod"</span></span><br><span class="line">sudo sh -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">if</span> [ $? != <span class="number">0</span> ]; <span class="keyword">then</span></span><br><span class="line">  su root -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ $? != <span class="number">0</span> ]; <span class="keyword">then</span></span><br><span class="line">  su root -c <span class="string">"chown root <span class="variable">$SUBINS</span>; chmod 6550 <span class="variable">$SUBINS</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">ls <span class="operator">-l</span> <span class="variable">$SUBINS</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="使用">使用</h3><p>使用方式也很简单，通过编辑bin目录下的conf文件来完成，这里以SOCKET转HTTP为例，具体需求自己查看配置文件。<br>编辑dg9_9_13.conf，新增：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mail-address of the administrator of this DeleGat</span></span><br><span class="line">ADMIN=email@email.com</span><br><span class="line"><span class="comment"># the protocol DeleGate speaks with its clients</span></span><br><span class="line">SERVER=http</span><br><span class="line"><span class="comment"># the entrance port on which DeleGate waits clients</span></span><br><span class="line">-P8080</span><br><span class="line"><span class="comment"># forwarding to a SOCKS server</span></span><br><span class="line">SOCKS=<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">80</span></span><br></pre></td></tr></table></figure></p>
-<p>配置完成后，直接执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./dg9_9_13</span><br><span class="line"><span class="comment"># 如果没有权限，给权限即可</span></span><br><span class="line">sudo chmod +x dg9_9_13</span><br></pre></td></tr></table></figure></p>
-<p>查看是否在运行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep dg9</span><br><span class="line">hwangjr   <span class="number">4595</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">53340</span>  <span class="number">3436</span> ?        Ss   <span class="number">11</span>:<span class="number">10</span>   <span class="number">0</span>:<span class="number">00</span> ./dg9_9_13 -&#123;<span class="number">000</span>&#125;[RPM=<span class="number">0.00</span>(<span class="number">0.0</span> <span class="number">0.0</span> <span class="number">0.0</span>),IDLE=<span class="number">15</span>s]-P8080 -- --------------------</span><br><span class="line">hwangjr   <span class="number">4601</span>  <span class="number">0.0</span>  <span class="number">0.0</span>  <span class="number">15952</span>   <span class="number">940</span> pts/<span class="number">14</span>   S+   <span class="number">11</span>:<span class="number">10</span>   <span class="number">0</span>:<span class="number">00</span> grep --color=auto dg9</span><br></pre></td></tr></table></figure></p>
-<p>停止运行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./dg9_9_13 -P8080 -F<span class="built_in">kill</span></span><br><span class="line"><span class="comment"># 暴力</span></span><br><span class="line"><span class="built_in">kill</span> -<span class="number">9</span> <span class="number">4595</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="配置ANDROID_SDK">配置ANDROID SDK</h3><p>回到我们的场景，配置ANDROID SDK，基本按照我们的思路，直接配置本地的路由和端口即可。<br>打开ANDROID SDK，Tools -&gt; Options，配置HTTP PROXY SERVER为：127.0.0.1，端口为8080，然后即可畅游谷歌网络。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">12</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52791</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">15</span> INFO     connecting dl-ssl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52796</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">17</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52799</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">12</span>:<span class="number">03</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52809</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">18</span>:<span class="number">57</span> INFO     connecting dl.google.com:<span class="number">80</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52821</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">08</span>-<span class="number">21</span> <span class="number">11</span>:<span class="number">50</span>:<span class="number">02</span> INFO     connecting ssl.google-analytics.com:<span class="number">443</span> from <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">52962</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="ShadowSocks">ShadowSocks</h3><p>顺带简单介绍下<a href="https://github.com/shadowsocks/shadowsocks" target="_blank" rel="external">shadowsocks/shadowsocks</a>，其功能在官网已经介绍：</p>
-<blockquote>
-<p>A fast tunnel proxy that helps you bypass firewalls.<br>Features:<br>TCP &amp; UDP support<br>User management API<br>TCP Fast Open<br>Workers and graceful restart<br>Destination IP blacklist</p>
-</blockquote>
-<p>安装（ubuntu）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
-<p>使用：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">usage: sslocal [OPTION]...</span><br><span class="line">A fast tunnel proxy that helps you bypass firewalls.</span><br><span class="line"></span><br><span class="line">You can supply configurations via either config file or <span class="built_in">command</span> line arguments.</span><br><span class="line"></span><br><span class="line">Proxy options:</span><br><span class="line">  -c CONFIG              path to config file</span><br><span class="line">  <span class="operator">-s</span> SERVER_ADDR         server address</span><br><span class="line">  -p SERVER_PORT         server port, default: <span class="number">8388</span></span><br><span class="line">  -b LOCAL_ADDR          <span class="built_in">local</span> binding address, default: <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">  <span class="operator">-l</span> LOCAL_PORT          <span class="built_in">local</span> port, default: <span class="number">1080</span></span><br><span class="line">  -k PASSWORD            password</span><br><span class="line">  -m METHOD              encryption method, default: aes-<span class="number">256</span>-cfb</span><br><span class="line">  -t TIMEOUT             timeout <span class="keyword">in</span> seconds, default: <span class="number">300</span></span><br><span class="line">  --fast-open            use TCP_FASTOPEN, requires Linux <span class="number">3.7</span>+</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line">  -h, --help             show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  <span class="operator">-d</span> start/stop/restart  daemon mode</span><br><span class="line">  --pid-file PID_FILE    pid file <span class="keyword">for</span> daemon mode</span><br><span class="line">  --log-file LOG_FILE    <span class="built_in">log</span> file <span class="keyword">for</span> daemon mode</span><br><span class="line">  --user USER            username to run as</span><br><span class="line">  -v, -vv                verbose mode</span><br><span class="line">  -q, -qq                quiet mode, only show warnings/errors</span><br><span class="line">  --version              show version information</span><br><span class="line"></span><br><span class="line">Online <span class="built_in">help</span>: &lt;https://github.com/shadowsocks/shadowsocks&gt;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">sudo sslocal <span class="operator">-s</span> SERVER_ADDR -p SERVER_PORT -b LOCAL_ADDR <span class="operator">-l</span> LOCAL_PORT -k PASSWORD -m METHOD</span><br><span class="line"></span><br><span class="line"><span class="comment"># LOG</span></span><br><span class="line">sudo less /var/<span class="built_in">log</span>/shadowsocks.log</span><br></pre></td></tr></table></figure>
-<p>更多详细可以参考文档<a href="https://github.com/shadowsocks/shadowsocks" target="_blank" rel="external">shadowsocks/shadowsocks</a>。</p>
-<h2 id="总结">总结</h2><p>伟大的墙。</p>
-<h2 id="REF">REF</h2><p><a href="http://delegate.org/delegate/" target="_blank" rel="external">DeleGate Support Site</a><br><a href="http://www.delegate.org/documents/" target="_blank" rel="external">Documents on DeleGate</a><br><a href="ftp://ftp.delegate.org/pub/DeleGate/" target="_blank" rel="external">FTP on DeleGate</a><br><a href="http://www.delegate.org/delegate/build.shtml" target="_blank" rel="external">Building DeleGate</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/21/将SOCKET代理转化为HTTP代理/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -1165,7 +1156,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/Android/" title="Android">Android<sup>12</sup></a></li>
+			<li><a href="/categories/Android/" title="Android">Android<sup>13</sup></a></li>
 		  
 		
 		  
@@ -1202,11 +1193,11 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>23</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>24</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Android/" title="Android">Android<sup>12</sup></a></li>
+				<li><a href="/tags/Android/" title="Android">Android<sup>13</sup></a></li>
 			
 		
 			

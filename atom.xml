@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Life is wonderful!]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="https://hwangjr.github.io//"/>
-  <updated>2015-11-24T10:43:47.007Z</updated>
+  <updated>2015-11-25T10:23:44.277Z</updated>
   <id>https://hwangjr.github.io//</id>
   
   <author>
@@ -14,6 +14,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[搞定Android Proguard]]></title>
+    <link href="https://hwangjr.github.io/2015/11/25/%E6%90%9E%E5%AE%9AAndroid-Proguard/"/>
+    <id>https://hwangjr.github.io/2015/11/25/搞定Android-Proguard/</id>
+    <published>2015-11-25T10:23:19.000Z</published>
+    <updated>2015-11-25T10:23:44.277Z</updated>
+    <content type="html"><![CDATA[<h2 id="背景">背景</h2><p>各种引用库，各种混淆，心好累。<br>所以，有了<a href="https://github.com/AndroidKnife/proguard-config" target="_blank" rel="external">AndroidKnife/proguard-config</a>。</p>
+<h2 id="混淆设置">混淆设置</h2><p>Android中采用Proguard进行代码混淆。每次混淆，都会开始找寻混淆配置，在此开源库中，你可以找到你想要的，如果没找到，没关系，可以PULL REQUEST。</p>
+<h3 id="build-gradle">build.gradle</h3><p>正常在<code>build.gradle</code>中加入混淆配置文件即可：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled <span class="keyword">true</span></span><br><span class="line">            zipAlignEnabled <span class="keyword">true</span></span><br><span class="line">            shrinkResources <span class="keyword">true</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// specific proguard files</span></span><br><span class="line">            proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span>, <span class="string">'proguard-gson.pro'</span></span><br><span class="line">            proguardFile <span class="string">'proguard-square-okio.pro'</span></span><br><span class="line">            ...</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// As of Gradle Android plugin 1.1.0, the test APK has a separate config</span></span><br><span class="line">            testProguardFile <span class="string">'proguard-rules-test.pro'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="proguard-rules-pro">proguard-rules.pro</h3><p>将混淆设置加入<code>proguard-rules.pro</code>文件也是一种方式：<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"><span class="keyword">include</span> xxx</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="consumerProguardFiles">consumerProguardFiles</h3><p>开源库中可以依赖此标志来指定库的混淆方式，此会将<code>*.pro</code>文件打包进入<code>aar</code>中，库混淆时候会自动使用此混淆配置文件。</p>
+<p>需要注意的是，以<code>consumerProguardFiles</code>方式加入的混淆具有以下特性：</p>
+<ul>
+<li><code>*.pro</code>文件会包含在<code>aar</code>文件中</li>
+<li>这些<code>pro</code>配置会在混淆的时候被使用</li>
+<li>此配置针对此<code>aar</code>进行混淆配置</li>
+<li>此配置只对库文件有效，对应用程序无效</li>
+</ul>
+<p>所以以<a href="https://github.com/AndroidKnife/proguard-config" target="_blank" rel="external">AndroidKnife/proguard-config</a>开源库，只要一行代码即可搞定外部混淆：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.hwangjr.proguard:proguardconfig:1.0.1@aar'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结">总结</h2><p>使用此库大善，欢迎pull request。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[引用各种库，然后各种的混淆，心好累。]]>
+    
+    </summary>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[发布开源项目到Maven（Gradle + Sonatype）]]></title>
@@ -47,7 +81,7 @@
 <h2 id="GPG密钥">GPG密钥</h2><p>密钥是为了上传文件的加密和签名。如果有安装git，那么应该是已经安装GPG了，以下默认命令为Linux下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成密钥</span></span><br><span class="line">gpg --gen-key</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">gpg --list-key</span><br></pre></td></tr></table></figure></p>
 <p>其中姓名、邮箱和备注需要认真填写下，最后输入的Passphase，是密码，上传maven需要使用。</p>
 <blockquote>
-<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x68;&#x75;&#97;&#x6e;&#x67;&#x6a;&#105;&#97;&#x6e;&#114;&#x6f;&#x6e;&#x67;&#50;&#x30;&#49;&#48;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#x68;&#x75;&#97;&#x6e;&#x67;&#x6a;&#105;&#97;&#x6e;&#114;&#x6f;&#x6e;&#x67;&#50;&#x30;&#49;&#48;&#64;&#x67;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a><br>sub   2048R/2F11E234 2015-11-24</p>
+<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#104;&#x75;&#x61;&#110;&#103;&#x6a;&#x69;&#97;&#110;&#114;&#111;&#110;&#x67;&#x32;&#48;&#x31;&#48;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;">&#104;&#x75;&#x61;&#110;&#103;&#x6a;&#x69;&#97;&#110;&#114;&#111;&#110;&#x67;&#x32;&#48;&#x31;&#48;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a><br>sub   2048R/2F11E234 2015-11-24</p>
 </blockquote>
 <p>B53A8137是KEY ID。上传公钥到服务器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --keyserver hkp://pool.sks-keyservers.net --send-keys B53A8137</span><br></pre></td></tr></table></figure></p>
 <h2 id="本地配置POM">本地配置POM</h2><p>Chris Banes大神已经写完Gradle插件<a href="https://github.com/chrisbanes/gradle-mvn-push" target="_blank" rel="external">chrisbanes/gradle-mvn-push</a>，可直接使用<a href="https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle" target="_blank" rel="external">gradle-mvn-push.gradle</a>，上面有详细的配置和使用方式。简要步骤为：</p>
@@ -1582,39 +1616,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[ToolBar基础用法及自定义ToolBar。]]>
-    
-    </summary>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
-    
-      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Android Studio With SVN]]></title>
-    <link href="https://hwangjr.github.io/2015/07/08/Android-Studio-With-SVN/"/>
-    <id>https://hwangjr.github.io/2015/07/08/Android-Studio-With-SVN/</id>
-    <published>2015-07-08T12:17:08.000Z</published>
-    <updated>2015-07-08T12:17:42.289Z</updated>
-    <content type="html"><![CDATA[<h2 id="环境">环境</h2><p>系统使用Ubuntu 12.04，SVN版本1.8.8，AS使用最新稳定1.2.2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">svn, version <span class="number">1.8</span>.<span class="number">8</span> (r1568071)</span><br><span class="line">   compiled Aug <span class="number">13</span> <span class="number">2014</span>, <span class="number">17</span>:<span class="number">12</span>:<span class="number">39</span> on x86_64-pc-linux-gnu</span><br></pre></td></tr></table></figure></p>
-<h2 id="配置AS">配置AS</h2><p>配置AS很简单。<br>1、配置SVN执行目录：<br>File -&gt; Settings -&gt; Version Control -&gt; Subversion -&gt; General Tab里面的Use command line client，如果你已经安装SVN，AS应该默认是配置好的。<br>2、上传你的文件到SVN：<br>VCS -&gt; Import into Version Control -&gt; Import into Subversion…之后就可在线上版本查看到文件已经同步。<br>3、为项目新增SVN管理：<br>VCS -&gt; Enable Version Control Integration… 简单配置，即可在面板上有UP和CI等版本操作的图标。<br>至此，AS配置完成。</p>
-<h2 id="设置SVN_IGNORE">设置SVN IGNORE</h2><p>一直不知道SVN如何设置忽略命令，网上看的很多都是不准确或者理解有偏差。<br>1、设置全局忽略文件列表：<br>编辑~/.subversion/config文件，修改此文件中的global-ignores，里面也有提供实例。<br>当然，如果你想修改所有用户的ignore，文件目录在/etc/subversion/config。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo</span></span><br><span class="line"><span class="comment">#   *.rej *~ #*# .#* .*.swp .DS_Store</span></span><br></pre></td></tr></table></figure></p>
-<p>2、设置某目录svn ignore：<br>关键是使用svn的property set命令，此命令不可递归，只能设置当前目录下的ignore规则。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore path</span><br><span class="line"><span class="comment"># svn propedit svn:ignore path</span></span><br><span class="line">svn pd svn:ignore path</span><br><span class="line"><span class="comment"># svn propdel svn:ignore path</span></span><br><span class="line">svn ps svn:ignore path</span><br><span class="line"><span class="comment"># svn propset svn:ignore path</span></span><br></pre></td></tr></table></figure></p>
-<p>如果当前目录结构为：<br>.<br>|<br>|-Android<br>|   |<br>|   - trunk<br>|   - branches<br>|   - tags<br>|-iOS<br>想要过滤trunk目录下某些文件或目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore Android/trunk</span><br></pre></td></tr></table></figure></p>
-<p>之后会打开编辑窗口，输入下方文件即可：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>附带完整svn ignore命令（svn st命令，可以查看当前状态）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> project-path</span><br><span class="line">svn pe Android/trunk</span><br><span class="line">svn pe Android/trunk/.idea</span><br><span class="line">svn pe Android/trunk/app</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/.idea下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workspace.xml</span><br><span class="line">libraries</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/app下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build</span><br></pre></td></tr></table></figure></p>
-<p>设置完成，使用svn ci -m ‘ignore files’即可。<br>附带.ignore文件为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Built application files</span></span><br><span class="line">*.apk</span><br><span class="line">*.ap_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Files for the Dalvik VM</span></span><br><span class="line">*.dex</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java class files</span></span><br><span class="line">*.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generated files</span></span><br><span class="line">bin/</span><br><span class="line">gen/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Gradle files</span></span><br><span class="line">.gradle/</span><br><span class="line">build/</span><br><span class="line">/*/build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local configuration file (sdk path, etc)</span></span><br><span class="line">local.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># Proguard folder generated by Eclipse</span></span><br><span class="line">proguard/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Log Files</span></span><br><span class="line">*.log</span><br><span class="line"></span><br><span class="line">/.idea/workspace.xml</span><br><span class="line">/.idea/libraries</span><br><span class="line">.DS_Store</span><br><span class="line">/capture</span><br></pre></td></tr></table></figure></p>
-<p>附带命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn <span class="built_in">export</span> dir dir_bak</span><br><span class="line">svn rm dir</span><br><span class="line">svn commit -m <span class="string">'delete dir'</span></span><br><span class="line">mv dir-bak dir</span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile1</span><br><span class="line">ignorefile2</span><br><span class="line">ignorefile3'</span> dir</span><br></pre></td></tr></table></figure></p>
-<h2 id="SVN常用命令">SVN常用命令</h2><p>Show The Code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">svn co svn://xxx</span><br><span class="line">svn checkout svn://</span><br><span class="line">svn <span class="built_in">export</span> [-r version] svn://</span><br><span class="line">svn add file</span><br><span class="line">svn commit -m <span class="string">''</span></span><br><span class="line">svn ci -m <span class="string">''</span></span><br><span class="line">svn up</span><br><span class="line">svn update</span><br><span class="line">svn update -r <span class="number">200</span> file</span><br><span class="line">svn delete svn:// -m <span class="string">''</span></span><br><span class="line">svn delete file</span><br></pre></td></tr></table></figure></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用Android Studio来管理SVN版本，进行协同工作。]]>
     
     </summary>
     
