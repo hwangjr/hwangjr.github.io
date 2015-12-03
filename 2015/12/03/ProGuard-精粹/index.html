@@ -1,0 +1,586 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ProGuard 精粹 | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="总结ProGuard使用及日常，主要针对Android及Java的混淆。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ProGuard 精粹">
+<meta property="og:url" content="https://hwangjr.github.io/2015/12/03/ProGuard-精粹/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="总结ProGuard使用及日常，主要针对Android及Java的混淆。">
+<meta property="og:updated_time" content="2015-12-03T07:01:46.322Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ProGuard 精粹">
+<meta name="twitter:description" content="总结ProGuard使用及日常，主要针对Android及Java的混淆。">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/03/ProGuard-精粹/" title="ProGuard 精粹" itemprop="url">ProGuard 精粹</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-03T07:01:25.000Z" itemprop="datePublished"> 发表于 2015-12-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原则"><span class="toc-number">2.</span> <span class="toc-text">原则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AndroidStudio"><span class="toc-number">3.1.</span> <span class="toc-text">AndroidStudio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他方式"><span class="toc-number">3.2.</span> <span class="toc-text">其他方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置"><span class="toc-number">4.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本配置"><span class="toc-number">4.1.</span> <span class="toc-text">基本配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见使用"><span class="toc-number">4.2.</span> <span class="toc-text">常见使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#混淆后"><span class="toc-number">5.</span> <span class="toc-text">混淆后</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆后文件"><span class="toc-number">5.1.</span> <span class="toc-text">混淆后文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆后验证"><span class="toc-number">5.2.</span> <span class="toc-text">混淆后验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆后调试"><span class="toc-number">5.3.</span> <span class="toc-text">混淆后调试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ProGuard-Android"><span class="toc-number">6.</span> <span class="toc-text">ProGuard-Android</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">6.1.</span> <span class="toc-text">Ref</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="背景">背景</h1><p>总结ProGuard混淆日常的使用方式，常见的混淆片段等。</p>
+<p>更多内容<a href="http://proguard.sourceforge.net/" target="_blank" rel="external">ProGuard</a></p>
+<blockquote>
+<p>ProGuard is a free Java class file shrinker, optimizer, obfuscator, and preverifier. It detects and removes unused classes, fields, methods, and attributes. It optimizes bytecode and removes unused instructions. It renames the remaining classes, fields, and methods using short meaningless names. Finally, it preverifies the processed code for Java 6 or higher, or for Java Micro Edition.<br><strong>Some uses of ProGuard are:</strong><br>Creating more compact code, for smaller code archives, faster transfer across networks, faster loading, and smaller memory footprints.<br>Making programs and libraries harder to reverse-engineer.<br>Listing dead code, so it can be removed from the source code.<br>Retargeting and preverifying existing class files for Java 6 or higher, to take full advantage of their faster class loading.</p>
+</blockquote>
+<h1 id="原则">原则</h1><p>现在面向对象都讲究原则，做事也讲究原则。</p>
+<ul>
+<li>反射用到的类不混淆</li>
+<li>JNI方法不混淆</li>
+<li>Manifest中类不混淆</li>
+<li>四大组件和Application子类、Framework层下所有类默认不混淆</li>
+<li>Parcelable子类和Creator静态成员变量不混淆（BadParcelableException，怕了吧）</li>
+<li>GSon、FastJson等库时，Json对象不混淆（注解可解决此问题）</li>
+<li>第三方开源库或引用其他第三方SDK，加入对应混淆规则（或者库在打包aar时有指定<code>consumerProguardFiles</code>）</li>
+<li>WebView的JS调用接口不混淆</li>
+</ul>
+<h1 id="使用">使用</h1><h2 id="AndroidStudio">AndroidStudio</h2><p>新建项目后，默认会在模块目录下新建<code>build.gradle</code>和<code>proguard-rules.pro</code>文件，修改<code>build.gradle</code>文件中的<code>proguardFiles</code>配置：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">    debug &#123;</span><br><span class="line">        versionNameSuffix <span class="string">"-debug"</span></span><br><span class="line">        minifyEnabled <span class="literal">false</span></span><br><span class="line">        zipAlignEnabled <span class="literal">false</span></span><br><span class="line">        shrinkResources <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    release &#123;</span><br><span class="line">        minifyEnabled <span class="literal">true</span></span><br><span class="line">        zipAlignEnabled <span class="literal">true</span></span><br><span class="line">        shrinkResources <span class="literal">true</span></span><br><span class="line">        proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span></span><br><span class="line">        signingConfig signingConfigs.xxx</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果你是引用库，那么不要忘了给库配上混淆，详细参考<a href="http://blog.hwangjr.com/2015/11/25/%E6%90%9E%E5%AE%9AAndroid-Proguard/" target="_blank" rel="external">搞定Android Proguard</a>或者<a href="https://github.com/AndroidKnife/proguard-config" target="_blank" rel="external">AndroidKnife/proguard-config</a>：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">consumerProguardFiles</span><br></pre></td></tr></table></figure></p>
+<h2 id="其他方式">其他方式</h2><p>在SDK目录下，有<code>tools/proguard/</code>，这里即<code>proguard</code>的大本营，包括上面的<code>getDefaultProguardFile</code>方法也是到此目录获取<code>proguard-android.txt</code>文件。</p>
+<p>在<code>proguard</code>目录下有<code>bin</code>目录，可以直接启动界面配置，当然也可以保存配置等。</p>
+<p>其他类似<code>ANT</code>或者<code>IDE</code>类似<code>Eclipse</code>等，基本大同小异，自行摸索。</p>
+<h1 id="配置">配置</h1><h2 id="基本配置">基本配置</h2><p>常用语法：</p>
+<ul>
+<li><code>-libraryjars class_path</code>：应用的依赖包，如<code>android-support-v4</code></li>
+<li>-keep [,modifier,…] class_specification`：不混淆某些类</li>
+<li><code>-keepclassmembers [,modifier,...] class_specification</code>：不混淆类的成员</li>
+<li><code>-keepclasseswithmembers [,modifier,...] class_specification</code>：不混淆类及其成员</li>
+<li><code>-keepnames class_specification</code>：不混淆类及其成员名</li>
+<li><code>-keepclassmembernames class_specification</code>：不混淆类的成员名</li>
+<li><code>-keepclasseswithmembernames class_specification</code>：不混淆类及其成员名</li>
+<li><code>-assumenosideeffects class_specification</code>：假设调用不产生任何影响，在代码优化时会将该调用<code>remove</code>掉。如<code>system.out.println</code>和<code>Log.v</code>等等</li>
+<li><code>-dontwarn [class_filter]</code>：不提示warnning</li>
+</ul>
+<p>更多关于ProGuard混淆规则和语法，参考<a href="http://proguard.sourceforge.net/index.html#manual/usage.html" target="_blank" rel="external">ProGuard</a>。</p>
+<h2 id="常见使用">常见使用</h2><p><strong>不混淆类构造方法，需指定函数参数类型：</strong><br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-keepclassmembers <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">hwangjr</span>.<span class="title">utils</span>.<span class="title">Telephony</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> &lt;init&gt;(<span class="keyword">int</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>不混淆某个包所有/某个类、接口：</strong><br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-keep class com.hwangjr.utils.<span class="keyword">*</span><span class="keyword">*</span> &#123; <span class="keyword">*</span>; &#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>不混淆某个方法：</strong><br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-keepclassmembers <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">hwangjr</span>.<span class="title">utils</span>.<span class="title">Telephony</span> </span>&#123;</span><br><span class="line">    public <span class="built_in">String</span> getTelephone(java.lang.<span class="built_in">String</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>不混淆Parcelable子类：</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-keep <span class="class"><span class="keyword">class</span> * <span class="keyword">implements</span> <span class="title">android</span>.<span class="title">os</span>.<span class="title">Parcelable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> android.os.Parcelable<span class="variable">$Creator</span> *;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>使用assumenosideeffects移除代码：</strong><br>正常可通过BuildConfig.DEBUG变量控制日志输出，DEBUG模式可查看到日志。但ProGuard也可压缩和优化不必要的代码，包括debug日志，在发布时，会自动从源码中删除。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-assumenosideeffects <span class="keyword">class</span> android.util.Log &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">v</span><span class="params">(...)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">i</span><span class="params">(...)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">d</span><span class="params">(...)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">w</span><span class="params">(...)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> *** <span class="title">e</span><span class="params">(...)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong> 反射：</strong><br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">keepattributes <span class="constant">Signature</span></span><br><span class="line"></span>-<span class="ruby">keepattributes <span class="constant">EnclosingMethod</span></span></span><br></pre></td></tr></table></figure></p>
+<p><strong>Serializable类：</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-keepclassmembers <span class="class"><span class="keyword">class</span> * <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> java.io.ObjectStreamField[] serialPersistentFields;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream)</span></span>;</span><br><span class="line">    java.lang.<span class="function">Object <span class="title">writeReplace</span><span class="params">()</span></span>;</span><br><span class="line">    java.lang.<span class="function">Object <span class="title">readResolve</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>JS接口：</strong><br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">keepclassmembers <span class="class"><span class="keyword">class</span> <span class="title">fqcn</span>.<span class="title">of</span>.<span class="title">javascript</span>.<span class="title">interface</span>.<span class="title">for</span>.<span class="title">webview</span> &#123;</span></span><br><span class="line"></span>    public *;</span><br><span class="line">&#125;</span><br><span class="line">-<span class="ruby">keep <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">package</span>.<span class="title">name</span>.** &#123; *;</span> &#125;</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="混淆后">混淆后</h1><h2 id="混淆后文件">混淆后文件</h2><p>Android Studio发布版本之后，会自动生成混淆之后文件（build/outputs/mapping/channel/release/）：<br><code>mapping.txt</code>：混淆前后代码对照，在混淆之后如果出现问题，需要查找此文件进行定位。<br><code>dump.txt</code>：APK内所有class文件结构<br><code>seeds.txt</code>：没有被混淆的类和成员<br><code>usage.txt</code>：源代码中被删除的代码</p>
+<p><strong>所以，养成保存<code>mapping.txt</code>文件的习惯。</strong></p>
+<h2 id="混淆后验证">混淆后验证</h2><p>反编译应用，大部分都变成<code>abc...</code>。</p>
+<h2 id="混淆后调试">混淆后调试</h2><p>问题分为代码问题和混淆问题。</p>
+<p><strong>代码问题</strong><br>通过查看<code>mapping.txt</code>文件，反推定位对应代码问题来进行解决。混淆后<code>$</code>为匿名内部类。</p>
+<p><strong>混淆问题</strong><br>最常见<code>ClassNotFoundException</code>、<code>BadParcelableException</code>及JSON解析错误。<br><code>ClassNotFoundException</code>通过mapping逆推找到类，在混淆中加入不混淆此类即可：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-keep <span class="type">class</span> package.<span class="property">name</span>.<span class="type">class</span> &#123; *; &#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Parcelable</code>混淆错误加入：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-keep <span class="class"><span class="keyword">class</span> * <span class="keyword">implements</span> <span class="title">android</span>.<span class="title">os</span>.<span class="title">Parcelable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> android.os.Parcelable<span class="variable">$Creator</span> *;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>V4</code>包、<code>V7</code>包等包混淆问题（<code>sdk/tools/proguard/proguard-android.txt</code>中已经明确）：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The support library contains references to newer platform versions.</span></span><br><span class="line"><span class="comment"># Don't warn about those in case this app is linking against an older</span></span><br><span class="line"><span class="comment"># platform version.  We know about them, and they are safe.</span></span><br><span class="line">-dontwarn android.support.<span class="keyword">*</span><span class="keyword">*</span></span><br></pre></td></tr></table></figure></p>
+<p>更多问题可以参考：<a href="http://proguard.sourceforge.net/index.html#manual/troubleshooting.html" target="_blank" rel="external">ProGuard TroubleShooting</a></p>
+<h1 id="ProGuard-Android">ProGuard-Android</h1><p>参考示例<code>sdk/tools/proguard/proguard-android.txt</code>：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is a configuration file for ProGuard.</span></span><br><span class="line"><span class="comment"># http://proguard.sourceforge.net/index.html#manual/usage.html</span></span><br><span class="line"></span><br><span class="line">-dontusemixedcaseclassnames</span><br><span class="line">-dontskipnonpubliclibraryclasses</span><br><span class="line">-verbose</span><br><span class="line"></span><br><span class="line"><span class="comment"># Optimization is turned off by default. Dex does not like code run</span></span><br><span class="line"><span class="comment"># through the ProGuard optimize and preverify steps (and performs some</span></span><br><span class="line"><span class="comment"># of these optimizations on its own).</span></span><br><span class="line">-dontoptimize</span><br><span class="line">-dontpreverify</span><br><span class="line"><span class="comment"># Note that if you want to enable optimization, you cannot just</span></span><br><span class="line"><span class="comment"># include optimization flags in your own project configuration file;</span></span><br><span class="line"><span class="comment"># instead you will need to point to the</span></span><br><span class="line"><span class="comment"># "proguard-android-optimize.txt" file instead of this one from your</span></span><br><span class="line"><span class="comment"># project.properties file.</span></span><br><span class="line"></span><br><span class="line">-keepattributes <span class="keyword">*</span>Annotation<span class="keyword">*</span></span><br><span class="line">-keep public class com.google.vending.licensing.ILicensingService</span><br><span class="line">-keep public class com.android.vending.licensing.ILicensingService</span><br><span class="line"></span><br><span class="line"><span class="comment"># For native methods, see http://proguard.sourceforge.net/manual/examples.html#native</span></span><br><span class="line">-keepclasseswithmembernames class <span class="keyword">*</span> &#123;</span><br><span class="line">    native <span class="variable">&lt;methods&gt;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># keep setters in Views so that animations can still work.</span></span><br><span class="line"><span class="comment"># see http://proguard.sourceforge.net/manual/examples.html#beans</span></span><br><span class="line">-keepclassmembers public class <span class="keyword">*</span> extends android.view.View &#123;</span><br><span class="line">   void set<span class="keyword">*</span>(<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>);</span><br><span class="line">   <span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span> get<span class="keyword">*</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># We want to keep methods in Activity that could be used in the XML attribute onClick</span></span><br><span class="line">-keepclassmembers class <span class="keyword">*</span> extends android.app.Activity &#123;</span><br><span class="line">   public void <span class="keyword">*</span>(android.view.View);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations</span></span><br><span class="line">-keepclassmembers enum <span class="keyword">*</span> &#123;</span><br><span class="line">    public static <span class="keyword">*</span><span class="keyword">*</span>[] values();</span><br><span class="line">    public static <span class="keyword">*</span><span class="keyword">*</span> valueOf(java.lang.String);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclassmembers class <span class="keyword">*</span> implements android.os.Parcelable &#123;</span><br><span class="line">  public static final android.os.Parcelable$Creator CREATOR;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclassmembers class <span class="keyword">*</span><span class="keyword">*</span>.R$<span class="keyword">*</span> &#123;</span><br><span class="line">    public static <span class="variable">&lt;fields&gt;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># The support library contains references to newer platform versions.</span></span><br><span class="line"><span class="comment"># Don't warn about those in case this app is linking against an older</span></span><br><span class="line"><span class="comment"># platform version.  We know about them, and they are safe.</span></span><br><span class="line">-dontwarn android.support.<span class="keyword">*</span><span class="keyword">*</span></span><br></pre></td></tr></table></figure></p>
+<p>参考示例<code>sdk/tools/proguard/proguard-android-optimize.txt</code>：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is a configuration file for ProGuard.</span></span><br><span class="line"><span class="comment"># http://proguard.sourceforge.net/index.html#manual/usage.html</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Optimizations: If you don't want to optimize, use the</span></span><br><span class="line"><span class="comment"># proguard-android.txt configuration file instead of this one, which</span></span><br><span class="line"><span class="comment"># turns off the optimization flags.  Adding optimization introduces</span></span><br><span class="line"><span class="comment"># certain risks, since for example not all optimizations performed by</span></span><br><span class="line"><span class="comment"># ProGuard works on all versions of Dalvik.  The following flags turn</span></span><br><span class="line"><span class="comment"># off various optimizations known to have issues, but the list may not</span></span><br><span class="line"><span class="comment"># be complete or up to date. (The "arithmetic" optimization can be</span></span><br><span class="line"><span class="comment"># used if you are only targeting Android 2.0 or later.)  Make sure you</span></span><br><span class="line"><span class="comment"># test thoroughly if you go this route.</span></span><br><span class="line">-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/<span class="keyword">*</span>,!class/merging/<span class="keyword">*</span></span><br><span class="line">-optimizationpasses 5</span><br><span class="line">-allowaccessmodification</span><br><span class="line">-dontpreverify</span><br><span class="line"></span><br><span class="line"><span class="comment"># The remainder of this file is identical to the non-optimized version</span></span><br><span class="line"><span class="comment"># of the Proguard configuration file (except that the other file has</span></span><br><span class="line"><span class="comment"># flags to turn off optimization).</span></span><br><span class="line"></span><br><span class="line">-dontusemixedcaseclassnames</span><br><span class="line">-dontskipnonpubliclibraryclasses</span><br><span class="line">-verbose</span><br><span class="line"></span><br><span class="line">-keepattributes <span class="keyword">*</span>Annotation<span class="keyword">*</span></span><br><span class="line">-keep public class com.google.vending.licensing.ILicensingService</span><br><span class="line">-keep public class com.android.vending.licensing.ILicensingService</span><br><span class="line"></span><br><span class="line"><span class="comment"># For native methods, see http://proguard.sourceforge.net/manual/examples.html#native</span></span><br><span class="line">-keepclasseswithmembernames class <span class="keyword">*</span> &#123;</span><br><span class="line">    native <span class="variable">&lt;methods&gt;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># keep setters in Views so that animations can still work.</span></span><br><span class="line"><span class="comment"># see http://proguard.sourceforge.net/manual/examples.html#beans</span></span><br><span class="line">-keepclassmembers public class <span class="keyword">*</span> extends android.view.View &#123;</span><br><span class="line">   void set<span class="keyword">*</span>(<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>);</span><br><span class="line">   <span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span> get<span class="keyword">*</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># We want to keep methods in Activity that could be used in the XML attribute onClick</span></span><br><span class="line">-keepclassmembers class <span class="keyword">*</span> extends android.app.Activity &#123;</span><br><span class="line">   public void <span class="keyword">*</span>(android.view.View);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations</span></span><br><span class="line">-keepclassmembers enum <span class="keyword">*</span> &#123;</span><br><span class="line">    public static <span class="keyword">*</span><span class="keyword">*</span>[] values();</span><br><span class="line">    public static <span class="keyword">*</span><span class="keyword">*</span> valueOf(java.lang.String);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclassmembers class <span class="keyword">*</span> implements android.os.Parcelable &#123;</span><br><span class="line">  public static final android.os.Parcelable$Creator CREATOR;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-keepclassmembers class <span class="keyword">*</span><span class="keyword">*</span>.R$<span class="keyword">*</span> &#123;</span><br><span class="line">    public static <span class="variable">&lt;fields&gt;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># The support library contains references to newer platform versions.</span></span><br><span class="line"><span class="comment"># Don't warn about those in case this app is linking against an older</span></span><br><span class="line"><span class="comment"># platform version.  We know about them, and they are safe.</span></span><br><span class="line">-dontwarn android.support.<span class="keyword">*</span><span class="keyword">*</span></span><br></pre></td></tr></table></figure></p>
+<p>参考<code>sdk/tools/proguard/proguard-project.txt</code>：<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># To enable ProGuard in your project, edit project.properties</span></span><br><span class="line"><span class="preprocessor"># to define the proguard.config property as described in that file.</span></span><br><span class="line"><span class="preprocessor">#</span></span><br><span class="line"><span class="preprocessor"># Add project specific ProGuard rules here.</span></span><br><span class="line"><span class="preprocessor"># By default, the flags in this file are appended to flags specified</span></span><br><span class="line"><span class="preprocessor"># in $&#123;sdk.dir&#125;/tools/proguard/proguard-android.txt</span></span><br><span class="line"><span class="preprocessor"># You can edit the include path and order by changing the ProGuard</span></span><br><span class="line"><span class="preprocessor"># include property in project.properties.</span></span><br><span class="line"><span class="preprocessor">#</span></span><br><span class="line"><span class="preprocessor"># For more details, see</span></span><br><span class="line"><span class="preprocessor">#   http://developer.android.com/guide/developing/tools/proguard.html</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># Add any project specific keep options here:</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># If your project uses WebView with JS, uncomment the following</span></span><br><span class="line"><span class="preprocessor"># and specify the fully qualified class name to the JavaScript interface</span></span><br><span class="line"><span class="preprocessor"># class:</span></span><br><span class="line"><span class="preprocessor">#-keepclassmembers class fqcn.of.javascript.interface.for.webview &#123;</span></span><br><span class="line"><span class="preprocessor">#   public *;</span></span><br><span class="line"><span class="preprocessor">#&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Ref">Ref</h2><p><a href="http://proguard.sourceforge.net/" target="_blank" rel="external">ProGuard</a><br><a href="http://developer.android.com/intl/zh-cn/tools/help/proguard.html" target="_blank" rel="external">ProGuard | Android Developers</a><br><a href="http://www.trinea.cn/android/proguard-use/" target="_blank" rel="external">ProGuard的作用</a><br><a href="https://github.com/D-clock/Doc/blob/master/Gradle/4_AndroidStudio%E4%B8%8BProGuard%E6%B7%B7%E6%B7%86%E6%89%93%E5%8C%85.md" target="_blank" rel="external">AndroidStudio下ProGuard混淆打包.md</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2015/12/03/ProGuard-精粹/" data-title="ProGuard 精粹 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/11/25/搞定Android-Proguard/"  title="搞定Android Proguard">
+ <strong>下一篇：</strong><br/> 
+ <span>搞定Android Proguard
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原则"><span class="toc-number">2.</span> <span class="toc-text">原则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AndroidStudio"><span class="toc-number">3.1.</span> <span class="toc-text">AndroidStudio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他方式"><span class="toc-number">3.2.</span> <span class="toc-text">其他方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置"><span class="toc-number">4.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本配置"><span class="toc-number">4.1.</span> <span class="toc-text">基本配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见使用"><span class="toc-number">4.2.</span> <span class="toc-text">常见使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#混淆后"><span class="toc-number">5.</span> <span class="toc-text">混淆后</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆后文件"><span class="toc-number">5.1.</span> <span class="toc-text">混淆后文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆后验证"><span class="toc-number">5.2.</span> <span class="toc-text">混淆后验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#混淆后调试"><span class="toc-number">5.3.</span> <span class="toc-text">混淆后调试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ProGuard-Android"><span class="toc-number">6.</span> <span class="toc-text">ProGuard-Android</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">6.1.</span> <span class="toc-text">Ref</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>25</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>14</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
