@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://hwangjr.github.io/2016/01/14/Git%E6%97%A0%E6%B3%95%E6%8F%90%E4%BA%A4%E7%9B%AE%E5%BD%95/</loc>
+    <lastmod>2016-01-14T11:18:32.799Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hwangjr.github.io/2016/01/14/Git%E5%A4%9A%E4%B8%AA%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E8%BF%9B%E8%A1%8C%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2016-01-14T11:17:57.423Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hwangjr.github.io/2016/01/14/%E4%BD%BF%E7%94%A8Gitolite%E6%90%AD%E5%BB%BAGit%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <lastmod>2016-01-14T11:17:17.279Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://hwangjr.github.io/2015/12/23/%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86tmp%E6%96%87%E4%BB%B6/</loc>
     <lastmod>2015-12-23T11:04:17.303Z</lastmod>
   </url>

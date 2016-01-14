@@ -127,7 +127,7 @@
 <h2 id="GPG密钥">GPG密钥</h2><p>密钥是为了上传文件的加密和签名。如果有安装git，那么应该是已经安装GPG了，以下默认命令为Linux下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成密钥</span></span><br><span class="line">gpg --gen-key</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">gpg --list-key</span><br></pre></td></tr></table></figure></p>
 <p>其中姓名、邮箱和备注需要认真填写下，最后输入的Passphase，是密码，上传maven需要使用。</p>
 <blockquote>
-<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#111;&#x3a;&#104;&#117;&#x61;&#x6e;&#x67;&#106;&#105;&#x61;&#110;&#114;&#x6f;&#x6e;&#x67;&#50;&#48;&#x31;&#48;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#x2e;&#99;&#x6f;&#109;">&#104;&#117;&#x61;&#x6e;&#x67;&#106;&#105;&#x61;&#110;&#114;&#x6f;&#x6e;&#x67;&#50;&#48;&#x31;&#48;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#x2e;&#99;&#x6f;&#109;</a><br>sub   2048R/2F11E234 2015-11-24</p>
+<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#58;&#x68;&#x75;&#97;&#x6e;&#103;&#106;&#105;&#x61;&#x6e;&#x72;&#111;&#x6e;&#103;&#50;&#48;&#49;&#48;&#64;&#103;&#109;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#109;">&#x68;&#x75;&#97;&#x6e;&#103;&#106;&#105;&#x61;&#x6e;&#x72;&#111;&#x6e;&#103;&#50;&#48;&#49;&#48;&#64;&#103;&#109;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#109;</a><br>sub   2048R/2F11E234 2015-11-24</p>
 </blockquote>
 <p>B53A8137是KEY ID。上传公钥到服务器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --keyserver hkp://pool.sks-keyservers.net --send-keys B53A8137</span><br></pre></td></tr></table></figure></p>
 <h2 id="本地配置POM">本地配置POM</h2><p>Chris Banes大神已经写完Gradle插件<a href="https://github.com/chrisbanes/gradle-mvn-push" target="_blank" rel="external">chrisbanes/gradle-mvn-push</a>，可直接使用<a href="https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle" target="_blank" rel="external">gradle-mvn-push.gradle</a>，上面有详细的配置和使用方式。简要步骤为：</p>
@@ -254,6 +254,10 @@
 		  
 		
 		  
+			<li><a href="/categories/Git/" title="Git">Git<sup>3</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
 		  
 		
@@ -279,7 +283,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>27</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>30</sup></a></li>
 			
 		
 			
@@ -288,6 +292,10 @@
 		
 			
 				<li><a href="/tags/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>3</sup></a></li>
 			
 		
 			
@@ -375,7 +383,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
 		

@@ -82,6 +82,369 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/27/Crontabs-Guide/" title="Crontabs Guide" itemprop="url">Crontabs Guide</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-27T04:05:24.000Z" itemprop="datePublished"> 发表于 2015-10-27</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Introduction">Introduction</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man crontab</span><br></pre></td></tr></table></figure>
+<p>—-&gt;</p>
+<blockquote>
+<p>Crontab  is the program used to install, remove or list the tables used to drive the cron(8) daemon.  Each user can have their own crontab, and though these are files in /var/spool/ , they are not intended to be edited directly. For SELinux in mls mode can be even more crontabs - for each range. For more see selinux(8).</p>
+<p>The  cron  jobs  could  be allow or disallow for different users. For classical crontab there exists cron.allow and cron.deny files.  If cron.allow file exists, then you must be listed therein in order to be allowed to use this command.  If the cron.allow file does not exist but the cron.deny file does exist,  then  you must  not  be listed in the cron.deny file in order to use this command.  If neither of these files exists, only the super user will be allowed to use this com-mand. The second option is using PAM authentication, where you set up users, which could or couldn’t use crontab and also system cron jobs from /etc/cron.d/.</p>
+<p>The temporary directory could be set in enviroment variables. If it’s not set by user than /tmp is used.</p>
+</blockquote>
+<h2 id="Installation">Installation</h2><p>Just the commands:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># check installation</span></span><br><span class="line">rpm -ql crontabs</span><br><span class="line">rpm -qa crontabs</span><br><span class="line"><span class="comment"># install</span></span><br><span class="line">yum install crontabs</span><br><span class="line"><span class="comment"># start service on boot</span></span><br><span class="line">chkconfig crond on</span><br><span class="line"><span class="comment"># start service now</span></span><br><span class="line">service crond start</span><br><span class="line">service crond status</span><br><span class="line">service crond restart</span><br><span class="line">service crond reload</span><br><span class="line">service crond stop</span><br></pre></td></tr></table></figure></p>
+<p>Also, you can check the service by:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntsysv</span><br></pre></td></tr></table></figure></p>
+<h2 id="Usage">Usage</h2><h3 id="Basic_Usage">Basic Usage</h3><p>Also, <code>man</code> is our best friend :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man crontab</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<ul>
+<li>NAME<br>crontab - maintain crontab files for individual users</li>
+<li>SYNOPSIS<br>crontab [-u user] file<br>crontab [-u user] [-l | -r | -e] [-i] [-s]</li>
+<li>OPTIONS<pre><code>**-u**     Append <span class="keyword">the</span> <span class="property">name</span> <span class="keyword">of</span> <span class="keyword">the</span> user <span class="keyword">whose</span> crontab <span class="keyword">is</span> <span class="keyword">to</span> be tweaked.  If this option <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">given</span>, crontab examines <span class="string">"your"</span> crontab, i.e., <span class="keyword">the</span> crontab <span class="keyword">of</span> <span class="keyword">the</span>  person  executing  <span class="keyword">the</span>  command.   Note  <span class="keyword">that</span>  su(<span class="number">8</span>) can confuse crontab <span class="keyword">and</span> <span class="keyword">that</span> <span class="keyword">if</span> you are <span class="property">running</span> inside <span class="keyword">of</span> su(<span class="number">8</span>) you should always use <span class="keyword">the</span> -u option <span class="keyword">for</span> safety’s sake.  The <span class="keyword">first</span> form <span class="keyword">of</span> this command <span class="keyword">is</span> used <span class="keyword">to</span> install a new crontab <span class="keyword">from</span> <span class="keyword">some</span> named <span class="type">file</span> <span class="keyword">or</span> standard input  <span class="keyword">if</span>  <span class="keyword">the</span>  pseudo-filename  <span class="string">"-"</span>  <span class="keyword">is</span> <span class="keyword">given</span>.
+**-l**     The current crontab will be displayed <span class="function_start"><span class="keyword">on</span></span> standard output.
+**-r**     The current crontab will be removed.
+**-e**     This  option  <span class="keyword">is</span> used <span class="keyword">to</span> edit <span class="keyword">the</span> current crontab using <span class="keyword">the</span> editor specified <span class="keyword">by</span> <span class="keyword">the</span> VISUAL <span class="keyword">or</span> EDITOR environment variables.  After you <span class="keyword">exit</span> <span class="keyword">from</span> <span class="keyword">the</span> editor, <span class="keyword">the</span> modified crontab will be installed automatically.
+**-i**     This option modifies <span class="keyword">the</span> -r option <span class="keyword">to</span> prompt <span class="keyword">the</span> user <span class="keyword">for</span> a ’y/Y’ response <span class="keyword">before</span> actually removing <span class="keyword">the</span> crontab.
+**-s**     It will append <span class="keyword">the</span> current SELinux security context <span class="type">string</span> <span class="keyword">as</span> an MLS_LEVEL setting <span class="keyword">to</span> <span class="keyword">the</span> crontab <span class="type">file</span> <span class="keyword">before</span> editing / replacement occurs - see <span class="keyword">the</span> doc-umentation <span class="keyword">of</span> MLS_LEVEL <span class="keyword">in</span> crontab(<span class="number">5</span>).
+</code></pre></li>
+<li>FILES<pre><code><span class="regexp">/etc/</span>cron.allow
+<span class="regexp">/etc/</span>cron.deny
+</code></pre></li>
+</ul>
+</blockquote>
+<p>Shortly for this :<br>&gt;</p>
+<ul>
+<li>usage:<br>  crontab [-u user] file<br>  crontab [-u user] [ -e | -l | -r ]<pre><code>(<span class="keyword">default</span> operation <span class="keyword">is</span> <span class="built_in">replace</span>, per <span class="number">1003.2</span>)
+</code></pre>  -e    (edit user’s crontab)<br>  -l    (list user’s crontab)<br>  -r    (delete user’s crontab)<br>  -i    (prompt before deleting user’s crontab)<br>  -s    (selinux context)</li>
+</ul>
+<p>The format of <code>-e</code> command is:<br><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">  *    *    *    *    *   command</span><br><span class="line">minus <span class="built_in">hour</span> <span class="built_in">day</span> <span class="built_in">month</span> week command</span><br><span class="line"></span><br><span class="line">minus: <span class="number">1</span>~<span class="number">59</span> minus, * <span class="keyword">or</span> */<span class="number">1</span> <span class="keyword">for</span> per minus</span><br><span class="line"><span class="built_in">hour</span>: <span class="number">1</span>~<span class="number">23</span>, <span class="number">0</span> means <span class="number">0</span> o<span class="comment">'clock</span></span><br><span class="line"><span class="built_in">day</span>: <span class="number">1</span>~<span class="number">31</span></span><br><span class="line"><span class="built_in">month</span>: <span class="number">1</span>~<span class="number">12</span></span><br><span class="line">week: <span class="number">0</span>~<span class="number">6</span>, <span class="number">0</span> means sunday</span><br><span class="line">command: the command u want <span class="keyword">to</span> run</span><br></pre></td></tr></table></figure></p>
+<h3 id="Examples">Examples</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># every night at <span class="number">21</span>:<span class="number">31</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每晚的<span class="number">21</span>:<span class="number">30</span></span></span><br><span class="line"><span class="number">30</span> <span class="number">21</span> * * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">1</span>, <span class="number">10</span>, <span class="number">22</span> per month at <span class="number">4</span>:<span class="number">45</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每月<span class="number">1</span>、<span class="number">10</span>、<span class="number">22</span>日的<span class="number">4</span>:<span class="number">45</span></span></span><br><span class="line"><span class="number">45</span> <span class="number">4</span> <span class="number">1</span>,<span class="number">10</span>,<span class="number">22</span> * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># saturday and sunday per week at <span class="number">1</span>:<span class="number">10</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每周六、周日的<span class="number">1</span>:<span class="number">10</span></span></span><br><span class="line"><span class="number">10</span> <span class="number">1</span> * * <span class="number">6</span>,<span class="number">0</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">18</span>:<span class="number">00</span> ~ <span class="number">23</span>:<span class="number">00</span> per <span class="number">30</span> minus everyday reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每天<span class="number">18</span>:<span class="number">00</span>至<span class="number">23</span>:<span class="number">00</span>之间每隔<span class="number">30</span>分钟</span></span><br><span class="line"><span class="number">0</span>,<span class="number">30</span> <span class="number">18</span>-<span class="number">23</span> * * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># saturday per week at <span class="number">23</span>:<span class="number">00</span> reload nginx</span></span><br><span class="line"><span class="preprocessor"># 每星期六的<span class="number">23</span>:<span class="number">00</span></span></span><br><span class="line"><span class="number">0</span> <span class="number">23</span> * * <span class="number">6</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">23</span>:<span class="number">00</span> ~ <span class="number">7</span>:<span class="number">00</span> per hour</span></span><br><span class="line"><span class="preprocessor"># <span class="number">23</span>点到<span class="number">7</span>点之间，每隔一小时</span></span><br><span class="line"><span class="number">0</span> <span class="number">23</span>-<span class="number">7</span>/<span class="number">1</span> * * * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># per hour</span></span><br><span class="line"><span class="comment"># 每一小时</span></span><br><span class="line"><span class="keyword">*</span> <span class="keyword">*</span>/1 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">4</span> every month and monday to wednesday every week at <span class="number">11</span>:<span class="number">00</span></span></span><br><span class="line"><span class="preprocessor"># 每月的<span class="number">4</span>号与每周一到周三的<span class="number">11</span>点</span></span><br><span class="line"><span class="number">0</span> <span class="number">11</span> <span class="number">4</span> * mon-wed /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="number">1</span> january at <span class="number">4</span>:<span class="number">00</span></span></span><br><span class="line"><span class="preprocessor"># 一月一号的<span class="number">4</span>点</span></span><br><span class="line"><span class="number">0</span> <span class="number">4</span> <span class="number">1</span> jan * /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># per 30 minus</span></span><br><span class="line"><span class="comment"># 每半小时</span></span><br><span class="line"><span class="keyword">*</span>/30 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<h3 id="Advanced_Usage">Advanced Usage</h3><p>For the files:</p>
+<ul>
+<li>/etc/cron.allow : list the user who can use crontab</li>
+<li>/etc/cron.deny : list the user who cannot use crontab</li>
+<li>/var/spool/cron : all users and their crontab will be store here</li>
+<li>/var/log/cron : cron log per job</li>
+<li>/etc/crontab : for system jobs, <code>crontab -e</code> is for current user</li>
+<li>/etc/cron.d/* : seperated cron file</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ls /etc/cron.d</span><br><span class="line"><span class="number">0</span>hourly  raid-check</span><br><span class="line"></span><br><span class="line">cat /etc/cron.d/<span class="number">0</span>hourly </span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=/</span><br><span class="line"><span class="number">01</span> * * * * root run-parts /etc/cron.hourly</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ls /etc/cron.hourly/</span><br><span class="line"><span class="number">0</span>anacron</span><br><span class="line"></span><br><span class="line">cat /etc/cron.hourly/<span class="number">0</span>anacron </span><br><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Skip excecution unless the date has changed from the previous run </span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> -r /var/spool/anacron/cron.daily; <span class="keyword">then</span></span><br><span class="line">    day=`cat /var/spool/anacron/cron.daily`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ `date +%Y%m%d` = <span class="string">"<span class="variable">$day</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">exit</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Skip excecution unless AC powered</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> -x /usr/bin/on_ac_power; <span class="keyword">then</span></span><br><span class="line">    /usr/bin/on_ac_power &amp;&gt; /dev/null</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">test</span> $? <span class="operator">-eq</span> <span class="number">1</span>; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">exit</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">/usr/sbin/anacron <span class="operator">-s</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/anacrontab </span><br><span class="line"><span class="comment"># /etc/anacrontab: configuration file for anacron</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># See anacron(8) and anacrontab(5) for details.</span></span><br><span class="line"></span><br><span class="line">SHELL=/bin/sh</span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</span><br><span class="line">MAILTO=root</span><br><span class="line"><span class="comment"># the maximal random delay added to the base delay of the jobs</span></span><br><span class="line">RANDOM_DELAY=<span class="number">45</span></span><br><span class="line"><span class="comment"># the jobs will be started during the following hours only</span></span><br><span class="line">START_HOURS_RANGE=<span class="number">3</span>-<span class="number">22</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#period in days   delay in minutes   job-identifier   command</span></span><br><span class="line"><span class="number">1</span>	<span class="number">5</span>	cron.daily		nice run-parts /etc/cron.daily</span><br><span class="line"><span class="number">7</span>	<span class="number">25</span>	cron.weekly		nice run-parts /etc/cron.weekly</span><br><span class="line">@monthly <span class="number">45</span>	cron.monthly		nice run-parts /etc/cron.monthly</span><br></pre></td></tr></table></figure>
+<p><a href="http://linux.vbird.org/linux_basic/0430cron.php" target="_blank" rel="external">More Info</a>.</p>
+<h2 id="Practice">Practice</h2><p>I want to backup my svn daily, so i must have a script to backup:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">cd</span> /home/svn/repos</span><br><span class="line">now=`/bin/date +%Y%m%d`</span><br><span class="line">/bin/tar czvf <span class="string">"kk_backup_<span class="variable">$now</span>.tar.gz"</span> kk/ &amp;&amp; rm -rf /home/svn/backup/* &amp;&amp; /bin/mv kk_backup_*.tar.gz /home/svn/backup/</span><br><span class="line"><span class="keyword">if</span> [ $? == <span class="number">0</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">result=<span class="string">"backup svn OK!!"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">result=<span class="string">"backup svn False!!"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$result</span></span><br></pre></td></tr></table></figure></p>
+<p>then just give the script to <code>/etc/cron.daily</code>:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp scripts/backup.sh /etc/cron.daily/svn_backup.sh</span><br><span class="line">chmod +x /etc/cron.daily/svn_backup.sh</span><br></pre></td></tr></table></figure></p>
+<p>That’s all.</p>
+<h1 id="REF">REF</h1><p><a href="http://linux.vbird.org/linux_basic/0430cron.php" target="_blank" rel="external">鳥哥的 Linux 私房菜 — 第十五章、例行性工作排程(crontab)</a><br><a href="http://www.cnblogs.com/ccdc/archive/2012/06/01/2529471.html" target="_blank" rel="external">centos中crontab（计时器）用法详解 - 长城的草 - 博客园</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/27/Crontabs-Guide/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/24/CentOS6-5使用RSYNC发布程序/" title="CentOS6.5使用RSYNC发布程序" itemprop="url">CentOS6.5使用RSYNC发布程序</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-24T11:53:51.000Z" itemprop="datePublished"> 发表于 2015-10-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>Rsync（remote synchronize）是一个远程数据同步工具，可通过LAN/WAN快速同步多台主机间的文件，也可以使用 Rsync 同步本地硬盘中的不同目录。</p>
+<blockquote>
+<p>rsync is an <a href="http://www.opensource.org/" target="_blank" rel="external">open source</a> utility that provides fast incremental file transfer. rsync is freely available under the <a href="https://rsync.samba.org/GPL.html" target="_blank" rel="external">GNU General Public License</a> and is currently being maintained by <a href="http://opencoder.net/" target="_blank" rel="external">Wayne Davison</a>.<br>If you are running (1) an xattr-enabled rsync older than 3.0.2, (2) a writable rsync daemon older than 3.0.0, or (3) a version of rsync older than 2.6.6, please see the <a href="https://rsync.samba.org/security.html" target="_blank" rel="external">rsync security advisory page</a>.</p>
+</blockquote>
+<p>本次将使用此工具与SVN配合，通过SVN进行版本控制，上传代码之后，自动同步发布到线上。</p>
+<h2 id="安装">安装</h2><p>查询现有版本并安装。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询</span></span><br><span class="line">rpm -qa | grep rsync</span><br><span class="line"><span class="comment"># 卸载</span></span><br><span class="line">rpm <span class="operator">-e</span> rsync</span><br><span class="line"><span class="comment"># 下载</span></span><br><span class="line">wget http://pkgs.repoforge.org/rsync/rsync-<span class="number">3.1</span>.<span class="number">1</span>-<span class="number">1</span>.el6.rfx.x86_64.rpm</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">rpm -ivh rsync-<span class="number">3.1</span>.<span class="number">1</span>-<span class="number">1</span>.el6.rfx.x86_64.rpm</span><br><span class="line"><span class="comment"># 直接升级</span></span><br><span class="line">rpm -Uvh rsync-<span class="number">3.1</span>.<span class="number">1</span>-<span class="number">1</span>.el6.rfx.x86_64.rpm</span><br></pre></td></tr></table></figure></p>
+<p>自然，你可以通过<code>yum</code>安装，不过版本较低：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install rsync</span><br><span class="line">--&gt; Running transaction check</span><br><span class="line">---&gt; Package rsync.x86_64 <span class="number">0</span>:<span class="number">3.0</span>.<span class="number">6</span>-<span class="number">9</span>.el6_4.<span class="number">1</span> will be updated</span><br><span class="line">---&gt; Package rsync.x86_64 <span class="number">0</span>:<span class="number">3.0</span>.<span class="number">6</span>-<span class="number">12</span>.el6 will be an update</span><br><span class="line">--&gt; Finished Dependency Resolution</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置">配置</h2><h3 id="初始配置">初始配置</h3><ul>
+<li>选择rsync服务器启动方式：<ol>
+<li>rsync服务器负载较高，则使用独立启动模式</li>
+<li>rsync服务器负载较低，使用xinetd运行方式</li>
+</ol>
+</li>
+<li>创建配置文件rsyncd.conf</li>
+<li>对于非匿名方式访问的rsync服务器创建配置口令（建议配置需要口令访问）<br>CentOS 默认以xinetd模式运行rsync，rsync的xinetd配置文件是/etc/xinetd.d/rsync<br>如果配置rsync以xinetd模式运行，执行如下命令<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chkconfig rsync on</span><br><span class="line">service xinetd restart</span><br><span class="line"><span class="preprocessor"># 如果执行 service xinetd restart 发现 xinetd: unrecognized service 则未安装xinetd服务</span></span><br><span class="line"><span class="preprocessor"># 执行 yum install xinetd 安装 xinetd服务</span></span><br><span class="line"><span class="preprocessor"># 安装之后启动 xinetd服务(service xinetd start)</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>编辑rsync的xinetd配置文件/etc/xinetd.d/rsync文件，修改参数 server_args = —daemon —config=/etc/rsyncd/rsyncd.conf 可以配置rsync服务器启动时的参数</p>
+<p>如果使用独立运行模式，则执行如下命令<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/rsync <span class="comment">--daemon</span></span><br><span class="line">#编辑 /etc/rc.<span class="keyword">local</span>文件 加入 /usr/bin/rsync <span class="comment">--daemon 保证每次开机启动都会自动启动rsync服务</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="配置设置">配置设置</h3><p>创建配置目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建rsync服务目录</span></span><br><span class="line">mkdir /etc/rsyncd</span><br><span class="line"><span class="comment"># 创建配置文件</span></span><br><span class="line">touch /etc/rsyncd/rsyncd.conf</span><br><span class="line"><span class="comment"># 创建密码文件</span></span><br><span class="line">touch /etc/rsyncd/rsyncd.passwd</span><br><span class="line"><span class="comment">#权限修改</span></span><br><span class="line">chown root:root /etc/rsyncd/rsyncd.passwd</span><br><span class="line">chmod <span class="number">600</span> /etc/rsyncd/rsyncd.passwd</span><br></pre></td></tr></table></figure></p>
+<p>配置文件：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"># GLOBAL OPTIONS</span><br><span class="line">uid = root                         </span><br><span class="line">gid = root                                  </span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">use</span> chroot = <span class="keyword">no</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">read</span> <span class="keyword">only</span> = yes</span><br><span class="line"></span><br><span class="line">#<span class="keyword">limit</span> <span class="keyword">access</span> <span class="keyword">to</span> <span class="keyword">private</span> LANs</span><br><span class="line"><span class="keyword">hosts</span> <span class="keyword">allow</span>=<span class="number">172.16</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.0</span><span class="number">.0</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span> <span class="number">10.0</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span></span><br><span class="line"><span class="keyword">hosts</span> deny=*</span><br><span class="line"><span class="keyword">max</span> connections = <span class="number">5</span>                      </span><br><span class="line"></span><br><span class="line">pid <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsyncd.pid             </span><br><span class="line"></span><br><span class="line">secrets <span class="keyword">file</span> = /etc/rsyncd/rsyncd.passwd</span><br><span class="line">#<span class="keyword">lock</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsync.<span class="keyword">lock</span>           </span><br><span class="line"></span><br><span class="line">#motd <span class="keyword">file</span> = /etc/rsyncd/rsyncd.motd        </span><br><span class="line"></span><br><span class="line">#This will give you a separate <span class="keyword">log</span> <span class="keyword">file</span></span><br><span class="line">#<span class="keyword">log</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/<span class="keyword">log</span>/rsync.<span class="keyword">log</span></span><br><span class="line"></span><br><span class="line">#This will <span class="keyword">log</span> every <span class="keyword">file</span> transferred - up <span class="keyword">to</span> <span class="number">85</span>,<span class="number">000</span>+ per <span class="keyword">user</span>, per <span class="keyword">sync</span></span><br><span class="line">transfer <span class="keyword">logging</span> = yes</span><br><span class="line"></span><br><span class="line"><span class="keyword">log</span> <span class="keyword">format</span> = %<span class="keyword">t</span> %a %<span class="keyword">m</span> %<span class="keyword">f</span> %b</span><br><span class="line">syslog facility = local3</span><br><span class="line"><span class="keyword">timeout</span> = <span class="number">300</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">MODULE</span> OPTIONS</span><br><span class="line">[hwangjrhome]</span><br><span class="line"><span class="keyword">path</span> = /home/hwangjr/</span><br><span class="line"><span class="keyword">list</span>=yes</span><br><span class="line"><span class="keyword">ignore</span> <span class="keyword">errors</span></span><br><span class="line">auth <span class="keyword">users</span> = hwangjr</span><br><span class="line"><span class="keyword">comment</span> = HwangJR home</span><br><span class="line"><span class="keyword">exclude</span> = important/</span><br><span class="line"></span><br><span class="line">[chinatmp]</span><br><span class="line"><span class="keyword">path</span> = /tmp/china/</span><br><span class="line"><span class="keyword">list</span>=<span class="keyword">no</span></span><br><span class="line"><span class="keyword">ignore</span> <span class="keyword">errors</span></span><br><span class="line">auth <span class="keyword">users</span> = china</span><br><span class="line"><span class="keyword">comment</span> = tmp china</span></span><br></pre></td></tr></table></figure></p>
+<p>密码文件：<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">hwangjr:</span>asdf             <span class="preprocessor">#格式   用户名:口令</span></span><br><span class="line"><span class="label">china:</span>jk               <span class="preprocessor">#该用户不要求是系统用户</span></span><br></pre></td></tr></table></figure></p>
+<p>查看服务是否启动：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -an <span class="string">| grep 873</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="自动同步">自动同步</h3><p>编辑crontab<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab <span class="operator">-e</span></span><br></pre></td></tr></table></figure></p>
+<p>加入同步命令：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 每天<span class="number">0</span>点<span class="number">10</span>分执行后面的命令</span></span><br><span class="line"><span class="number">10</span> <span class="number">0</span> * * * rsync -avzP  --<span class="keyword">delete</span>  --password-file=/tmp/rsync.password hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br></pre></td></tr></table></figure></p>
+<h3 id="客户端配置">客户端配置</h3><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 安装客户端</span></span><br><span class="line">yum -y install rsync</span><br><span class="line"><span class="preprocessor"># 同步命令</span></span><br><span class="line"><span class="preprocessor"># -a 参数，相当于-rlptgoD</span></span><br><span class="line"><span class="preprocessor">#   -r 是递归 -l 是链接文件，意思是拷贝链接文件；-p 表示保持文件原有权限</span></span><br><span class="line"><span class="preprocessor">#   -t 保持文件原有时间；-g 保持文#件原有用户组；-o 保持文件原有属主；-D 相当于块设备文件</span></span><br><span class="line"><span class="preprocessor"># -z 传输时压缩；</span></span><br><span class="line"><span class="preprocessor"># -P 传输进度；</span></span><br><span class="line"><span class="preprocessor"># -v 传输时的进度等信息，和-P有点关系，自己试试。可以看文档；</span></span><br><span class="line"><span class="preprocessor"># 同步</span></span><br><span class="line">rsync -avzP hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 客户端数据和服务器端数据保持一致</span></span><br><span class="line"><span class="preprocessor"># –delete 选项，表示客户端上的数据要与服务器端完全一致，如果 /tmp/hwangjr/目录中有服务器上不存在的文件，则删除。最终目的是让/tmp/hwangjr/目录上的数据完全与服务器上保持一致；用的时候要小心点，最好不要把已经有重要数所据的目录，当做本地更新目录，否则会把你的数据全部删除</span></span><br><span class="line">rsync -avzP  --delete hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 指定传输时候的密码文件，密码文件权限 600</span></span><br><span class="line"><span class="preprocessor"># –password-file=rsync.password ，这时当我们以hwangjr用户登录rsync服务器同步数据时，密码将读取 /tmp/rsync.password 这个文件。这个文件内容只是hwangjr用户的密码。我们要如下做；</span></span><br><span class="line"><span class="preprocessor"># touch /tmp/rsync.password</span></span><br><span class="line"><span class="preprocessor"># chmod 600 /tmp/rsync.password</span></span><br><span class="line"><span class="preprocessor"># echo "asdf"&gt; /tmp/rsync.password</span></span><br><span class="line"><span class="preprocessor"># rsync -avzP  --delete  --password-file=/tmp/rsync.password hwangjr@172.16.1.135::hwangjrhome  /tmp/hwangjr/</span></span><br><span class="line"><span class="preprocessor"># 注： 这样就不需要密码了，服务器通过crond 计划任务自动同步</span></span><br><span class="line">rsync -avzP  --delete  --password-file=/tmp/rsync.password hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br></pre></td></tr></table></figure>
+<h3 id="配置语法">配置语法</h3><blockquote>
+<ul>
+<li><strong>模块</strong>：<br>  以[模块名称]开始</li>
+<li><strong>参数配置行</strong>：<br>  格式 name = value<br>  其中 value的值可以是string(可以不使用引号)或者boolean(0/1,true/false,yes/no)</li>
+<li><strong>以#开始是注释行</strong></li>
+<li><strong>以\是续行符</strong></li>
+</ul>
+</blockquote>
+<ol>
+<li><p>全局参数（[模块名称]之外的配置均为全局配置）<br><strong>address</strong><br>在独立运行时，用于指定的服务器运行的 IP 地址。由 xinetd 运行时将忽略此参数，使用命令行上的 –address 选项替代<br>默认值 本地所有IP<br><strong>port</strong><br>指定 rsync 守护进程监听的端口号。 由 xinetd 运行时将忽略此参数，使用命令行上的–port 选项替代。<br>默认值是 873<br><strong>motd file</strong><br>指定一个消息文件，当客户连接服务器时该文件的内容显示给客户。<br>默认值无<br><strong>pid file</strong><br>rsync 的守护进程将其 PID 写入指定的文件。<br>默认值 无<br><strong>log file</strong><br>指定 rsync 守护进程的日志文件，而不将日志发送给 syslog。<br>默认值 无<br><strong>syslog facility</strong><br>指定 rsync 发送日志消息给 syslog 时的消息级别<br>默认值 daemon<br><strong>socket options</strong><br>指定自定义 TCP 选项。<br>默认值无</p>
+</li>
+<li><p>模块参数<br>模块参数主要用于定义 rsync 服务器哪个目录要被同步。模块声明的格式必须为 [module] 形式，这个名字就是在 rsync 客户端看到的名字，类似于 Samba 服务器提供的共享名。而服务器真正同步的数据是通过 path 来指定的。可以根据自己的需要，来指定多个模块，模块中可以定义以下参数：</p>
+</li>
+</ol>
+<ul>
+<li>基本模块参数<br><strong>path</strong><br>指定当前模块在 rsync 服务器上的同步路径，该参数是必须指定的<br><strong>comment</strong><br>给模块指定一个描述，该描述连同模块名在客户连接得到模块列表时显示给客户<br>模块控制参数<br><strong>use chroot</strong><br>若为 true，则 rsync 在传输文件之前首先 chroot 到 path 参数所指定的目录下。这样做的原因是实现额外的安全防护，但是缺点是需要 root 权限，并且不能备份指向 path 外部的符号连接所指向的目录文件。<br>默认值true<br><strong>uid</strong><br>指定该模块以指定的 UID 传输文件。<br>默认值 nobody<br><strong>gid</strong><br>指定该模块以指定的 GID 传输文件。<br>默认值 nobody<br><strong>max connections</strong><br>定该模块的最大并发连接数量以保护服务器，超过限制的连接请求将被告知随后再试。<br>默认值 0 不限制<br><strong>read only</strong><br>指定是否允许客户上传文件。若为 true 则不允许上传；若为 false 并且服务器目录也具有读写权限则允许上传。<br>默认值 true<br><strong>write only</strong><br>指定是否允许客户下载文件。若为 true 则不允许下载；若为 false 并且服务器目录也具有读权限则允许下载。<br>默认值 false<br>模块认证参数<br><strong>hosts allow</strong><br>用一个主机列表指定哪些主机客户允许连接该模块。不匹配主机列表的主机将被拒绝<br>默认值 <em><br><strong>hosts deny</strong><br>用一个主机列表指定哪些主机客户不允许连接该模块。<br>默认值 空<br><strong>auth users</strong><br>指定由空格或逗号分隔的用户名列表，只有这些用户才允许连接该模块。这里的用户和系统用户没有任何关系。用户名和口令以明文方式存放在 secrets file 参数指定的文件中<br>默认匿名<br><strong>secrets file</strong><br>指定一个 rsync 认证口令文件。只有在 auth users 被定义时，该文件才起作用。<br>默认值 空<br><em>*strict modes</em></em><br>指定是否监测口令文件的权限。若为 true 则口令文件只能被 rsync 服务器运行身份的用户访问，其他任何用户不可以访问该文件。<br>默认值 true</li>
+</ul>
+<p>其中客户主机列表定义可以是以下形式：</p>
+<blockquote>
+<p>单个IP地址 例如：192.168.0.1<br>整个网段 例如：192.168.0.0/24，192.168.0.0/255.255.255.0<br>可解析的单个主机名 例如：centos，centos.bsmart.cn<br>域内的所有主机 例如：.bsmart.cn<br>“”则表示所有。<br>多个列表项要用空格间隔。</p>
+</blockquote>
+<p>而认证口令则：</p>
+<blockquote>
+<p>rsync 认证口令文件的权限一定是 600，否则客户端将不能连接服务器。<br>rsync 认证口令文件中每一行指定一个 用户名:口令 对，格式为：username:passwd<br>一般来说口令最好不要超过8个字符。若您只配置匿名访问的 rsync 服务器，则无需设置上述参数。</p>
+</blockquote>
+<h2 id="SVN同步实例">SVN同步实例</h2><p>基本思路就是，当发生commit时，触发服务端svn数据目录update，也触发rsync去同步网站目录。</p>
+<h3 id="服务器配置文件">服务器配置文件</h3><p>编辑配置文件：<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">vim</span> /etc/rsyncd/rsyncd.<span class="keyword">conf</span></span><br></pre></td></tr></table></figure></p>
+<p>配置文件为：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># GLOBAL OPTIONS</span><br><span class="line">uid = root</span><br><span class="line">gid = root</span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">use</span> chroot = <span class="keyword">no</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">read</span> <span class="keyword">only</span> = yes</span><br><span class="line"></span><br><span class="line">#<span class="keyword">limit</span> <span class="keyword">access</span> <span class="keyword">to</span> <span class="keyword">private</span> LANs</span><br><span class="line"><span class="keyword">hosts</span> <span class="keyword">allow</span>=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"><span class="keyword">hosts</span> deny=*</span><br><span class="line"><span class="keyword">max</span> connections = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">pid <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsyncd.pid</span><br><span class="line">secrets <span class="keyword">file</span> = /etc/rsyncd/rsyncd.passwd</span><br><span class="line"><span class="keyword">lock</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsync.<span class="keyword">lock</span></span><br><span class="line">#motd <span class="keyword">file</span> = /etc/rsyncd/rsyncd.motd</span><br><span class="line"></span><br><span class="line">#This will give you a separate <span class="keyword">log</span> <span class="keyword">file</span></span><br><span class="line">#<span class="keyword">log</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/<span class="keyword">log</span>/rsync.<span class="keyword">log</span></span><br><span class="line"></span><br><span class="line">#This will <span class="keyword">log</span> every <span class="keyword">file</span> transferred - up <span class="keyword">to</span> <span class="number">85</span>,<span class="number">000</span>+ per <span class="keyword">user</span>, per <span class="keyword">sync</span></span><br><span class="line">transfer <span class="keyword">logging</span> = yes</span><br><span class="line"><span class="keyword">log</span> <span class="keyword">format</span> = %<span class="keyword">t</span> %a %<span class="keyword">m</span> %<span class="keyword">f</span> %b</span><br><span class="line">syslog facility = local3</span><br><span class="line"><span class="keyword">timeout</span> = <span class="number">300</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">MODULE</span> OPTIONS</span><br><span class="line">[kksvn]</span><br><span class="line"><span class="keyword">path</span> = /home/svn/rsyncd/kk</span><br><span class="line"><span class="keyword">list</span>=yes</span><br><span class="line"><span class="keyword">ignore</span> <span class="keyword">errors</span></span><br><span class="line">auth <span class="keyword">users</span> = kksvn</span><br><span class="line"><span class="keyword">comment</span> = KK SVN</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>use chroot=no 时，同步后DES的文件主或组如果有，则显示名，即使ID不一样；<br>use chroot=yes时，如果两台机器同名的ID不同，则服务端只会显示SRC的ID，造成权限问题。</p>
+</blockquote>
+<p>编辑rsync的用户认证配置文件<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># vim /etc/rsyncd/rsyncd.passwd</span></span><br><span class="line">kksvn:kksvn</span><br><span class="line"><span class="preprocessor">#chmod 600 /etc/rsyncd/rsyncd.passwd</span></span><br></pre></td></tr></table></figure></p>
+<p>启动服务：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>bin<span class="regexp">/rsync --daemon --config=/</span>etc<span class="regexp">/rsyncd/</span>rsyncd.conf</span><br><span class="line">echo <span class="string">"/usr/bin/rsync --daemon"</span> &gt;&gt;<span class="regexp">/etc/</span>rc.local</span><br></pre></td></tr></table></figure></p>
+<p>注：修改配置文件和用户密码不需要重启服务</p>
+<h3 id="客户端测试">客户端测试</h3><p>客户端测试：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># vim /home/svn/rsyncd/conf/rsyncd.passwd</span></span><br><span class="line">kksvn</span><br><span class="line"><span class="preprocessor"># chmod <span class="number">600</span> /home/svn/rsyncd/conf/rsyncd.passwd</span></span><br><span class="line"><span class="preprocessor"># rsync -avzp --progress --delete --exclude=.svn --password-file=/home/svn/rsyncd/conf/rsyncd.passwd kksvn@<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>::kksvn /tmp/kk</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="SVN配置">SVN配置</h3><p>配置钩子：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="regexp">/home/</span>svn<span class="regexp">/repos/</span>kk<span class="regexp">/hooks/</span>post-commit</span><br><span class="line">chmod +x <span class="regexp">/home/</span>svn<span class="regexp">/repos/</span>kk<span class="regexp">/hooks/</span>post-commit</span><br></pre></td></tr></table></figure></p>
+<p>post-commit内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span><br><span class="line"></span></span><br><span class="line">REPOS=<span class="string">"<span class="variable">$1</span>"</span></span><br><span class="line">REV=<span class="string">"<span class="variable">$2</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LANG=zh_CN.UTF-<span class="number">8</span></span><br><span class="line">/usr/bin/svn update /home/svn/rsyncd/kke</span><br><span class="line"><span class="keyword">if</span> [ $? <span class="operator">-eq</span> <span class="number">0</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    /bin/bash /home/svn/rsyncd/scripts/kke_rsync.sh &gt; /dev/null <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
+<p>kke_rsync.sh内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#/bin/bash</span></span><br><span class="line"></span><br><span class="line">IP=<span class="string">"127.0.0.1"</span></span><br><span class="line">Auth_module=<span class="string">"kksvn"</span></span><br><span class="line">Localdir=<span class="string">"/tmp/kk"</span></span><br><span class="line">Auth_user=<span class="string">"kksvn"</span></span><br><span class="line">Passwd_file=<span class="string">"/home/svn/rsyncd/conf/rsyncd.passwd"</span></span><br><span class="line">Exc=<span class="string">" --exclude=.svn"</span></span><br><span class="line">/usr/bin/rsync -vrtopgl --progress --delete <span class="variable">$&#123;Exc&#125;</span> --password-file=<span class="variable">$&#123;Passwd_file&#125;</span> <span class="variable">$Auth_user</span>@<span class="variable">$&#123;IP&#125;</span>::<span class="variable">$&#123;Auth_module&#125;</span> <span class="variable">$&#123;Localdir&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="拓展">拓展</h2><h3 id="通过exclude排除多个文件/目录">通过exclude排除多个文件/目录</h3><p>使用rsync -av –exclude=.svn /home/hwangjr/t1 /home/hwangjr/t2 只能排除.svn文件/目录。但如果要排除多个文件/目录，就需要新建个exclude.list，然后rsync -av –exclude-from=”exclude.list”指定不需要同步的文件/目录。<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将/home/hwangjr/t1目录拷贝到/home/hwangjr/t2目录下，/home/hwangjr/exclude.list中指定文件不拷贝</span></span><br><span class="line">rsync -av --exclude-from=<span class="regexp">/home/hwangjr</span><span class="regexp">/exclude.list /home</span><span class="regexp">/hwangjr/t</span>1 /home/hwangjr/t2</span><br></pre></td></tr></table></figure></p>
+<p>exclude.list里面填写要排除的文件/目录，一行一个，直接写文件名即可。如果要排除a,b.1,b.2,tmp/g，那么exclude.list里就应该写：<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">a</span></span><br><span class="line"><span class="regexp">b.*</span></span><br><span class="line">tmp/g</span><br></pre></td></tr></table></figure></p>
+<p>不应该写成：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>a</span><br><span class="line"><span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>b.*</span><br><span class="line"><span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>tmp<span class="regexp">/g</span></span><br></pre></td></tr></table></figure></p>
+<p>也不应该写成：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.<span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>a</span><br><span class="line">.<span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>b.*</span><br><span class="line">.<span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>tmp<span class="regexp">/g</span></span><br></pre></td></tr></table></figure></p>
+<p>SO：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">–<span class="keyword">exclude</span>=PATTERN <span class="keyword">exclude</span> files matching PATTERN</span><br><span class="line">–<span class="keyword">exclude</span>-<span class="keyword">from</span>=<span class="keyword">FILE</span> <span class="keyword">read</span> <span class="keyword">exclude</span> patterns <span class="keyword">from</span> <span class="keyword">FILE</span></span><br><span class="line">–<span class="keyword">include</span>=PATTERN don’t <span class="keyword">exclude</span> files matching PATTERN</span><br><span class="line">–<span class="keyword">include</span>-<span class="keyword">from</span>=<span class="keyword">FILE</span> <span class="keyword">read</span> <span class="keyword">include</span> patterns <span class="keyword">from</span> <span class="keyword">FILE</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="REF">REF</h2><p><a href="https://download.samba.org/pub/rsync/src/" target="_blank" rel="external">Index of /pub/rsync/src</a><br><a href="https://rsync.samba.org/" target="_blank" rel="external">rsync</a><br><a href="http://pkgs.repoforge.org/rsync/" target="_blank" rel="external">Index of /rsync</a><br><a href="http://segmentfault.com/a/1190000002502991" target="_blank" rel="external">CentOS 6.5下rsync服务器安装配置 - SegmentFault</a><br><a href="http://my.oschina.net/duguaoxue/blog/496228" target="_blank" rel="external">CentOS 6.3下rsync服务器的安装与配置 - longjian的个人页面 - 开源中国社区</a><br><a href="http://wjw7702.blog.51cto.com/5210820/1148808" target="_blank" rel="external">Rsync常见错误及命令详细参数 - 彼岸 - 51CTO技术博客</a><br><a href="http://sndapk.blog.51cto.com/5385144/1360384" target="_blank" rel="external">svn+rsync实时发布程序 - notepad - 51CTO技术博客</a><br><a href="http://www.ttlsa.com/svn/linux-svn-rsync-inotify/" target="_blank" rel="external">linux下svn+rsync+inotify实现代码自动同步 - 运维生存时间</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/24/CentOS6-5使用RSYNC发布程序/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/23/阿里CentOS-6-iptables配置/" title="阿里CentOS 6 iptables配置" itemprop="url">阿里CentOS 6 iptables配置</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-23T10:31:08.000Z" itemprop="datePublished"> 发表于 2015-10-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>就是，配置防火墙，防止被鲁。</p>
+<p>iptables的命令格式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables [-t table] <span class="built_in">command</span> [chain] [rules] [-j target]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>[-t table] ：用来指明使用的表， 有三种选项: filter, nat 和 mangle，如果未指定，则使用filter作为缺省表。 事实上，对于单个服务器的防火墙配置，一般来讲，我们只需要对filter表进行配件就OK了。filter表包括 INPUT, OUTPUT,和FORWARD三个chain.</p>
+</li>
+<li><p>command 表明iptables命名要做什么，比如</p>
+</li>
+<li><p>-A （–append): 该命令会把一条规则附件到chain的末尾。</p>
+</li>
+<li><p>-D（–delete)用来删除某个规则。</p>
+</li>
+<li><p>-F （–flush) 如果指定了chain, 删除该chain中的所有规则，如果未指定chain, 则删除所有chain中的所有规则。</p>
+</li>
+<li><p>target: 是由规则指定的操作。 包括下面几种：</p>
+</li>
+<li><p>ACCEPT: 接收信息包(允许它前往目的地），并且将停止遍历chain.</p>
+</li>
+<li><p>DROP：  拒绝，</p>
+</li>
+</ul>
+<p>此外还有REJECT, RETURN, LOG, REDIRECT, MARK, MIRROR, MAQUERADE等。</p>
+<p>具体的iptables的语法和概念就不再多说了，请参照<a href="http://linux.die.net/man/8/iptables" target="_blank" rel="external">iptables man page</a>官方文档 .</p>
+<p>简单来说，iptables防火墙是由一系列的规则(rule)组成，  一个数据请求进来， 会依次和这些规则进行比较，如果正好符合规则的定义，那这个数据请求要么会被接收ACCEPT，要么被拒绝DRIP。如果不符合任何规则的定义，最后缺省的规则会被应用。</p>
+<h2 id="配置">配置</h2><p>SSH的端口22自然是需要开放的，否则我们就无法登录服务器了。CentOS的VPS经常作为用LAMP搭建的Web服务器，FTP服务器， Mail服务器等。</p>
+<ul>
+<li><p>对于Web服务来说，需要开放80端口，如果是HTTPS/SSL协议的话，还需用开放443端口。</p>
+</li>
+<li><p>对于Mail服务来说，由于涉及SMTP, POP3, IMAP协议，需要开放的端口：SMTP : 25   Secure SMTP:465  POP3: 110   Secure POP3: 995   IMAP: 143   IMAP over SSL: 993。</p>
+</li>
+<li><p>对于FTP服务来说，需要开放 20, 21两个端口。</p>
+</li>
+</ul>
+<h3 id="屏蔽常见攻击">屏蔽常见攻击</h3><p>缺省情况下，CentOS的iptables的设置是允许任何数据通过的。我们首先要清空iptables中的所有的规则：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -F</span><br></pre></td></tr></table></figure></p>
+<p>然后我们加上阻止简单扫描和攻击的规则：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP             <span class="comment">#NONE 包(所有标识bit都没有设置)主要是扫描类的数据包</span></span><br><span class="line">iptables -A INPUT -p tcp ! --syn -m state --state NEW -j DROP     <span class="comment">#防止sync-flood 攻击</span></span><br><span class="line">iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP              <span class="comment">#ALL包（所有的标注bit都被设置了）也是网络扫描的数据包</span></span><br></pre></td></tr></table></figure></p>
+<p>关于sync-flood, 请参照<a href="http://en.wikipedia.org/wiki/SYN_flood" target="_blank" rel="external">wikipedia</a>的解释。</p>
+<h3 id="相应服务开放端口">相应服务开放端口</h3><p>首先我们应该接受本机localhost的任何请求，否则，数据库连接等将无法工作：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -A INPUT -i lo -j ACCEPT</span><br></pre></td></tr></table></figure></p>
+<p>对于不同的服务需要开放不同的端口：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">iptables -A INPUT -p tcp --dport <span class="number">22</span> -j ACCEPT      <span class="comment"># SSH</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">80</span> -j ACCEPT      <span class="comment"># HTTP</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">443</span> -j ACCEPT     <span class="comment">#HTTPS</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">25</span> -j ACCEPT   <span class="comment">#SMTP</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">465</span>  -j ACCEPT <span class="comment">#Secure SMTP</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">110</span> -j ACCEPT   <span class="comment">#POP3</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">995</span> -j ACCEPT   <span class="comment">#Secure POP3</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">143</span> -j ACCEPT   <span class="comment">#IMAP</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">993</span> -j ACCEPT   <span class="comment">#Secure IMAP</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="通用规则">通用规则</h3><p>首先要允许所有从服务器端发起的连接，由此返回的响应数据应该是允许的！比如VPS发起的yum update , 必须要允许外部的update数据进来：<br><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I INPUT -m <span class="keyword">state</span>  --state ESTABLISHED, RELATED -j ACCEPT</span><br></pre></td></tr></table></figure></p>
+<p>最后，设置缺省的策略：屏蔽任何进入的数据请求，允许所有从Server发出的请求<br><figure class="highlight tp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iptables -<span class="keyword">P</span> OUTPUT <span class="keyword">ACC</span>EPT</span><br><span class="line">iptables -<span class="keyword">P</span> INPUT DROP</span><br></pre></td></tr></table></figure></p>
+<h3 id="保存设置">保存设置</h3><p>首先通过下面的命令查看一下我们的设置是否正确！<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptable -<span class="keyword">L</span> -<span class="keyword">n</span></span><br></pre></td></tr></table></figure></p>
+<p>确认没有问题后，执行下面的命令<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables <span class="keyword">save</span></span><br></pre></td></tr></table></figure></p>
+<p>执行上述命令后，相应的规则会写入 /etc/sysconfig/iptables这个文件，你可以检查一下看看。</p>
+<p>最后执行<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">service</span> iptables restart</span><br></pre></td></tr></table></figure></p>
+<p>重新启动iptables防火墙，以使上述设置生效。</p>
+<h3 id="自动化">自动化</h3><p>为了更方便的修改和维护自己的iptables的设置，我一般是把所有的iptables的设置先写到一个单独文件中，测试没有问题后。然后再保存到iptable的配置文件中。</p>
+<p>放大招，sh配置文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line"><span class="comment"># A simple iptables firewall configuration</span></span><br><span class="line"></span><br><span class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin; <span class="built_in">export</span> PATH</span><br><span class="line"></span><br><span class="line"><span class="comment">#flush/erase original rules</span></span><br><span class="line">iptables -F <span class="comment">#清除所有已制定的rule</span></span><br><span class="line">iptables -X <span class="comment">#清除用户自定义的chain/table</span></span><br><span class="line">iptables -Z <span class="comment">#将所有的chain的计数和流量统计归零</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Accept localhost connetting, no matter what it is</span></span><br><span class="line">iptables -A INPUT -i lo -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="comment">#Accept any response package which is initiated from inside</span></span><br><span class="line">iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="comment">#block most common network attacks(recon packets and syn-flood attack)</span></span><br><span class="line">iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP</span><br><span class="line">iptables -A INPUT -p tcp ! --syn -m state --state NEW -j DROP</span><br><span class="line">iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP</span><br><span class="line"></span><br><span class="line"><span class="comment">#open ports for different services</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">22</span> -j ACCEPT <span class="comment">#SSH</span></span><br><span class="line">iptables -A INPUT -p tcp --dport <span class="number">80</span> -j ACCEPT <span class="comment">#HTTP</span></span><br><span class="line"><span class="comment">#iptables -A INPUT -p tcp --dport 443 -j ACCEPT #HTTPS</span></span><br><span class="line"><span class="comment">#iptables -A INPUT -p tcp --dport 25 -j ACCEPT #SMTP</span></span><br><span class="line"><span class="comment">#iptables -A INPUT -p tcp --dport 465 -j ACCEPT #Secure SMTP</span></span><br><span class="line"><span class="comment">#iptables -A INPUT -p tcp --dport 110 -j ACCEPT #POP3</span></span><br><span class="line"><span class="comment">#iptables -A INPUT -p tcp --dport 995 -j ACCEPT #Secure POP</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ICMP configuration</span></span><br><span class="line"><span class="comment">#To prevent ICMP DDOS,we do not allow ICMP type 8(echo-request) or limit this request with 1/second</span></span><br><span class="line"><span class="comment">#some ICMP requests are allowed.</span></span><br><span class="line">icmp_<span class="built_in">type</span>=<span class="string">"0 3 4 11 12 14 16 18"</span></span><br><span class="line"><span class="keyword">for</span> ticmp <span class="keyword">in</span> <span class="variable">$icmp_type</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    iptables -A INPUT -p icmp --icmp-type <span class="variable">$ticmp</span> -j ACCEPT</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="comment">#iptables -A INPUT -p icmp --icmp-type 8 -m limit --limit 1/second -j ACCEPT</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#default policies</span></span><br><span class="line">iptables -P OUTPUT ACCEPT</span><br><span class="line">iptables -P INPUT DROP</span><br><span class="line"></span><br><span class="line"><span class="comment">#save to /etc/sysconfig/iptables</span></span><br><span class="line">/etc/init.d/iptables save</span><br></pre></td></tr></table></figure></p>
+<h2 id="常用命令">常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">yum install iptables</span><br><span class="line"><span class="comment"># 检测状态</span></span><br><span class="line">service iptables status</span><br><span class="line">service iptables start</span><br><span class="line"><span class="comment"># 查看当前配置</span></span><br><span class="line">iptables -L -n</span><br><span class="line"></span><br><span class="line"><span class="comment"># 接受一切请求</span></span><br><span class="line">iptables -P INPUT ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清空默认所有规则</span></span><br><span class="line">iptables -F</span><br><span class="line"><span class="comment"># 清空自定义所有规则</span></span><br><span class="line">iptables -X</span><br><span class="line"><span class="comment"># 清除计数器</span></span><br><span class="line">iptables -Z</span><br><span class="line"></span><br><span class="line">service iptables save</span><br><span class="line">chkconfig iptables on</span><br></pre></td></tr></table></figure>
+<h2 id="REF">REF</h2><p><a href="http://www.androiddev.net/centos-6-iptables-firewall/" target="_blank" rel="external">为CentOS 6设置IPTables防火墙 | 码农日记</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/23/阿里CentOS-6-iptables配置/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/23/Gradle查询-排除依赖/" title="Gradle查询/排除依赖" itemprop="url">Gradle查询/排除依赖</a>
   </h1>
   <p class="article-author">By
@@ -1313,263 +1676,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/05/创业团队股权分配/" title="创业团队股权分配" itemprop="url">创业团队股权分配</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-05T07:33:39.000Z" itemprop="datePublished"> 发表于 2015-08-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>团队分配股权，根本上来说，是需要创始人在分配和讨论过程中，整个团队感觉到合理、公平的一个分配方案，需要让各方达成共识。但是股权分配肯定无法替代信任的建立。<br>另外，股权分配一旦确定，很多在执行力上不足，这也是很多创业团队现有的问题，这时大家必须坐到一块，兑现股权约定。<br>本文从互联网资料参考，并进行总结，希望能让大家有所收获。</p>
-<h2 id="阶梯分配">阶梯分配</h2><p>将其取名为阶梯，是因为这个分配是从进入团队的不同时期来进行分配，越迟加入公司的员工风险越低。</p>
-<h3 id="原则">原则</h3><p>为了简单，假设所有创始人都全职创业。<br>随着公司的不断壮大，新员工不断加入，公司的也将一批一批的加入新员工，当你进行第一批招人时，很可能你已经获取到现金流（投资或者客户），所以除了创始人（第一批）之外，其他都不是创始人，他们是加入公司打工，因为他们不需要冒很大风险且从工作第一天就开始拿工资了。<br>那么当你的公司大到可以上市或者其他，这时你的公司也许已经有了6批，员工大约5批，第二批有5个，第三批25个，第四批200，ETC。<br>综上：创始人应该最终拿整个公司大约50%的股份，首批下面的5批员工每一批最终都分别分到大约10%的公司股份，每一批员工都将平分这10%股份。<br>基本思路就是，你设立不同的资历，最高的员工承受最大风险，最低员工风险最低，每批员工平均分配给这个这批股份，也就是让越早加入员工获得越多股份。<br>现在，你还需用执行一个重要的原则：股份绑定（vesting）。绑定期最好是4-5年，任何人在公司起码1年才可持有股份（包括创始人）。一般头一年25%，接下来每月落实2%。没有股份绑定条款，派股给任何人都是不靠谱的！<br>最后需要解决一个问题，当有新的投资进来时，将如何分割股份？答案很简单：新的投资将稀释所有人的股份。<br>另外，千万不要用分配股权来解决一些薪资或其他问题，比如：</p>
-<ol>
-<li>创业构想提出者，需要多拿股份吗？</li>
-<li>创始人之一不是全职投入？（那创始人就不是创始人了）</li>
-<li>为公司提供设备或其他有价值（专利等）东西，如何处理？<br>这些问题，都可通过类似补发工资等方式来解决，在公司现金流运转正常之后，对每个创始人薪资进行补发，避免因此引起的纠纷。<br>投资人、创始人和雇员分别拥有多少股份？这个需要市场来确定，现实地看，如果投资人最终获得50%以上，创始人重要性将被削弱，从而丧失动力。而如果创始人和员工如果持有100%股份，也会给投资人带来很大的压力，以平衡投资人和创始人/员工之间分配。正常公司上市时，投资人将拥有50%股份，创始人+员工将拥有50%股份。<h3 id="总结">总结</h3>虽然创业公司股权分配原则没有一刀切的解决方案，但是尽可能简单化、透明化、公平化！</li>
-</ol>
-<h2 id="常规分配">常规分配</h2><p>股权分配最错误的做法是股权五五分，五五分的结果是没有分配决定权。在开始的蜜月期可能不会产生争执，正所谓可以共患难，难以同甘苦。到了一定阶段，出现分歧的时候，如果有没有一个人拥有绝对的控制权，可能谁也不服气谁，最终的结果就是分道扬镳，创业失败。基于公司法规定的的股权1/2的决议规则和2/3的特别决议规则，相对理想的股权分配是持1/2以上股权，更理想是2/3以上。<br>这边分为三个部分。<br>一是创始人的股权。<br>二是员工的股权。<br>三是众筹的股权。</p>
-<h3 id="创始人的股权">创始人的股权</h3><h4 id="确定创始人">确定创始人</h4><p>创始人是承担了风险的人。判断创始人的简单方法是拿不拿工资，如果在最开始，都不能支付工资给你，那你就是创始人。<br>按照下面标准来进行股权增减：</p>
-<ol>
-<li>初始(每人均分100份股权)。</li>
-<li>召集人(股权增加5%)。</li>
-<li>创业点子及执行很重要(股权增加5%)。提供了最初的创业点子并执行成功。</li>
-<li>迈出第一步最难(股权增加5%-25%)。如果某个创始人提出的概念已经着手实施，比如已经开始申请专利、已经有一个演示原型、已经有一个产品的早期版本，或者其他对吸引投资或贷款有利的事情，那么这个创始人额外可以得到的股权，从5%到 25%不等。</li>
-<li>CEO，即总经理应该持股更多(股权增加5%)。</li>
-<li>全职创业是最最有价值的(股权增加200%)。</li>
-<li>信誉是最重要的资产(股权增加50-500%)。如果创始人是第一次创业，而他的合伙人里有人曾经参与过风投投资成功了的项目，那么这个合伙人比创始人更有投资价值。在某些极端情况 下，某些创始人会让投资人觉得非常值得投资，这些超级合伙人基本上消除了“创办阶段”的所有风险，所以最好让他们在这个阶段获得最多的股权。</li>
-<li>现金投入参照投资人投资。很可能是某个合伙人投入的资金相对而言多的多。这样的投资应该获较多的股权，因为最早期的投资，风险也往往最大，所以应该获得更多的股权。</li>
-<li>最后进行计算。假设最后计算的三个创始人的股份是为200/150/250，那么将他们的股份数相加(即为600份)作为总数，再计算他们每个人的持股比例：33%/25%/42%。<h4 id="创始人股权的退出机制">创始人股权的退出机制</h4>作为创业企业，如果创始人离开创业团队就涉及股权的退出机制。如果不设定退出机制，允许中途退出的合伙人带走股权，对退出合伙人的公平，但却是对其它长期参与创业的合伙人最大的不公平，对其它合伙人也没有安全感。<br>对于退出的合伙人，一方面，可以全部或部分收回股权；另一方面，必须承认合伙人的历史贡献，按照一定溢价/或折价回购股权。对于如何确定具体的退出价格，涉及两个因素，一个是退出价格基数，一个是溢价/或折价倍数。可以考虑按照：</li>
-<li>合伙人掏钱买股权的购买价格的一定溢价回购</li>
-<li>退出合伙人按照其持股比例可参与分配公司净资产或净利润的一定溢价</li>
-<li>按照公司最近一轮融资估值的一定折扣价回购</li>
-<li>有些退出价格是当时投入的本金，加合理利息回报。至于退出价格，不同公司会存在差异。<h4 id="股权与分红权的分离">股权与分红权的分离</h4>分红权和股权可以分离，表决权理论上也可以分离。对于出资较大的合伙人，可以给与较大的分红权，但对于承担风险较大的，应给与较大的股权。<h4 id="股权协议的约定">股权协议的约定</h4>一些公司出现拥有股权的合伙人在创业过程中出现了，违背创业企业利益的行为，比如泄密或者携带知识产权另立门户等，为了保护创业企业其他合伙人的利益，最好在协议中约定这些对股权的限制条款。还可制定股权实现的考核标准，不达到考核标准不拥有股权。<h3 id="员工的股权">员工的股权</h3>什么是员工？谁是员工的判断标准是看其是否是具有员工心态的人。在创业企业，有些合伙人希望把员工当做合伙人，也给与股权激励。这样的做法，负面作用是：</li>
-<li>过早的分散了股权</li>
-<li>拥有员工心态的人，希望得到的是稳定的现金收入，而不是未来可能增值的股权。<br>因此，即使是作为激励作用的股权也不应当份额过大。员工管理问题不应单纯利用股权解决。一般来说，VC会要求员工持股计划在VC投资进来之前执行，这样VC就可以减少稀释。不过不能认为这是A轮VC自私，要知道B轮VC到时候也会要求在他们进来之前再执行一次员工持股计划，这时A轮VC和创始股东将一起稀释。 员工的期权比例应该留多少？一般来说是5-15%。<h3 id="众筹的股权">众筹的股权</h3><strong>众筹从概念逐渐变为实践，“股权众筹是否构成非法集资”已经不再是法律角度的焦点。</strong>股权众筹，既然是“众”筹，就说明股东数量非常多。不过，公司法规定，有限责任公司的股东不超过50人，非上市的股份有限公司股东不超过200人。法律对公司股东人数的限制，导致大部分众筹股东不能直接出现在企业工商登记的股东名册中。这一问题的解决方案一般有两种：</li>
-<li><strong>委托持股，或者说是代持股。</strong>一个实名股东分别与几个乃至几十个隐名的众筹股东签订代持股协议，代表众筹股东持有众筹公司股份。在这种模式下，众筹股东并不亲自持有股份，而是由某一个实名股东持有，并且在工商登记里只体现出该实名股东的身份。中国国内法律已经认可了保护真实股东的合法利益，也就是即使股东名册里面没有出现众筹股东的名字，只要有协议证明真实股东是真实的出资人，其权益也是被保障的。</li>
-<li><strong>持股平台持股。</strong>比如，先设立一个持股平台，五十个众筹股东作为这个持股平台的投资人，把资金投入持股平台。然后，持股平台把这笔款再投入众筹公司，由持股平台作为众筹公司的股东。这样五十个众筹股东在众筹公司里只体现为一个股东，即持股平台。持股平台可以是有限责任公司，也可以是有限合伙。两者对于众筹股东来说都是有限责任的。按照合伙企业法，通常有限合伙人不参与管理，由普通合伙人负责管理。这样，众筹发起人就可以其普通合伙人的身份，管理和控制持股平台，进而控制持股平台在众筹公司的股份，也就实际上控制了众筹股东的投资及股份。<br><strong>期权池</strong>是在融资前为未来引进高级人才而预留的一部分股份，用于激励员工(包括创始人自己、高管、骨干、普通员工)，是初创企业实施股权激励计划(Equity Incentive Plan)最普通采用的形式，在欧美等国家被认为是驱动初创企业发展必要的关键要素之一。硅谷的惯例是预留公司全部股份的10%-20%作为期权池，较大的期权池对员工和VC具更大吸引力。 VC一般要求期权池在它进入前设立，并要求在它进入后达到一定比例。由于每轮融资都会稀释期权池的股权比例，因此一般在每次融资时均调整(扩大)期权池，以不断吸引新的人才。<h3 id="案例">案例</h3>苹果，起始阶段的股权比例是乔布斯和沃兹尼亚克各45%，韦恩10%；谷歌，佩吉和布林一人一半；Facebook，扎克伯格65%，萨维林30%，莫斯科维茨5%。<br>苹果电脑是沃兹尼亚克开发的，但乔布斯和沃兹股份一样（沃兹的父亲对此非常不满），因为乔布斯不仅是个营销天才，而且拥有领导力，对公司未来意志坚定激情四射。而沃兹生性内敛，习惯于一个人工作，并且只愿意兼职为新公司工作，乔布斯和他的朋友家人百般劝说才同意全职。至于韦恩，他拥有10%是因为其他两人在运营公司方面完全是新手，需要他的经验。由于厌恶风险，韦恩很快就退股了，他一直声称自己从未后悔过。<br>Facebook是扎克伯格开发的，他又是个意志坚定的领导者，因此占据65%，萨维林懂得怎样把产品变成钱，莫斯科维茨则在增加用户上贡献卓著。不过，Facebook起始阶段的股权安排埋下了日后隐患。由于萨维林不愿意和其他人一样中止学业全情投入新公司，而他又占有1/3的股份。因此，当莫斯科维茨和新加入但创业经验丰富的帕克贡献与日俱增时，就只能稀释萨维林的股份来增加后两者的持股，而萨维林则以冻结公司账号作为回应。A轮融资完成后，萨维林的股份降至不到10%，怒火中烧的他干脆将昔日伙伴们告上了法庭。萨维林之所以拿那么高股份是因为他能为公司赚到钱，而公司每天都得花钱。但扎克伯格的理念是“让网站有趣比让它赚钱更重要”，萨维林想的则是如何满足广告商要求从而多赚钱。短期看萨维林是对的，但这么做不可能成就一家伟大的公司，扎克伯格对此心知肚明。Facebook正确的办法应当是早一点寻找天使投资，就像苹果和谷歌曾经做过的那样。在新公司确定产品方向之后，就需要天使投资来帮助自己把产品和商业模式稳定下，避免立即赚钱的压力将公司引入歧途。Facebook的天使投资人是帕克的朋友介绍的彼得·泰尔，他注资50万美元，获得 10%股份。这之后，Facebook的发展可谓一帆风顺，不到一年就拿到了A轮融资——阿克塞尔公司投资1270万美元，公司估值1亿美元。7年后的2012年，Facebook上市，此时公司8岁。谷歌从天使到A轮的时间差不多是一年。硅谷著名风投公司KPCB和红杉资本各注入谷歌125万美元，分别获得10%股份。5后的2004年，也就是公司创立6年后，谷歌上市，近2000名员工获得配股。 苹果公司在马库拉投资后没有经历后续融资，4年之后上市，上百名员工成了百万富翁，此时公司5岁。<h3 id="总结-1">总结</h3>创业团队在组建过程中需要制定股权分配方案。随着公司逐渐变大，资本需求会越来越旺，后续融资不可避免，引进经验丰富的运营人才也必须授予其股权或期权，这些都会稀释创始人的股权。事实上，创始人在公司长大之后如何不被董事会踢出自己创办的公司，早已是硅谷的经典话题之一。乔布斯在苹果上市4年半后被赶出了苹果公司，没有一个创始人愿意失去自己的公司，而他们也有办法做到这一点，那就是采用双层股权结构（就是前文提到的表决权和分红权分离的做法）。<br>苹果当年是单一股权结构，同股同权，苹果上市后，乔布斯的股权下降到11%，董事会里也没有他的铁杆盟友（他本以为马库拉会是），触犯众怒后的结局可想而知。 谷歌则在上市时重拾美国资本市场消失已久的AB股模式，佩吉、布林、施密特等公司创始人和高管持有B类股票，每股表决权等于A类股票10股的表决权。2012年，谷歌又增加了不含投票权的C类股用于增发新股。这样，即使总股本继续扩大，即使创始人减持了股票，他们也不会丧失对公司的控制力。预计到2015年，佩吉、布林、施密特持有谷歌股票将低于总股本的20%，但仍拥有近60%的投票权。Facebook前年上市时同样使用了投票权1：10的AB股模式，这样扎克伯格一人就拥有28.2的表决权。此外，扎克伯格还和主要股东签订了表决权代理协议，在特定情况下，扎克伯格可代表这些股东行使表决权，这意味着他掌握了56.9%的表决权。<br>在中国，公司法规定同股同权，不允许直接实施双层或三层股权结构，但公司法允许公司章程对投票权进行特别约定（有限责任公司），允许股东在股东大会上将自己的投票权授予其他股东代为行使（股份有限公司）。</li>
-</ol>
-<h2 id="总结-2">总结</h2><p>股权分配问题是一种博弈，是不同角色之间的讨价还价，也取决于不同人的性格，没有一个标准答案。</p>
-<h2 id="Ref">Ref</h2><p><a href="http://www.zhihu.com/question/19551070" target="_blank" rel="external">几个朋友合伙创业，如何分配股权？ - 知乎</a><br><a href="http://zhuanlan.zhihu.com/duguodong/19906816" target="_blank" rel="external">杜国栋：联合创始人退出，他手里的股权怎么办？ - 创思舍 - 知乎专栏</a><br><a href="http://zhuanlan.zhihu.com/duguodong/19970947" target="_blank" rel="external">创始人之间如何分股权：按贡献估值 - 创思舍 - 知乎专栏</a><br><a href="http://wenku.baidu.com/view/cd30202c453610661ed9f410.html" target="_blank" rel="external">华为股权分配政策(幻灯片)_百度文库</a><br><a href="http://www.tmtpost.com/172112.html" target="_blank" rel="external">联合创始人股权分配，五五分是最糟糕的做法</a><br><a href="http://blog.sina.com.cn/s/blog_61b925fa0100foie.html" target="_blank" rel="external">(3)11.18.09 期权：为什么给，给多少，怎么给？<em>邵亦波</em>新浪博客</a><br><a href="http://36kr.com/p/22890.html" target="_blank" rel="external">Joel Spolsky: 创业公司如何公平分配股权？</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/创业/">创业</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/创业/">创业</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/05/创业团队股权分配/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/29/HTML-In-TextView/" title="HTML In TextView" itemprop="url">HTML In TextView</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-29T07:50:06.000Z" itemprop="datePublished"> 发表于 2015-07-29</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>往往我们会遇到效果图中需要展示多个颜色的文字，不同的大小，甚至有可能会遇到多个排版，这时候，如果我们全部用TextView，有时候一个字就因为颜色不同就得新建一个TextView，是很浪费。这时候，我们可以适当考虑HTML来排版并显示在TextView中。<br>目前在GITHUB上面已经开源一个Html TextView库，有学习价值，有兴趣可以参考：<a href="https://github.com/sufficientlysecure/html-textview" target="_blank" rel="external">html-textview</a></p>
-<h2 id="HTML在string-xml中">HTML在string.xml中</h2><p>在string.xml中是无法直接写html，下面实例包括字符替换和HTML示例。<br>string.xml<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;string name=<span class="string">"format_temp"</span>&gt;&lt;![CDATA[&lt;font color=\<span class="string">"#9d9d9d\"&gt;%1<span class="variable">$s</span>&lt;/font&gt; 收到@&lt;font color=\"#dd3a37\"&gt;%2<span class="variable">$s</span>&lt;/font&gt;的示例]]&gt;&lt;/string&gt;</span><br><span class="line">// 或者使用转意</span><br><span class="line">&lt;string name="</span>format_temp<span class="string">"&gt;Text: &amp;lt;b&gt;%s&amp;lt;/b&gt;&lt;/string&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>使用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String.format(getString(R.string.format_temp)), <span class="string">"刚刚"</span>, <span class="string">"大胖"</span>);</span><br></pre></td></tr></table></figure></p>
-<h2 id="在TextView中的使用">在TextView中的使用</h2><h3 id="文本展示">文本展示</h3><p>单纯文本展示直接使用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 滚动</span></span><br><span class="line">TextView.setMovementMethod(ScrollingMovementMethod.getInstance());</span><br><span class="line">TextView.setText(Html.fromHtml(html));</span><br></pre></td></tr></table></figure></p>
-<h3 id="超链接展示">超链接展示</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TextView.setMovementMethod(LinkMovementMethod.getInstance());</span><br><span class="line">TextView.setText(Html.fromHtml(html));</span><br></pre></td></tr></table></figure>
-<p>或者设置TextView的autoLink为all<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;TextView</span><br><span class="line">	android:id=<span class="string">"@+id/textView"</span></span><br><span class="line">	android:layout_width=<span class="string">"wrap_content"</span></span><br><span class="line">	android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">	android:autoLink=<span class="string">"all"</span> /&gt;</span><br><span class="line"></span><br><span class="line">&lt;TextView</span><br><span class="line">	android:id=<span class="string">"@+id/textView"</span></span><br><span class="line">	android:layout_width=<span class="string">"wrap_content"</span></span><br><span class="line">	android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">	android:autoLink=<span class="string">"web|email"</span> /&gt;</span><br><span class="line"></span><br><span class="line">TextView.setAutoLinkMask(Linkify.ALL);</span><br><span class="line">TextView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES|Linkify.WEB_URLS);</span><br></pre></td></tr></table></figure></p>
-<h3 id="图片展示">图片展示</h3><p>在Html的fromHtml方法中，可以传入Html的ImageGetter。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TextView.setText(Html.fromHtml(html, <span class="keyword">new</span> ImageGetter(), <span class="keyword">null</span>));</span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageGetter</span> <span class="keyword">implements</span> <span class="title">Html</span>.<span class="title">ImageGetter</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Drawable <span class="title">getDrawable</span><span class="params">(String source)</span> </span>&#123;</span><br><span class="line">		Drawable d = getResources().getDrawable(R.drawable.ic_launch);</span><br><span class="line">		d.setBounds(<span class="number">0</span>,<span class="number">0</span>,d.getIntrinsicWidth(),d.getIntrinsicHeight());</span><br><span class="line">		<span class="keyword">return</span> d;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="自定义TAG展示">自定义TAG展示</h3><p>这时，我们需要用到我们最后一个传入参数，<a href="http://developer.android.com/intl/zh-cn/reference/android/text/Html.TagHandler.html" target="_blank" rel="external">Html.TagHandler</a>。简单示例一个size的标签。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SizeLabel</span> <span class="keyword">implements</span> <span class="title">TagHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SizeLabel</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.size = size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleTag</span><span class="params">(<span class="keyword">boolean</span> opening, String tag, Editable output,</span><br><span class="line">                          XMLReader xmlReader)</span> </span>&#123;</span><br><span class="line">        <span class="comment">/**</span><br><span class="line">         * 参数： </span><br><span class="line">         * opening：为true时表示开始解析,为false时表示解析完 </span><br><span class="line">         * tag:当前解析的标签 </span><br><span class="line">         * output:文本中的内容 </span><br><span class="line">         * xmlReader:xml解析器 </span><br><span class="line">         */</span></span><br><span class="line">        <span class="comment">// 判断当前解析的tag是否为size,并且已经解析完毕(在没有解析完毕之前output中没有数据)  </span></span><br><span class="line">        <span class="keyword">if</span> (tag.toLowerCase().equals(<span class="string">"size"</span>) &amp;&amp; !opening) &#123;</span><br><span class="line">            <span class="comment">// 通过output调用setSpan方法,改变文本的0下标到最后的下标的大小;  </span></span><br><span class="line">            <span class="comment">// 最后的参数用来标识在span范围内的文本前后输入新的字符时是否也改变它们的效果;  </span></span><br><span class="line">            output.setSpan(<span class="keyword">new</span> AbsoluteSizeSpan(size), <span class="number">0</span>, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="支持的HTML标签">支持的HTML标签</h2><p>并不是所有的HTML标签都支持，目前支持的标签分为两类：<br>1 . 静态string资源中，解析是通过<a href="https://android.googlesource.com/platform/frameworks/base.git/+/android-5.1.1_r8/core/java/android/content/res/StringBlock.java" target="_blank" rel="external">android.content.res.StringBlock</a>类来进行，目前支持的有：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">a</span>&gt;</span>：支持href属性</span><br><span class="line"><span class="tag">&lt;<span class="title">annotation</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">big</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">font</span>&gt;</span>：支持height, size, fgcolor和bicolor</span><br><span class="line"><span class="tag">&lt;<span class="title">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">marquee</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">small</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">strike</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">tt</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">u</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>2 . Html.fromHtml方法中支持是通过<a href="https://android.googlesource.com/platform/frameworks/base.git/+/android-5.1.1_r8/core/java/android/text/Html.java" target="_blank" rel="external">Html.java</a>来进行，目前支持的有：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">a</span>&gt;</span>：href</span><br><span class="line"><span class="tag">&lt;<span class="title">b</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">big</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">blockquote</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">cite</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">dfn</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">em</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">font</span>&gt;</span>：color和face属性</span><br><span class="line"><span class="tag">&lt;<span class="title">h1</span>&gt;</span> - <span class="tag">&lt;<span class="title">h6</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">img</span>&gt;</span>：支持src属性，需要实现ImageGetter接口</span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">small</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">strike</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">strong</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">sup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">tt</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">u</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>另外，font的color属性除了直接支持颜色色值之外，还支持一些颜色的直接名字，<a href="https://android.googlesource.com/platform/frameworks/base.git/+/android-5.1.1_r8/graphics/java/android/graphics/Color.java" target="_blank" rel="external">Color.java</a>的getHtmlColor方法：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">black</span><br><span class="line">darkgray</span><br><span class="line">gray</span><br><span class="line">lightgray</span><br><span class="line">white</span><br><span class="line">red</span><br><span class="line">green</span><br><span class="line">blue</span><br><span class="line">yellow</span><br><span class="line">cyan</span><br><span class="line">magenta</span><br><span class="line">aqua</span><br><span class="line">fuchsia</span><br><span class="line">darkgrey</span><br><span class="line">grey</span><br><span class="line">lightgrey</span><br><span class="line">lime</span><br><span class="line">maroon</span><br><span class="line">navy</span><br><span class="line">olive</span><br><span class="line">purple</span><br><span class="line">silver</span><br><span class="line">teal</span><br></pre></td></tr></table></figure></p>
-<h2 id="简单原理剖析">简单原理剖析</h2><p>其实这主要是用到了<a href="http://developer.android.com/intl/zh-cn/reference/android/text/Spannable.html" target="_blank" rel="external">Spannable</a>接口。里面已经实现了SpannableString及setSpan即可得到我们想要的风格。</p>
-<h3 id="简单使用">简单使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SpannableString text = <span class="keyword">new</span> SpannableString(<span class="string">"Test"</span>);</span><br><span class="line">TextView.setText(text);</span><br></pre></td></tr></table></figure>
-<h3 id="字体样式">字体样式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// setSpan会将start到end这间的文本设置成创建的span格式。span可以是图片格式。</span></span><br><span class="line"><span class="comment">// 设置字体(default,default-bold,monospace,serif,sans-serif)</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> TypefaceSpan(<span class="string">"monospace"</span>), <span class="number">0</span>, <span class="number">2</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 等宽字体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> TypefaceSpan(<span class="string">"serif"</span>), <span class="number">2</span>, <span class="number">4</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 衬线字体</span></span><br></pre></td></tr></table></figure>
-<h3 id="字体绝对大小">字体绝对大小</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体绝对大小（绝对值,单位：像素）</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> AbsoluteSizeSpan(<span class="number">20</span>), <span class="number">4</span>, <span class="number">6</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line"><span class="comment">// 第二个参数boolean dip，如果为true，表示前面的字体大小单位为dip，否则为像素，同上。</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> AbsoluteSizeSpan(<span class="number">20</span>, <span class="keyword">true</span>), <span class="number">6</span>, <span class="number">8</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br></pre></td></tr></table></figure>
-<h3 id="字体相对大小">字体相对大小</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体相对大小（相对值,单位：像素） 参数表示为默认字体大小的多少倍</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> RelativeSizeSpan(<span class="number">0.5f</span>), <span class="number">8</span>, <span class="number">10</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 0.5f表示默认字体大小的一半</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> RelativeSizeSpan(<span class="number">2.0f</span>), <span class="number">10</span>, <span class="number">12</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 2.0f表示默认字体大小的两倍</span></span><br></pre></td></tr></table></figure>
-<h3 id="前景色和背景色">前景色和背景色</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体前景色 ，Color.MAGENTA为紫红</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> ForegroundColorSpan(Color.MAGENTA), <span class="number">12</span>, <span class="number">15</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 设置前景色为洋红色</span></span><br><span class="line"><span class="comment">// 设置字体背景色 ，Color.CYAN为青绿色</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> BackgroundColorSpan(Color.CYAN), <span class="number">15</span>, <span class="number">18</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 设置背景色为青色</span></span><br></pre></td></tr></table></figure>
-<h3 id="设置字体粗体、斜体、粗斜体">设置字体粗体、斜体、粗斜体</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体样式正常，粗体，斜体，粗斜体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.NORMAL), <span class="number">18</span>, <span class="number">20</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 正常</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.BOLD), <span class="number">20</span>, <span class="number">22</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 粗体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.ITALIC), <span class="number">22</span>, <span class="number">24</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 斜体</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StyleSpan(android.graphics.Typeface.BOLD_ITALIC), <span class="number">24</span>, <span class="number">27</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 粗斜体</span></span><br></pre></td></tr></table></figure>
-<h3 id="设置下划线和删除线">设置下划线和删除线</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置下划线</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> UnderlineSpan(), <span class="number">27</span>, <span class="number">30</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line"><span class="comment">// 设置删除线</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> StrikethroughSpan(), <span class="number">30</span>, <span class="number">33</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br></pre></td></tr></table></figure>
-<h3 id="设置下标和上标">设置下标和上标</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">text.setSpan(<span class="keyword">new</span> SubscriptSpan(), <span class="number">34</span>, <span class="number">35</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 下标</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> SuperscriptSpan(), <span class="number">36</span>, <span class="number">37</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 上标</span></span><br></pre></td></tr></table></figure>
-<h3 id="设置超链接">设置超链接</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 超级链接（需要添加setMovementMethod方法附加响应）</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"tel:13888888888"</span>), <span class="number">37</span>, <span class="number">39</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 电话</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"mailto:google@google.com"</span>), <span class="number">39</span>, <span class="number">41</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 邮件</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"http://www.google.com"</span>), <span class="number">41</span>, <span class="number">43</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// URL</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"sms:13888888888"</span>), <span class="number">43</span>, <span class="number">45</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 短信，使用sms:或者smsto:</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"mms:13888888888"</span>), <span class="number">45</span>, <span class="number">47</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 彩信，使用mms:或者mmsto:</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> URLSpan(<span class="string">"geo:38.899533,-77.036476"</span>), <span class="number">47</span>, <span class="number">49</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 地图</span></span><br></pre></td></tr></table></figure>
-<h3 id="拉伸字体">拉伸字体</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字体大小（相对值,单位：像素） 参数表示为默认字体宽度的多少倍</span></span><br><span class="line">text.setSpan(<span class="keyword">new</span> ScaleXSpan(<span class="number">2.0f</span>), <span class="number">49</span>, <span class="number">51</span>, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); <span class="comment">// 2.0f表示默认字体宽度的两倍，即X轴方向放大为默认字体的两倍，而高度不变</span></span><br></pre></td></tr></table></figure>
-<h2 id="Ref">Ref</h2><p><a href="http://aichixihongshi.iteye.com/blog/1207503" target="_blank" rel="external">android中用Spannable在TextView中设置超链接、颜色、字体</a><br><a href="https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html" target="_blank" rel="external">HTML Tags Supported By TextView</a><br><a href="http://daniel-codes.blogspot.com/2011/04/html-in-textviews.html" target="_blank" rel="external">HTML in TextViews</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/29/HTML-In-TextView/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/破解Beyond-Compare/" title="破解Beyond Compare" itemprop="url">破解Beyond Compare</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T10:15:26.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>好吧，要支持原版<a href="http://www.scootersoftware.com/download.php" target="_blank" rel="external">BCompare</a>！</p>
-<h2 id="Linux破解">Linux破解</h2><p>破解相对简单：</p>
-<ol>
-<li>修改BCompare的KEY，让它可以使用生成的KEY就可以了。<br>ubuntu下安装deb，目录在/usr/lib/beyondcompare/下。<br>将：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keexjEP3t4Mue23hrnuPtY4TdcsqNiJL-<span class="number">5174</span>TsUdLmJSIXKfG2NGPwBL6vnRPddT7tH29qpkneX63DO9ECSPE9rzY1zhThHERg8lHM9IBFT+rVuiY823aQJuqzxCKIE1bcDqM4wgW01FH6oCBP1G4ub01xmb4BGSUG6ZrjxWHJyNLyIlGvOhoY2HAYzEtzYGwxFZn2JZ66o4RONkXjX0DF9EzsdUef3UAS+JQ+fCYReLawdjEe6tXCv88GKaaPKWxCeaUL9PejICQgRQOLGOZtZQkLgAelrOtehxz5ANOOqCaJgy2mJLQVLM5SJ9Dli909c5ybvEhVmIC0dc9dWH+</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>修改为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">N9KmiLVlKMU7RJqnE+WXEEPI1SgglmfmLc1yVH7dqBb9ehOoKG9UE+HAE1YvH1XX2XVGeEqYUY-Tsk7YBTz0WpSpoYyPgx6Iki5KLtQ5G<span class="operator">-a</span>KP9eysnkuOAkrvHU8bLbGtZteGwJarev03PhfCioJL4OSqsmQGEvDbHFEbNl1qJtdwEriR+VNZts9vNNLk7UGfeNwIiqpxjk4Mn09nmSd8FhM4ifvcaIbNCRoMPGl6KU12iseSe+w+<span class="number">1</span>kFsLhX+OhQM8WXcWV10cGqBzQE9OqOLUcg9n0krrR3KrohstS9smTwEx9olyLYppvC0p5i7dAx2deWvM1ZxKNs0BvcXGukR+</span><br></pre></td></tr></table></figure></p>
-<p>Linux命令为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">"s/keexjEP3t4Mue23hrnuPtY4TdcsqNiJL-5174TsUdLmJSIXKfG2NGPwBL6vnRPddT7tH29qpkneX63DO9ECSPE9rzY1zhThHERg8lHM9IBFT+rVuiY823aQJuqzxCKIE1bcDqM4wgW01FH6oCBP1G4ub01xmb4BGSUG6ZrjxWHJyNLyIlGvOhoY2HAYzEtzYGwxFZn2JZ66o4RONkXjX0DF9EzsdUef3UAS+JQ+fCYReLawdjEe6tXCv88GKaaPKWxCeaUL9PejICQgRQOLGOZtZQkLgAelrOtehxz5ANOOqCaJgy2mJLQVLM5SJ9Dli909c5ybvEhVmIC0dc9dWH+/N9KmiLVlKMU7RJqnE+WXEEPI1SgglmfmLc1yVH7dqBb9ehOoKG9UE+HAE1YvH1XX2XVGeEqYUY-Tsk7YBTz0WpSpoYyPgx6Iki5KLtQ5G-aKP9eysnkuOAkrvHU8bLbGtZteGwJarev03PhfCioJL4OSqsmQGEvDbHFEbNl1qJtdwEriR+VNZts9vNNLk7UGfeNwIiqpxjk4Mn09nmSd8FhM4ifvcaIbNCRoMPGl6KU12iseSe+w+1kFsLhX+OhQM8WXcWV10cGqBzQE9OqOLUcg9n0krrR3KrohstS9smTwEx9olyLYppvC0p5i7dAx2deWvM1ZxKNs0BvcXGukR+/g"</span> BCompare</span><br></pre></td></tr></table></figure></p>
-<p>如果有权限问题：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod <span class="number">755</span> BCompare</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>打开软件，会提示Trial Mode Error！表示成功！输入Team ZWT生成的密钥，即可注册成功！</li>
-</ol>
-<h2 id="其他系统">其他系统</h2><p>此方法适用所有系统，包括win和os x！</p>
-<h2 id="下载">下载</h2><p>Beyond Compare 4破解<a href="http://pan.baidu.com/s/1eQuGh6E" target="_blank" rel="external">下载地址</a>。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/tech/">tech</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/破解Beyond-Compare/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1594,6 +1703,10 @@
 		
 		  
 			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Git/" title="Git">Git<sup>3</sup></a></li>
 		  
 		
 		  
@@ -1622,7 +1735,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>27</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>30</sup></a></li>
 			
 		
 			
@@ -1631,6 +1744,10 @@
 		
 			
 				<li><a href="/tags/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>3</sup></a></li>
 			
 		
 			
@@ -1718,7 +1835,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
 		

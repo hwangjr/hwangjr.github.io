@@ -1,0 +1,613 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>使用Gitolite搭建Git服务器 | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="搭建Git服务器，并用gitolite管理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Gitolite搭建Git服务器">
+<meta property="og:url" content="https://hwangjr.github.io/2016/01/14/使用Gitolite搭建Git服务器/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="搭建Git服务器，并用gitolite管理。">
+<meta property="og:updated_time" content="2016-01-14T11:17:17.279Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Gitolite搭建Git服务器">
+<meta name="twitter:description" content="搭建Git服务器，并用gitolite管理。">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/14/使用Gitolite搭建Git服务器/" title="使用Gitolite搭建Git服务器" itemprop="url">使用Gitolite搭建Git服务器</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-14T11:16:25.000Z" itemprop="datePublished"> 发表于 2016-01-14</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#搭建"><span class="toc-number">2.</span> <span class="toc-text">搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#软件安装"><span class="toc-number">2.1.</span> <span class="toc-text">软件安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加用户"><span class="toc-number">2.2.</span> <span class="toc-text">添加用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化仓库"><span class="toc-number">2.3.</span> <span class="toc-text">初始化仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#禁用远程登陆"><span class="toc-number">2.4.</span> <span class="toc-text">禁用远程登陆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置客户端key"><span class="toc-number">2.5.</span> <span class="toc-text">配置客户端key</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DONE"><span class="toc-number">2.6.</span> <span class="toc-text">DONE</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用Gitolite"><span class="toc-number">3.</span> <span class="toc-text">使用Gitolite</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景-1"><span class="toc-number">3.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装前"><span class="toc-number">3.2.</span> <span class="toc-text">安装前</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">3.3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加gitolite用户和仓库"><span class="toc-number">3.4.</span> <span class="toc-text">添加gitolite用户和仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多配置"><span class="toc-number">3.5.</span> <span class="toc-text">更多配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#QUESTION"><span class="toc-number">4.</span> <span class="toc-text">QUESTION</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装过程遇到cant_locate_Data/Dumper-pm"><span class="toc-number">4.1.</span> <span class="toc-text">安装过程遇到cant locate Data/Dumper.pm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Clone_gitolite-admin时提示需要输入密码"><span class="toc-number">4.2.</span> <span class="toc-text">Clone gitolite-admin时提示需要输入密码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ref"><span class="toc-number">5.</span> <span class="toc-text">Ref</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="背景">背景</h1><p>搭建Git服务器作为代码管理工具。</p>
+<h1 id="搭建">搭建</h1><h2 id="软件安装">软件安装</h2><p>基于：</p>
+<ul>
+<li>CentOS 7</li>
+<li>Git 1.8.3<br>直接用yum安装，如果需要最新版本，请编译安装。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install git -y</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="添加用户">添加用户</h2><p>添加一个新用户来跑git服务。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adduser git</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">useradd <span class="operator">-s</span> /sbin/nologin -g git git</span><br><span class="line"><span class="comment"># /etc/passwd can checkout the users and group</span></span><br><span class="line">w git</span><br><span class="line">groups git</span><br></pre></td></tr></table></figure></p>
+<h2 id="初始化仓库">初始化仓库</h2><p>选择目录并初始化仓库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> path/git</span><br><span class="line">git init --bare project.git</span><br><span class="line">chown -R git project.git</span><br></pre></td></tr></table></figure></p>
+<h2 id="禁用远程登陆">禁用远程登陆</h2><p>禁止用户通过git账户登陆。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/passwd</span><br><span class="line"><span class="comment"># modify the bash</span></span><br><span class="line">git:xxxxxxxxx:/home/git:/usr/bin/git-shell</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置客户端key">配置客户端key</h2><p>客户端生成rsa key：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line">cat .ssh/id_rsa.pub</span><br></pre></td></tr></table></figure></p>
+<p>将生成的<code>id_rsa.pub</code>复制到服务器上，修改<code>.ssh/authorized_keys</code>文件。</p>
+<h2 id="DONE">DONE</h2><p>现在即可在本地进行<code>check out</code>：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@ip:/path/git/project.git</span><br></pre></td></tr></table></figure></p>
+<h1 id="使用Gitolite">使用Gitolite</h1><h2 id="背景-1">背景</h2><p>这是Git服务器管理软件，还有很多选择，自己决定。这里使用<a href="http://gitolite.com/gitolite/index.html" target="_blank" rel="external">Gitolite</a>。</p>
+<blockquote>
+<p><a href="https://about.gitlab.com/" target="_blank" rel="external">GitLab</a> : GitLab includes git repository management, code reviews, issue tracking, wikis and much more. GitLab comes with GitLab CI, an easy to use continuous integration and deployment tool.<br><a href="https://www.scm-manager.org/" target="_blank" rel="external">SCM-Manager</a> : The easiest way to share and manage your Git, Mercurial and Subversion repositories over http.<br><a href="https://www.gerritcodereview.com/" target="_blank" rel="external">Gerrit Code Review</a> + <a href="http://gitblit.com/" target="_blank" rel="external">Gitblit</a> : Gerrit provides web based code review and repository management for the Git version control system. Gitblit is an open-source, pure Java stack for managing, viewing, and serving Git repositories. It’s designed primarily as a tool for small workgroups who want to host centralized repositories.<br><a href="http://gitolite.com/gitolite/index.html" target="_blank" rel="external">Gitolite</a> + <a href="http://git-scm.com/book/ch4-6.html" target="_blank" rel="external">Git - Smart HTTP</a> : Gitolite allows you to setup git hosting on a central server, with fine-grained access control and many more powerful features.<br><a href="https://gogs.io/" target="_blank" rel="external">Gogs</a> : Gogs (Go Git Service) is a painless self-hosted Git service.<br><a href="http://www.getgitorious.com/" target="_blank" rel="external">Gitorious</a> : Run Gitorious yourself — get started with free, open source Git hosting and collaboration today.<br><a href="https://tuleap.net/" target="_blank" rel="external">Tuleap</a> OR <a href="https://github.com/Enalean/tuleap" target="_blank" rel="external">Tuleap Github</a> : Traditional development, Requirement Management, Agile Development, IT Service management… Tuleap makes software projects more productive, collaborative and industrialized.<br><a href="http://phabricator.org/" target="_blank" rel="external">Phabricator</a> OR <a href="https://github.com/phacility/phabricator" target="_blank" rel="external">phacility/phabricator</a> : Phabricator is a collection of open source web applications that help software companies build better software.<br><a href="https://github.com/gitbucket/gitbucket" target="_blank" rel="external">gitbucket/gitbucket</a> : GitBucket is a GitHub clone powered by Scala which has easy installation and high extensibility.<br><a href="http://gitlist.org/" target="_blank" rel="external">GitList</a> OR <a href="https://github.com/klaussilveira/gitlist" target="_blank" rel="external">klaussilveira/gitlist</a> : GitList allows you to browse repositories using your favorite browser, viewing files under different revisions, commit history and diffs. GitList is free and open source software, written in PHP, on top of Silex and the Twig template engine.<br><a href="http://git.zx2c4.com/cgit/about/" target="_blank" rel="external">cgit</a> : A hyperfast web frontend for git repositories written in C.<br><a href="https://github.com/mensi/cydra/" target="_blank" rel="external">mensi/cydra</a> : <strong>SEEMS DEAD</strong>. Cydra is a platform for project hosting written in Python. It has an extensible architecture to facilitate integration of 3rd party software such as version control systems and project management tools.<br><a href="https://github.com/tv42/gitosis" target="_blank" rel="external">tv42/gitosis</a> : <strong>SEEMS DEAD</strong>. Manage git repositories, provide access to them over SSH, with tight access control and not needing shell accounts.<br><a href="https://github.com/jakubgarfield/Bonobo-Git-Server" target="_blank" rel="external">jakubgarfield/Bonobo-Git-Server</a> : Bonobo Git Server for Windows is a web application you can install on your IIS and easily manage and connect to your git repositories.</p>
+</blockquote>
+<h2 id="安装前">安装前</h2><ol>
+<li>安装git</li>
+<li>创建git用户组和git用户</li>
+<li>创建管理员密钥</li>
+<li>将公钥上传到git服务器中</li>
+</ol>
+<p>其中，创建管理员密钥：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"git-admin"</span></span><br></pre></td></tr></table></figure></p>
+<p>并将git-admin.pub上传到服务器（可使用<code>scp</code>，如有问题，可能是firewall问题）。</p>
+<h2 id="安装">安装</h2><ol>
+<li>创建git用户下bin目录</li>
+<li>clone gitolite并安装</li>
+<li>使用公钥初始化gitolite</li>
+</ol>
+<p><a href="http://gitolite.com/gitolite/index.html" target="_blank" rel="external">Gitolite</a>安装很简单，可以查看官方文档：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">su git</span><br><span class="line">mkdir -p ~/bin</span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> git://github.com/sitaramc/gitolite</span><br><span class="line">gitolite/install --help</span><br><span class="line">gitolite/install -ln ~/bin</span><br><span class="line"><span class="comment"># make sure you have the path in $HOME/bin</span></span><br><span class="line"><span class="built_in">source</span> .bash_profile</span><br></pre></td></tr></table></figure></p>
+<p>初始化gitolite：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitolite setup -pk git-admin.pub</span><br></pre></td></tr></table></figure></p>
+<h2 id="添加gitolite用户和仓库">添加gitolite用户和仓库</h2><p>不需要手动在<code>git</code>服务器中添加新用户或新仓库。因为gitolite的用户，仓库和权限规则是使用一个名为<code>gitolite-admin</code>的特殊仓库进行维护，需通过修改该仓库并合并<code>push</code>到服务器中。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@host:gitolite-admin</span><br></pre></td></tr></table></figure></p>
+<p>Clone后，看到两个目录<code>conf</code>和<code>keydir</code>，<code>conf/gitolite.conf</code>用于修改仓库及用户权限，<code>keydir</code>用于存放用户公钥。<br>新增<code>hwangjr</code>用户：</p>
+<ol>
+<li>将其公钥（hwangjr.pub）添加到<code>keydir</code>目录</li>
+<li>修改<code>conf/gitolite.conf</code>文件，新增仓库和用户权限：<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">repo <span class="keyword">project</span></span><br><span class="line">	RW+ = hwangjr</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者使用其他权限：RW, R等</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>修改完上传服务器即可：<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_ins">add</span> conf</span><br><span class="line">git <span class="built_ins">add</span> keydir</span><br><span class="line">git commit -m '<span class="built_ins">add</span> repo project, <span class="built_ins">add</span> <span class="built_ins">user</span> hwangjr'</span><br><span class="line">git push</span><br></pre></td></tr></table></figure></p>
+<p><code>PUSH</code>成功之后，服务器会自动创建新的仓库并将用户密钥加入<code>.ssh/authorized_keys</code>文件中。</p>
+<h2 id="更多配置">更多配置</h2><p><code>gitolite</code>权限管理很完备，在此给出一些配置方案：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">repo project</span><br><span class="line">    RW+                     =   hwangjr</span><br><span class="line">    -   master              =   hwangjr</span><br><span class="line">    -   refs/tags/v[<span class="number">0</span>-<span class="number">9</span>]    =   hwangjr</span><br><span class="line">    RW                      =   hwangjr</span><br><span class="line">    RW  refs/tags/v[<span class="number">0</span>-<span class="number">9</span>]    =   hwangjr</span><br><span class="line">    R                       =   hwangjr</span><br></pre></td></tr></table></figure></p>
+<p>上面配置即：</p>
+<ul>
+<li>RW+ ： 能够对仓库进行所有的操作。</li>
+<li><ul>
+<li>master : 能够创建和推送任何名字不为master的分支，并能够添加任何不以v+数字开头的tag。</li>
+</ul>
+</li>
+<li><ul>
+<li>refs/tags/v[0-9] : 能够添加任何以v+数字开头的tag。</li>
+</ul>
+</li>
+<li>R : 能够进行clone和fetch操作。</li>
+</ul>
+<p>还可以添加组进行管理（<strong>@all</strong>为特殊组，表示所有用户）：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@staff</span>      =   hwangjr hwangjr1 hwangjr2</span><br><span class="line"><span class="variable">@interns</span>    =   hwangjr</span><br><span class="line"><span class="variable">@all-devs</span>   =   <span class="variable">@staff</span> <span class="variable">@interns</span></span><br><span class="line"></span><br><span class="line">repo secret</span><br><span class="line">    RW      =   <span class="variable">@staff</span></span><br><span class="line"></span><br><span class="line">repo project</span><br><span class="line">    RW+     =   <span class="variable">@staff</span></span><br><span class="line">    RW      =   <span class="variable">@interns</span></span><br></pre></td></tr></table></figure></p>
+<p>更多查看：<a href="http://gitolite.com/gitolite/gitolite.html" target="_blank" rel="external">gitolite all-in-one page</a>。</p>
+<h1 id="QUESTION">QUESTION</h1><h2 id="安装过程遇到cant_locate_Data/Dumper-pm">安装过程遇到cant locate Data/Dumper.pm</h2><p>在安装过程中，可能会遇到错误：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gitolite/install -h</span><br><span class="line">Can't locate Data/Dumper.pm <span class="keyword">in</span> @INC (@INC <span class="keyword">contains</span>: /home/git/gitolite/src/lib /usr/<span class="keyword">local</span>/lib64/perl5 /usr/<span class="keyword">local</span>/share/perl5 /usr/lib64/perl5/vendor_perl /usr/share/perl5/vendor_perl /usr/lib64/perl5 /usr/share/perl5 .) <span class="keyword">at</span> /home/git/gitolite/src/lib/Gitolite/Common.pm line <span class="number">61.</span></span><br><span class="line">BEGIN failed<span class="comment">--compilation aborted at /home/git/gitolite/src/lib/Gitolite/Common.pm line 61.</span></span><br><span class="line">Compilation failed <span class="keyword">in</span> require <span class="keyword">at</span> gitolite/install line <span class="number">15.</span></span><br><span class="line">BEGIN failed<span class="comment">--compilation aborted at gitolite/install line 15.</span></span><br></pre></td></tr></table></figure></p>
+<p>这是因为缺少包：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install perl-Data-Dumper</span><br></pre></td></tr></table></figure></p>
+<h2 id="Clone_gitolite-admin时提示需要输入密码">Clone gitolite-admin时提示需要输入密码</h2><p>在clone gitolite-admin时，会提示输入密码：</p>
+<ol>
+<li>在服务端生成rsa key</li>
+<li>在服务端进行clone</li>
+</ol>
+<p>此时会出现此错误，使用其他机器即可（需要复制rsa key到其他机器）。</p>
+<h1 id="Ref">Ref</h1><p><a href="http://wenzhiquan.github.io/blog/2014/10/14/fedora_20_install_gitolite/" target="_blank" rel="external">Fedora 20 安装gitolite</a><br><a href="https://github.com/sitaramc/gitolite" target="_blank" rel="external">sitaramc/gitolite</a><br><a href="http://gitolite.com/gitolite/install.html" target="_blank" rel="external">install and setup</a><br><a href="http://www.loushi135.com/articles/2015/09/21/1442848708235.html" target="_blank" rel="external">centos git服务器安装与gitolite用户权限管理 - 思迁</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Git/">Git</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Git/">Git</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2016/01/14/使用Gitolite搭建Git服务器/" data-title="使用Gitolite搭建Git服务器 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/01/14/Git多个远程仓库进行管理/" title="Git多个远程仓库进行管理">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Git多个远程仓库进行管理</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/12/23/自动清理tmp文件/"  title="自动清理tmp文件">
+ <strong>下一篇：</strong><br/> 
+ <span>自动清理tmp文件
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#搭建"><span class="toc-number">2.</span> <span class="toc-text">搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#软件安装"><span class="toc-number">2.1.</span> <span class="toc-text">软件安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加用户"><span class="toc-number">2.2.</span> <span class="toc-text">添加用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化仓库"><span class="toc-number">2.3.</span> <span class="toc-text">初始化仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#禁用远程登陆"><span class="toc-number">2.4.</span> <span class="toc-text">禁用远程登陆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置客户端key"><span class="toc-number">2.5.</span> <span class="toc-text">配置客户端key</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DONE"><span class="toc-number">2.6.</span> <span class="toc-text">DONE</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用Gitolite"><span class="toc-number">3.</span> <span class="toc-text">使用Gitolite</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景-1"><span class="toc-number">3.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装前"><span class="toc-number">3.2.</span> <span class="toc-text">安装前</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">3.3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加gitolite用户和仓库"><span class="toc-number">3.4.</span> <span class="toc-text">添加gitolite用户和仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多配置"><span class="toc-number">3.5.</span> <span class="toc-text">更多配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#QUESTION"><span class="toc-number">4.</span> <span class="toc-text">QUESTION</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装过程遇到cant_locate_Data/Dumper-pm"><span class="toc-number">4.1.</span> <span class="toc-text">安装过程遇到cant locate Data/Dumper.pm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Clone_gitolite-admin时提示需要输入密码"><span class="toc-number">4.2.</span> <span class="toc-text">Clone gitolite-admin时提示需要输入密码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ref"><span class="toc-number">5.</span> <span class="toc-text">Ref</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>15</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Git/" title="Git">Git<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>30</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
