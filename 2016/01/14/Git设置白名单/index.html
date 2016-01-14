@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>破解Beyond Compare | HwangJR&#39;s Blog</title>
+    <title>Git设置白名单 | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="利用Team ZWT来进行各个版本破解。">
+    <meta name="description" content="在Git中存在`.gitignore`文件来对文件进行过滤，那么如何利用此文件进行白名单设置呢。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="破解Beyond Compare">
-<meta property="og:url" content="https://hwangjr.github.io/2015/07/13/破解Beyond-Compare/index.html">
+<meta property="og:title" content="Git设置白名单">
+<meta property="og:url" content="https://hwangjr.github.io/2016/01/14/Git设置白名单/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="利用Team ZWT来进行各个版本破解。">
-<meta property="og:updated_time" content="2015-09-15T10:14:42.219Z">
+<meta property="og:description" content="在Git中存在`.gitignore`文件来对文件进行过滤，那么如何利用此文件进行白名单设置呢。">
+<meta property="og:updated_time" content="2016-01-14T11:21:10.703Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="破解Beyond Compare">
-<meta name="twitter:description" content="利用Team ZWT来进行各个版本破解。">
+<meta name="twitter:title" content="Git设置白名单">
+<meta name="twitter:description" content="在Git中存在`.gitignore`文件来对文件进行过滤，那么如何利用此文件进行白名单设置呢。">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/13/破解Beyond-Compare/" title="破解Beyond Compare" itemprop="url">破解Beyond Compare</a>
+      <a href="/2016/01/14/Git设置白名单/" title="Git设置白名单" itemprop="url">Git设置白名单</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-13T10:15:26.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
+    <time datetime="2016-01-14T11:20:39.000Z" itemprop="datePublished"> 发表于 2016-01-14</time>
     
   </p>
 </header>
@@ -97,24 +97,13 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux破解"><span class="toc-number">2.</span> <span class="toc-text">Linux破解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他系统"><span class="toc-number">3.</span> <span class="toc-text">其他系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下载"><span class="toc-number">4.</span> <span class="toc-text">下载</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#白名单"><span class="toc-number">2.</span> <span class="toc-text">白名单</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="背景">背景</h2><p>好吧，要支持原版<a href="http://www.scootersoftware.com/download.php" target="_blank" rel="external">BCompare</a>！</p>
-<h2 id="Linux破解">Linux破解</h2><p>破解相对简单：</p>
-<ol>
-<li>修改BCompare的KEY，让它可以使用生成的KEY就可以了。<br>ubuntu下安装deb，目录在/usr/lib/beyondcompare/下。<br>将：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keexjEP3t4Mue23hrnuPtY4TdcsqNiJL-<span class="number">5174</span>TsUdLmJSIXKfG2NGPwBL6vnRPddT7tH29qpkneX63DO9ECSPE9rzY1zhThHERg8lHM9IBFT+rVuiY823aQJuqzxCKIE1bcDqM4wgW01FH6oCBP1G4ub01xmb4BGSUG6ZrjxWHJyNLyIlGvOhoY2HAYzEtzYGwxFZn2JZ66o4RONkXjX0DF9EzsdUef3UAS+JQ+fCYReLawdjEe6tXCv88GKaaPKWxCeaUL9PejICQgRQOLGOZtZQkLgAelrOtehxz5ANOOqCaJgy2mJLQVLM5SJ9Dli909c5ybvEhVmIC0dc9dWH+</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>修改为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">N9KmiLVlKMU7RJqnE+WXEEPI1SgglmfmLc1yVH7dqBb9ehOoKG9UE+HAE1YvH1XX2XVGeEqYUY-Tsk7YBTz0WpSpoYyPgx6Iki5KLtQ5G<span class="operator">-a</span>KP9eysnkuOAkrvHU8bLbGtZteGwJarev03PhfCioJL4OSqsmQGEvDbHFEbNl1qJtdwEriR+VNZts9vNNLk7UGfeNwIiqpxjk4Mn09nmSd8FhM4ifvcaIbNCRoMPGl6KU12iseSe+w+<span class="number">1</span>kFsLhX+OhQM8WXcWV10cGqBzQE9OqOLUcg9n0krrR3KrohstS9smTwEx9olyLYppvC0p5i7dAx2deWvM1ZxKNs0BvcXGukR+</span><br></pre></td></tr></table></figure></p>
-<p>Linux命令为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">"s/keexjEP3t4Mue23hrnuPtY4TdcsqNiJL-5174TsUdLmJSIXKfG2NGPwBL6vnRPddT7tH29qpkneX63DO9ECSPE9rzY1zhThHERg8lHM9IBFT+rVuiY823aQJuqzxCKIE1bcDqM4wgW01FH6oCBP1G4ub01xmb4BGSUG6ZrjxWHJyNLyIlGvOhoY2HAYzEtzYGwxFZn2JZ66o4RONkXjX0DF9EzsdUef3UAS+JQ+fCYReLawdjEe6tXCv88GKaaPKWxCeaUL9PejICQgRQOLGOZtZQkLgAelrOtehxz5ANOOqCaJgy2mJLQVLM5SJ9Dli909c5ybvEhVmIC0dc9dWH+/N9KmiLVlKMU7RJqnE+WXEEPI1SgglmfmLc1yVH7dqBb9ehOoKG9UE+HAE1YvH1XX2XVGeEqYUY-Tsk7YBTz0WpSpoYyPgx6Iki5KLtQ5G-aKP9eysnkuOAkrvHU8bLbGtZteGwJarev03PhfCioJL4OSqsmQGEvDbHFEbNl1qJtdwEriR+VNZts9vNNLk7UGfeNwIiqpxjk4Mn09nmSd8FhM4ifvcaIbNCRoMPGl6KU12iseSe+w+1kFsLhX+OhQM8WXcWV10cGqBzQE9OqOLUcg9n0krrR3KrohstS9smTwEx9olyLYppvC0p5i7dAx2deWvM1ZxKNs0BvcXGukR+/g"</span> BCompare</span><br></pre></td></tr></table></figure></p>
-<p>如果有权限问题：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod <span class="number">755</span> BCompare</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>打开软件，会提示Trial Mode Error！表示成功！输入Team ZWT生成的密钥，即可注册成功！</li>
-</ol>
-<h2 id="其他系统">其他系统</h2><p>此方法适用所有系统，包括win和os x！</p>
-<h2 id="下载">下载</h2><p>Beyond Compare 4破解<a href="http://pan.baidu.com/s/1eQuGh6E" target="_blank" rel="external">下载地址</a>。</p>
+		<h1 id="背景">背景</h1><p><code>.gitignore</code>可以设置过滤文件，此文件还可以用来设置白名单。</p>
+<h1 id="白名单">白名单</h1><p>简单粗暴上菜（要解决此目录下的子目录也要过滤问题）：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ignore everything</span></span><br><span class="line"><span class="keyword">*</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># white list anything that's a directort</span></span><br><span class="line">!<span class="keyword">*</span>/</span><br><span class="line"><span class="comment"># add all the file types you don't want miss</span></span><br><span class="line">!<span class="keyword">*</span>.txt</span><br><span class="line">!<span class="keyword">*</span>.etc</span><br></pre></td></tr></table></figure></p>
+<p>ALL DONE!</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -122,13 +111,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/tech/">tech</a>
+  <a class="article-category-link" href="/categories/Git/">Git</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/tech/">tech</a>
+  <span></span> <a href="/tags/Git/">Git</a><a href="/tags/tech/">tech</a>
   </div>
 
 </div>
@@ -137,7 +126,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://hwangjr.github.io/2015/07/13/破解Beyond-Compare/" data-title="破解Beyond Compare | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="https://hwangjr.github.io/2016/01/14/Git设置白名单/" data-title="Git设置白名单 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -150,19 +139,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/29/HTML-In-TextView/" title="HTML In TextView">
-  <strong>上一篇：</strong><br/>
-  <span>
-  HTML In TextView</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/13/Android-Fragment-No-View-Found-For-ID-Error/"  title="Android Fragment - No View Found For ID Error">
+<a href="/2016/01/14/Git无法提交目录/"  title="Git无法提交目录">
  <strong>下一篇：</strong><br/> 
- <span>Android Fragment - No View Found For ID Error
+ <span>Git无法提交目录
 </span>
 </a>
 </div>
@@ -183,7 +164,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux破解"><span class="toc-number">2.</span> <span class="toc-text">Linux破解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他系统"><span class="toc-number">3.</span> <span class="toc-text">其他系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下载"><span class="toc-number">4.</span> <span class="toc-text">下载</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#白名单"><span class="toc-number">2.</span> <span class="toc-text">白名单</span></a></li></ol>
  
   </div>
 
