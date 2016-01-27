@@ -1,0 +1,654 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>调试Android应用 | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="在实际过程中，经常需要调试应用，而应用的调试手段是需要多样，这里进行总结，Xposed完整项目查看[AndroidKnife/XposedDebug](https://github.com/AndroidKnife/XposedDebug)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调试Android应用">
+<meta property="og:url" content="https://hwangjr.github.io/2016/01/27/调试Android应用/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="在实际过程中，经常需要调试应用，而应用的调试手段是需要多样，这里进行总结，Xposed完整项目查看[AndroidKnife/XposedDebug](https://github.com/AndroidKnife/XposedDebug)。">
+<meta property="og:updated_time" content="2016-01-27T02:06:12.907Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="调试Android应用">
+<meta name="twitter:description" content="在实际过程中，经常需要调试应用，而应用的调试手段是需要多样，这里进行总结，Xposed完整项目查看[AndroidKnife/XposedDebug](https://github.com/AndroidKnife/XposedDebug)。">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/27/调试Android应用/" title="调试Android应用" itemprop="url">调试Android应用</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-27T02:05:43.000Z" itemprop="datePublished"> 发表于 2016-01-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实践"><span class="toc-number">2.</span> <span class="toc-text">实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Debuggable属性"><span class="toc-number">2.1.</span> <span class="toc-text">使用Debuggable属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用build-prop属性"><span class="toc-number">2.2.</span> <span class="toc-text">使用build.prop属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Xposed进行HOOK"><span class="toc-number">2.3.</span> <span class="toc-text">Xposed进行HOOK</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简要介绍Xposed插件开发流程"><span class="toc-number">2.3.1.</span> <span class="toc-text">简要介绍Xposed插件开发流程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ref"><span class="toc-number">3.</span> <span class="toc-text">Ref</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="背景">背景</h1><p>需要针对已经发布的Release包进行调试，而要调试应用程序，需要满足：</p>
+<ol>
+<li>应用Manifest文件中Application标签包含属性<code>android:debuggable=&quot;true&quot;</code></li>
+<li><code>/default.prop</code>中<code>ro.debuggable</code>值为1</li>
+</ol>
+<p>针对上面限制，可选方案有：</p>
+<ol>
+<li>反编译应用修改Manifest，插入<code>android:debuggable=&quot;true&quot;</code></li>
+<li>修改<code>boot.img</code>，将<code>ro.debuggable</code>修改为1</li>
+<li>利用<a href="http://repo.xposed.info/" target="_blank" rel="external">Xposed</a>进行hook并debug应用</li>
+</ol>
+<h1 id="实践">实践</h1><h2 id="使用Debuggable属性">使用<code>Debuggable</code>属性</h2><p>从官方文档可以看出（<a href="http://developer.android.com/intl/zh-cn/guide/topics/manifest/application-element.html#debug" target="_blank" rel="external">application</a>）：</p>
+<blockquote>
+<p>android:debuggable<br>Whether or not the application can be debugged, even when running on a device in user mode — “true” if it can be, and “false” if not. The default value is “false”.</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">application</span></span><br><span class="line">	<span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_launcher"</span></span><br><span class="line">	<span class="attribute">android:label</span>=<span class="value">"@string/app_name"</span></span><br><span class="line">	<span class="attribute">android:theme</span>=<span class="value">"@style/AppTheme"</span> </span><br><span class="line">	<span class="attribute">android:debuggable</span>=<span class="value">"true"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>正常情况下，IDE会根据自身的打包来配置debug属性，因此在Manifest中最好<strong>不</strong>设置<code>debuggable</code>属性，而由打包方式来决定。查看具体的APK的信息：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 查看应用信息，可查看android:debuggable，<span class="number">0x0</span>为false，<span class="number">0xffffffff</span>为true</span></span><br><span class="line">aapt <span class="built_in">list</span> -v -a apk.apk</span><br></pre></td></tr></table></figure></p>
+<p>在应用中也可判断是否<code>debug</code>状态：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># 自身应用</span><br><span class="line">public static boolean isDebuggable(Context context) &#123;</span><br><span class="line">	try &#123;</span><br><span class="line">		ApplicationInfo info = context.getApplicationInfo();</span><br><span class="line">		return (info.flags &amp; ApplicationInfo.FLAG_DEBUGGABLE) != 0;</span><br><span class="line">	&#125; catch (Exception e) &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	return false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 其他应用</span><br><span class="line">public static boolean isDebuggable(Context context,String packageName) &#123;</span><br><span class="line">	try &#123;</span><br><span class="line">		PackageInfo pkgInfo = context.getPackageManager().getPackageInfo(packageName, 1);</span><br><span class="line">		if (pkgInfo != null ) &#123;</span><br><span class="line">			ApplicationInfo info = pkgInfo.applicationInfo;</span><br><span class="line">			return (info.flags &amp; ApplicationInfo.FLAG_DEBUGGABLE) != 0;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; catch (Exception e) &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>有的时候，我们还需要一些其他的方式或手段：</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 反编译apk，可修改smali及资源等</span></span><br><span class="line">apktool d apk.apk</span><br><span class="line"><span class="comment"># 修改Manifest，新增debuggable</span></span><br><span class="line">vim apk/AndroidManifest.xml</span><br><span class="line"><span class="comment"># 重新打包，apk文件在dist目录中，也可指定apk文件</span></span><br><span class="line">apktool b apk</span><br><span class="line"><span class="comment"># 更多信息</span></span><br><span class="line">apktool -h</span><br><span class="line"><span class="comment"># debug签名，也可自行指定签名，密码android</span></span><br><span class="line">jarsigner -verbose -keystore ~/.android/debug.keystore -signedjar new.apk apk.apk androiddebugkey</span><br><span class="line"><span class="comment"># 查看签名</span></span><br><span class="line">keytool -list -alias androiddebugkey -keystore &lt;path_to_debug_keystore&gt;.keystore -storepass android -keypass android</span><br><span class="line"><span class="comment"># 有时需要系统签名，系统签名官方git有提供([security at master · android](https://github.com/android/platform_build/tree/master/target/product/security))</span></span><br><span class="line">java -jar signapk.jar platform.x509.pem platform.pk8 apk/dist/apk.apk new_sys.apk</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用build-prop属性">使用<code>build.prop</code>属性</h2><p>有一种是重新打包<code>boot.img</code>，简单思路就是解包<code>boot.img</code>，修改<code>ramdisk</code>中的<code>default.prop</code>，再打包并刷机。因为<code>boot.img</code>会在开机自动覆盖，所以只能通过刷<code>boot</code>来搞定。具体可以搜索相关解包教程。</p>
+<p>另外一种要涉及重新编译<code>boot.img</code>，不同的版本源码编译不一样。更多可以参考：<a href="https://source.android.com/" target="_blank" rel="external">Android Open Source Project</a>。<br>ADB权限管理：</p>
+<ol>
+<li>4.2.2版本，针对连接设备需要使用者进行确认，且分设备与MAC进行管理</li>
+<li>4.2等设备有针对ADB管理的开发者模式，通过该模式对ADB的DEBUG进行权限管理</li>
+<li>开源版本，针对<code>eng/userdebug/user</code>进行管理与开放adb权限</li>
+</ol>
+<p>从系统编译和编译环境控制来说，通过property进行管理，主要为<code>ro.debuggable</code>和<code>system/core/rootdir/init.usb.rc</code>中<code>sys.usb.config</code>里包含对adb选项。</p>
+<p>简单编译可通过查找：</p>
+<ol>
+<li><code>ro.debuggable</code>相关的环境变量，比如<code>enable_target_debugging</code></li>
+<li>查找init.rc中权限改变</li>
+<li>添加开发者模式进行管理</li>
+</ol>
+<p>在系统编译时，有几个编译选项：</p>
+<ol>
+<li>eng：编译时默认选项</li>
+<li>user：产品生成发布版</li>
+<li>userdebug：与user版本相同，添加adb服务</li>
+</ol>
+<p>在4.4源码上进行相关参数的搜索（<code>ro.secure</code>，<code>ro.debuggable</code>，<code>ro.kernel.android.checkjni</code>）：<br><strong><code>ro.secure</code></strong><br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.<span class="regexp">/frameworks/</span>base<span class="regexp">/services/</span>java<span class="regexp">/com/</span>android<span class="regexp">/server/</span>wm/WindowManagerService.<span class="string">java:</span>    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SYSTEM_SECURE = <span class="string">"ro.secure"</span>;</span><br><span class="line">.<span class="regexp">/frameworks/</span>base<span class="regexp">/core/</span>java<span class="regexp">/android/</span>net<span class="regexp">/http/</span>AndroidHttpClient.<span class="string">java:</span>                <span class="comment">// Never print auth token -- we used to check ro.secure=0 to</span></span><br><span class="line">.<span class="regexp">/bionic/</span>libc<span class="regexp">/bionic/</span>system_properties.<span class="string">c:</span> * binary tree.  For instance, <span class="string">"ro.secure"</span>=<span class="string">"1"</span> could be stored <span class="keyword">as</span> <span class="string">follows:</span></span><br><span class="line">.<span class="regexp">/bionic/</span>libc<span class="regexp">/bionic/</span>system_properties.<span class="string">c:</span> *                     v        v            v     +--------&gt;| ro.secure |</span><br><span class="line">.<span class="regexp">/build/</span>core/main.<span class="string">mk:</span>  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=<span class="number">1</span></span><br><span class="line">.<span class="regexp">/build/</span>core/main.<span class="string">mk:</span>  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=<span class="number">0</span></span><br><span class="line">.<span class="regexp">/build/</span>core<span class="regexp">/build-system.html:        &lt;li&gt;&lt;code&gt;ro.secure=0&lt;/</span>code&gt;</span><br><span class="line">.<span class="regexp">/build/</span>core<span class="regexp">/build-system.html:        &lt;li&gt;&lt;code&gt;ro.secure=1&lt;/</span>code&gt;</span><br><span class="line">.<span class="regexp">/system/</span>core<span class="regexp">/adb/</span>adb.<span class="string">c:</span>   <span class="comment">/* run adbd in secure mode if ro.secure is set and</span><br><span class="line">./system/core/adb/adb.c:        property_get("ro.secure", value, "1");</span><br><span class="line">./system/core/adb/adb.c:            // don't run as root if ro.secure is set...</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>build/xxx：环境设置</li>
+<li>system/xxx/adb.c：如果=1,adb root将无法成功. 还有其它的附加条件除外.</li>
+<li>WindowManagerService：用于管理viewserver(Hierarchy Viewer)</li>
+<li>AndroidHttpClient：在=1时,不会在log中dump auth token</li>
+<li>bionic/xxx/system_properties.c：介绍properties存储结构时用的例子</li>
+</ul>
+<p><strong><code>ro.debuggable</code></strong><br><figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">./bootable/recovery/adb_install.cpp:    int len = property_get("ro.debuggable", value, NULL);</span><br><span class="line">./bootable/recovery/etc/init.rc:on property:ro.debuggable=1</span><br><span class="line">./build/core/build-system.html:        <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">code</span>&gt;</span>ro.debuggable=0<span class="tag">&lt;/<span class="title">code</span>&gt;</span></span><br><span class="line">./build/core/build-system.html:        <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">code</span>&gt;</span>ro.debuggable=1<span class="tag">&lt;/<span class="title">code</span>&gt;</span></span><br><span class="line">./build/core/build-system.html:        <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">code</span>&gt;</span>ro.debuggable=1<span class="tag">&lt;/<span class="title">code</span>&gt;</span></span><br><span class="line">./build/core/main.mk:  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=0</span><br><span class="line">./build/core/main.mk:  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1</span><br><span class="line">./build/tools/post_process_props.py:  # If ro.debuggable is 1, then enable adb on USB by default</span><br><span class="line">./build/tools/post_process_props.py:  if prop.get("ro.debuggable") == "1":</span><br><span class="line">./dalvik/docs/debugger.html:for all applications when the system property <span class="tag">&lt;<span class="title">code</span>&gt;</span>ro.debuggable<span class="tag">&lt;/<span class="title">code</span>&gt;</span></span><br><span class="line">./dalvik/docs/debugger.html:is set to <span class="tag">&lt;/<span class="title">code</span>&gt;</span>1<span class="tag">&lt;/<span class="title">code</span>&gt;</span> (use <span class="tag">&lt;<span class="title">code</span>&gt;</span>adb shell getprop ro.debuggable<span class="tag">&lt;/<span class="title">code</span>&gt;</span></span><br><span class="line">./device/samsung/manta/init.manta.rc:on property:ro.debuggable=1</span><br><span class="line">./external/libnfc-nxp/Linux_x86/phDal4Nfc.c:    property_get("ro.debuggable", value, "");</span><br><span class="line">./external/openssh/servconf.c:  /* Allow root login if ro.debuggable is set */</span><br><span class="line">./external/openssh/servconf.c:  property_get("ro.debuggable", value, "");</span><br><span class="line">./frameworks/av/services/audioflinger/AudioFlinger.cpp:    (void) property_get("ro.debuggable", value, "0");</span><br><span class="line">./frameworks/base/core/java/android/net/SSLCertificateSocketFactory.java:        return "1".equals(SystemProperties.get("ro.debuggable")) &amp;&amp;</span><br><span class="line">./frameworks/base/core/java/android/os/Build.java:            SystemProperties.getInt("ro.debuggable", 0) == 1;</span><br><span class="line">./frameworks/base/core/java/com/android/internal/os/ZygoteConnection.java:        if ("1".equals(SystemProperties.get("ro.debuggable"))) </span><span class="expression">&#123;</span><br><span class="line"><span class="variable">.</span><span class="end-block">/frameworks</span><span class="end-block">/base</span><span class="end-block">/core</span><span class="end-block">/java</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/internal</span><span class="end-block">/os</span><span class="end-block">/ZygoteConnection.java</span>:     * <span class="variable"><span class="keyword">If</span></span> <span class="string">"ro.debuggable"</span> <span class="variable">is</span> <span class="string">"1"</span>, <span class="variable">all</span> <span class="variable">apps</span> <span class="variable">are</span> <span class="variable">debuggable.</span> <span class="variable">Otherwise</span>,</span><br><span class="line"><span class="variable">.</span><span class="end-block">/frameworks</span><span class="end-block">/base</span><span class="end-block">/policy</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/internal</span><span class="end-block">/policy</span><span class="end-block">/impl</span><span class="end-block">/PhoneWindowManager.java</span>:        <span class="variable">mEnableShiftMenuBugReports</span> = <span class="string">"1"</span><span class="variable">.equals</span>(<span class="variable">SystemProperties.get</span>(<span class="string">"ro.debuggable"</span>));</span><br><span class="line"><span class="variable">.</span><span class="end-block">/frameworks</span><span class="end-block">/base</span><span class="end-block">/services</span><span class="end-block">/java</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/server</span><span class="end-block">/BootReceiver.java</span>:        <span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1 ? 98304 : 65536;</span><br><span class="line"><span class="variable">.</span><span class="end-block">/frameworks</span><span class="end-block">/base</span><span class="end-block">/services</span><span class="end-block">/java</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/server</span><span class="end-block">/am</span><span class="end-block">/ActivityManagerService.java</span>:    <span class="variable">private</span> <span class="variable">static</span> <span class="variable">final</span> <span class="variable">String</span> <span class="variable">SYSTEM</span>_<span class="variable">DEBUGGABLE</span> = <span class="string">"ro.debuggable"</span>;</span><br><span class="line"><span class="variable">.</span><span class="end-block">/frameworks</span><span class="end-block">/base</span><span class="end-block">/services</span><span class="end-block">/java</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/server</span><span class="end-block">/wm</span><span class="end-block">/WindowManagerService.java</span>:    <span class="variable">private</span> <span class="variable">static</span> <span class="variable">final</span> <span class="variable">String</span> <span class="variable">SYSTEM</span>_<span class="variable">DEBUGGABLE</span> = <span class="string">"ro.debuggable"</span>;</span><br><span class="line"><span class="variable">.</span><span class="end-block">/frameworks</span><span class="end-block">/native</span><span class="end-block">/opengl</span><span class="end-block">/libs</span><span class="end-block">/EGL</span><span class="end-block">/egl.cpp</span>:        <span class="variable">property</span>_<span class="variable">get</span>(<span class="string">"ro.debuggable"</span>, <span class="variable">value</span>, <span class="string">"0"</span>);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/AudioRouter.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/BluetoothManager.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/BluetoothPhoneService.java</span>:            &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallCommandService.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallController.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallHandlerServiceProxy.java</span>:            <span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallLogger.java</span>:        (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallModeler.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallNotifier.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallStateMonitor.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallerInfoCache.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CallerInfoCacheUpdateReceiver.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/CdmaDisplayInfo.java</span>:    <span class="variable">private</span> <span class="variable">static</span> <span class="variable">final</span> <span class="variable">boolean</span> <span class="variable">DBG</span> = (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/InCallScreenShowActivation.java</span>:                    &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1)) &#123;</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/InCallScreenShowActivation.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/NotificationMgr.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/OutgoingCallBroadcaster.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/PhoneGlobals.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/PhoneGlobals.java</span>:     *   (<span class="variable">PhoneApp.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1)</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/PhoneGlobals.java</span>:     *   1 <span class="variable">-</span> <span class="variable">normal</span> <span class="variable">debug</span> <span class="variable">logging</span> <span class="variable"><span class="keyword">if</span></span> <span class="variable">ro.debuggable</span> <span class="variable">is</span> <span class="variable">set</span> (<span class="variable">which</span> <span class="variable">is</span> <span class="variable">true</span> <span class="variable">in</span></span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/RespondViaSmsManager.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/Ringer.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/SipCallOptionHandler.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/packages</span><span class="end-block">/services</span><span class="end-block">/Telephony</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/phone</span><span class="end-block">/WiredHeadsetManager.java</span>:            (<span class="variable">PhoneGlobals.DBG</span>_<span class="variable">LEVEL</span> &gt;= 1) &amp;&amp; (<span class="variable">SystemProperties.getInt</span>(<span class="string">"ro.debuggable"</span>, 0) == 1);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/sdk</span><span class="end-block">/eclipse</span><span class="end-block">/plugins</span><span class="end-block">/com.android.ide.eclipse.adt</span><span class="end-block">/src</span><span class="end-block">/com</span><span class="end-block">/android</span><span class="end-block">/ide</span><span class="end-block">/eclipse</span><span class="end-block">/adt</span><span class="end-block">/internal</span><span class="end-block">/launch</span><span class="end-block">/AndroidLaunchController.java</span>:                        /<span class="end-block">/ because am -D does not check for ro.debuggable and the</span></span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/adb</span><span class="end-block">/adb.c</span>:            <span class="variable">property</span>_<span class="variable">get</span>(<span class="string">"ro.debuggable"</span>, <span class="variable">value</span>, <span class="string">""</span>);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/adb</span><span class="end-block">/adb.c</span>:    <span class="variable">property</span>_<span class="variable">get</span>(<span class="string">"ro.debuggable"</span>, <span class="variable">value</span>, <span class="string">""</span>);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/adb</span><span class="end-block">/services.c</span>:        <span class="variable">property</span>_<span class="variable">get</span>(<span class="string">"ro.debuggable"</span>, <span class="variable">value</span>, <span class="string">""</span>);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/debuggerd</span><span class="end-block">/tombstone.c</span>:    <span class="variable">property</span>_<span class="variable">get</span>(<span class="string">"ro.debuggable"</span>, <span class="variable">value</span>, <span class="string">"0"</span>);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/include</span><span class="end-block">/cutils</span><span class="end-block">/trace.h</span>: * <span class="variable">level</span> <span class="variable">tracing</span> <span class="variable">is</span> <span class="variable">not</span> <span class="variable">allowed</span> <span class="variable">unless</span> <span class="variable">the</span> <span class="variable">ro.debuggable</span> <span class="variable">system</span> <span class="variable">property</span> <span class="variable">is</span></span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/init</span><span class="end-block">/property</span>_<span class="variable">service.c</span>:    <span class="variable">ret</span> = <span class="variable">property</span>_<span class="variable">get</span>(<span class="string">"ro.debuggable"</span>, <span class="variable">debuggable</span>);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/libcutils</span><span class="end-block">/trace.c</span>:    <span class="variable">property</span>_<span class="variable">get</span>(<span class="string">"ro.debuggable"</span>, <span class="variable">value</span>, <span class="string">"0"</span>);</span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/libcutils</span><span class="end-block">/trace.c</span>:/<span class="end-block">/ application-level tracing is allowed when the ro.debuggable system property</span></span><br><span class="line"><span class="variable">.</span><span class="end-block">/system</span><span class="end-block">/core</span><span class="end-block">/rootdir</span><span class="end-block">/init.rc</span>:<span class="variable">on</span> <span class="variable">property</span>:<span class="variable">ro.debuggable</span>=1</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>./bootable/recovery/adb_install.cpp：debuggable 开启时,才可以成功重启adb</li>
+<li>./build/xxxx：debuggable 数据设置</li>
+<li>./dalvik/xxx：在dalvik中,如果debuggable为0, 仅AndroidManifest.xml中含有debuggable 才会支持jdwp调试</li>
+<li>./external/libnfc-nxp/Linux_x86/phDal4Nfc.c：NFC调试支持开关</li>
+<li>./external/openssh/servconf.c：openssh 允许root访问开关</li>
+<li>./frameworks/av/services/audioflinger/AudioFlinger.cpp：Audio Debug 开关</li>
+<li>./frameworks/base/core/java/android/net/SSLCertificateSocketFactory.java：SSL check 开关</li>
+<li>./frameworks/base/core/java/android/os/Build.java：IS_DEBUGGABLE环境变量控制</li>
+<li>./frameworks/base/core/java/com/android/internal/os/ZygoteConnection.java：App debuggable 开关, 如果=1, 所有应用都将进行debug支持</li>
+<li>./frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java：mEnableShiftMenuBugReports 支持</li>
+<li>./frameworks/base/services/java/com/android/server/BootReceiver.java：logged event size 控制, =1 存储量大</li>
+<li>./frameworks/base/services/java/com/android/server/am/ActivityManagerService.java：系统DEBUG状态，包括do bug report, OpenGLTrace, App Profile, App Heap Dump</li>
+<li>./frameworks/base/services/java/com/android/server/wm/WindowManagerService.java：系统DEBUG状态，与ro.secure 一起管理viewserver</li>
+<li>./frameworks/native/opengl/libs/EGL/egl.cpp：EGL debug</li>
+<li>LOGD 开关：<br>./packages/services/Telephony/src/com/android/phone/AudioRouter.java:<br>./packages/services/Telephony/src/com/android/phone/BluetoothManager.java:<br>./packages/services/Telephony/src/com/android/phone/BluetoothPhoneService.java<br>./packages/services/Telephony/src/com/android/phone/CallCommandService.java<br>./packages/services/Telephony/src/com/android/phone/CallController.java<br>./packages/services/Telephony/src/com/android/phone/CallHandlerServiceProxy.java<br>./packages/services/Telephony/src/com/android/phone/CallLogger.java<br>./packages/services/Telephony/src/com/android/phone/CallModeler.java<br>./packages/services/Telephony/src/com/android/phone/CallNotifier.java<br>./packages/services/Telephony/src/com/android/phone/CallStateMonitor.java<br>./packages/services/Telephony/src/com/android/phone/CallerInfoCache.java<br>./packages/services/Telephony/src/com/android/phone/CallerInfoCacheUpdateReceiver.java<br>./packages/services/Telephony/src/com/android/phone/CdmaDisplayInfo.java<br>./packages/services/Telephony/src/com/android/phone/InCallScreenShowActivation.java<br>./packages/services/Telephony/src/com/android/phone/InCallScreenShowActivation.java<br>./packages/services/Telephony/src/com/android/phone/NotificationMgr.java<br>./packages/services/Telephony/src/com/android/phone/OutgoingCallBroadcaster.java<br>./packages/services/Telephony/src/com/android/phone/PhoneGlobals.java<br>./packages/services/Telephony/src/com/android/phone/PhoneGlobals.java<br>./packages/services/Telephony/src/com/android/phone/PhoneGlobals.java<br>./packages/services/Telephony/src/com/android/phone/RespondViaSmsManager.java<br>./packages/services/Telephony/src/com/android/phone/Ringer.java<br>./packages/services/Telephony/src/com/android/phone/SipCallOptionHandler.java<br>./packages/services/Telephony/src/com/android/phone/WiredHeadsetManager.java</li>
+<li>./sdk/eclipse/plugins/com.android.ide.eclipse.adt/src/com/android/ide/eclipse/adt/internal/launch/AndroidLaunchController.java：ADT app debug launcher 支持</li>
+<li>./system/core/adb/adb.c：adb root permission</li>
+<li>./system/core/adb/services.c：adb root permission</li>
+<li>./system/core/debuggerd/tombstone.c：dump_crash want log if =1</li>
+<li>./system/core/init/property_service.c：Allow local property overwrite ro.debuggerd value</li>
+<li>./system/core/libcutils/trace.c：app trace on/off</li>
+<li>./system/core/rootdir/init.rc：adbd服务开启控制</li>
+</ul>
+<p><strong><code>ro.kernel.android.checkjni</code></strong><br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./frameworks/<span class="keyword">base/core/jni/AndroidRuntime.cpp: </span>       property_get(<span class="string">"ro.kernel.android.checkjni"</span>, propBuf, <span class="string">""</span>)<span class="comment">;</span></span><br><span class="line">./dalvik/docs/embedded-vm-control.html:first is &lt;<span class="preprocessor">code</span>&gt;ro.kernel.<span class="keyword">android.checkjni&lt;/code&gt;. </span> This is set <span class="keyword">by </span>the</span><br><span class="line">./dalvik/docs/embedded-vm-control.html:of this overrides the value from &lt;<span class="preprocessor">code</span>&gt;ro.kernel.<span class="keyword">android.checkjni&lt;/code&gt;.</span><br><span class="line"></span>./<span class="keyword">build/core/main.mk: </span> <span class="keyword">ADDITIONAL_BUILD_PROPERTIES </span>+= ro.kernel.<span class="keyword">android.checkjni=1</span><br><span class="line"></span>./<span class="keyword">build/core/build-system.html: </span>       &lt;li&gt;&lt;<span class="preprocessor">code</span>&gt;ro.kernel.<span class="keyword">android.checkjni=1&lt;/code&gt;</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>./frameworks/base/core/jni/AndroidRuntime.cpp：checkJNI value load</li>
+<li>dalvik/xxx：Java VM CheckJNI on/off</li>
+<li>build/xxx：checkJNI 状态设置</li>
+</ul>
+<p>基本来说，<code>ro.secure</code>主要是系统安全相关属性开关，包括：</p>
+<ul>
+<li>adb的root权限</li>
+<li>view server(Hierarchy Viewer)的开关</li>
+<li>系统各个模块的敏感信息输出</li>
+</ul>
+<p><code>ro.debuggable</code>主要是系统debug信息开关，包括：</p>
+<ul>
+<li>adb管理，是否可root，是否开机运行</li>
+<li>view server(Hierarchy Viewer)的开关</li>
+<li>系统debug信息开关，包括应用内部log、audio debug, ssl check, nfc, opengl elg等信息打印、系统各应用级别状态，包括profile, jdwp-debug, heap dump, opengl trace等</li>
+</ul>
+<p><code>ro.kernel.android.checkjni</code>主要是Java VM checkJNI的开关</p>
+<h2 id="Xposed进行HOOK"><code>Xposed</code>进行HOOK</h2><p>从上面的两个方案来看，debug都太过麻烦，还有一个简单的方式，那就是利用开源的Xposed框架进行hook。使用这一利器之前需要先root系统。用一句话来解释Xposed：</p>
+<blockquote>
+<p>利用JNI作为一个中转，将所有对于被hook的方法统一进入Xposed管理器，管理器再进行hook的前后调用。Xposed 调用非JVM JNI标准接口，需要准确调用dalvik/art中的方法调用，完成对原函数的调用。</p>
+</blockquote>
+<p>当我们设置<code>android:debuggable=&quot;true&quot;</code>时候，应用即可进行调试，而且可以进行JDWP连接进行调试。开启新应用时，Dalvik VM会forked/started新的线程，并开启debug，这时JDWP线程知道是否开启。我们跟踪<code>android.os.Process.start()</code>方法会发现，这是一个<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> ProcessStartResult start(<span class="keyword">final</span> <span class="keyword">String</span> processClass,</span><br><span class="line">                              <span class="keyword">final</span> <span class="keyword">String</span> niceName,</span><br><span class="line">                              <span class="built_in">int</span> uid, <span class="built_in">int</span> gid, <span class="built_in">int</span>[] gids,</span><br><span class="line">                              <span class="built_in">int</span> debugFlags, <span class="built_in">int</span> mountExternal,</span><br><span class="line">                              <span class="built_in">int</span> targetSdkVersion,</span><br><span class="line">                              <span class="keyword">String</span> seInfo,</span><br><span class="line">                              <span class="keyword">String</span>[] zygoteArgs) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> startViaZygote(processClass, niceName, uid, gid, gids, debugFlags, mountExternal, targetSdkVersion, seInfo, zygoteArgs);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ZygoteStartFailedEx ex) &#123;</span><br><span class="line">        Log.e(LOG_TAG,</span><br><span class="line">                <span class="string">"Starting VM process through Zygote failed"</span>);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(</span><br><span class="line">                <span class="string">"Starting VM process through Zygote failed"</span>, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>继续跟踪会发现，在<code>startViaZygote</code>方法中对<code>DEBUG_ENABLE_DEBUGGER</code>进行判断：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((debugFlags &amp; Zygote.DEBUG_ENABLE_DEBUGGER) != <span class="number">0</span>) &#123;</span><br><span class="line">	argsForZygote.add(<span class="string">"--enable-debugger"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来就简单了，利用反射获得这个<code>start</code>的方法，并进行hook即可，代码为（完整项目查看<a href="https://github.com/AndroidKnife/XposedDebug" target="_blank" rel="external">AndroidKnife/XposedDebug</a>）：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里演示了两个hook的方式，更多可以参阅文档</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhoneDebug</span> <span class="keyword">implements</span> <span class="title">IXposedHookLoadPackage</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">boolean</span> debugApps = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEBUG_ENABLE_DEBUGGER = <span class="number">0x1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleLoadPackage</span><span class="params">(XC_LoadPackage.LoadPackageParam loadPackageParam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (BuildConfig.DEBUG) &#123;</span><br><span class="line">            XposedBridge.log(<span class="string">"-- handle package: "</span> + loadPackageParam.packageName + <span class="string">" process: "</span> + loadPackageParam.processName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (loadPackageParam.appInfo == <span class="keyword">null</span> ||</span><br><span class="line">                (loadPackageParam.appInfo.flags &amp; (ApplicationInfo.FLAG_SYSTEM | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != <span class="number">0</span>) &#123;</span><br><span class="line">            XposedBridge.log(<span class="string">"-- appInfo: "</span> + loadPackageParam.appInfo);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method start = Process.class.getMethod(</span><br><span class="line">                    <span class="string">"start"</span>, String.class, String.class, Integer.TYPE, Integer.TYPE, <span class="keyword">int</span>[].class,</span><br><span class="line">                    Integer.TYPE, Integer.TYPE, Integer.TYPE, String.class, String[].class);</span><br><span class="line">            XposedBridge.log(<span class="string">"-- start hook, appInfo: "</span> + loadPackageParam.appInfo);</span><br><span class="line">            XposedBridge.hookMethod(start, <span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">                <span class="annotation">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">beforeHookedMethod</span><span class="params">(MethodHookParam methodHookParam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (debugApps) &#123;</span><br><span class="line">                        <span class="keyword">int</span> id = <span class="number">5</span>;</span><br><span class="line">                        <span class="keyword">int</span> flags = (Integer) methodHookParam.args[id];</span><br><span class="line">                        <span class="keyword">if</span> ((flags &amp; DEBUG_ENABLE_DEBUGGER) == <span class="number">0</span>) &#123;</span><br><span class="line">                            flags |= DEBUG_ENABLE_DEBUGGER;</span><br><span class="line">                        &#125;</span><br><span class="line">                        methodHookParam.args[id] = flags;</span><br><span class="line">                        <span class="keyword">if</span> (BuildConfig.DEBUG) &#123;</span><br><span class="line">                            XposedBridge.log(<span class="string">"set debuggable flags to: "</span> + flags);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">/*</span><br><span class="line">        XposedBridge.hookAllMethods(Process.class, "start", new XC_MethodHook() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            protected void beforeHookedMethod(MethodHookParam param) throws Throwable &#123;</span><br><span class="line">                if (debugApps) &#123;</span><br><span class="line">                    int id = 5;</span><br><span class="line">                    int flags = (Integer) param.args[id];</span><br><span class="line">                    if ((flags &amp; DEBUG_ENABLE_DEBUGGER) == 0) &#123;</span><br><span class="line">                        flags |= DEBUG_ENABLE_DEBUGGER;</span><br><span class="line">                    &#125;</span><br><span class="line">                    param.args[id] = flags;</span><br><span class="line">                    if (BuildConfig.DEBUG) &#123;</span><br><span class="line">                        XposedBridge.log("set debuggable flags to: " + flags);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);*/</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="简要介绍Xposed插件开发流程">简要介绍Xposed插件开发流程</h3><p>在Android Studio上大概过程为（完整代码：<a href="https://github.com/AndroidKnife/XposedDebug" target="_blank" rel="external">AndroidKnife/XposedDebug</a>）：</p>
+<ol>
+<li>创建工程，可以无Activity</li>
+<li>下载<a href="http://forum.xda-developers.com/xposed/xposed-api-changelog-developer-news-t2714067" target="_blank" rel="external">Xposed API</a> XposedBridgeApi-xx.jar，并将其放入<code>libs</code>目录</li>
+<li>修改Manifest，新增三个<code>meta-data</code>标签（详细看下面代码）</li>
+<li>实现<code>IXposedHookLoadPackage</code>接口及具体hook逻辑</li>
+<li>在<code>assets/xposed_init</code>配置声明需要加载到<code>XposedInstaller</code>的入口</li>
+<li>ALL DONE。<br>更多可以查看<a href="https://github.com/rovo89/XposedBridge/wiki/Development-tutorial" target="_blank" rel="external">Development tutorial</a>。</li>
+</ol>
+<p>运行Xposed插件，需要：</p>
+<ol>
+<li>安装<a href="http://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="external">Xposed Installer</a></li>
+<li>手机root</li>
+</ol>
+<p>AndroidManifest.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">manifest</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">package</span>=<span class="value">"com.hwangjr.xposed.mods.phonedebug"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">application</span></span><br><span class="line">        <span class="attribute">android:allowBackup</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:supportsRtl</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta-data</span></span><br><span class="line">            <span class="attribute">android:name</span>=<span class="value">"xposedmodule"</span></span><br><span class="line">            <span class="attribute">android:value</span>=<span class="value">"true"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta-data</span></span><br><span class="line">            <span class="attribute">android:name</span>=<span class="value">"xposeddescription"</span></span><br><span class="line">            <span class="attribute">android:value</span>=<span class="value">"Phone Debugger! (ro.debuggable or android:debuggable)"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta-data</span></span><br><span class="line">            <span class="attribute">android:name</span>=<span class="value">"xposedminversion"</span></span><br><span class="line">            <span class="attribute">android:value</span>=<span class="value">"54"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">application</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">manifest</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><code>assets/xposed_init</code>：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com<span class="class">.hwangjr</span><span class="class">.xposed</span><span class="class">.mods</span><span class="class">.phonedebug</span><span class="class">.PhoneDebug</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Ref">Ref</h1><p><a href="http://repo.xposed.info/" target="_blank" rel="external">Xposed Module Repository</a><br><a href="https://labs.mwrinfosecurity.com/blog/2013/11/29/debug-all-the-android-things/" target="_blank" rel="external">Debug All the Android Things - mwrlabs</a><br><a href="http://blog.csdn.net/hunanwy/article/details/9200673" target="_blank" rel="external">Android USER 版本与ENG 版本的差异—MTK官方解释 - hunanwy的专栏 - 博客频道 - CSDN.NET</a><br><a href="http://www.codefrom.com/c/49" target="_blank" rel="external">Xposed插件开发基础篇｜码源</a><br><a href="http://forum.xda-developers.com/" target="_blank" rel="external">Android Forum for Mobile Phones, Tablets, Watches &amp; Android App Development - XDA Forums</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2016/01/27/调试Android应用/" data-title="调试Android应用 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/01/14/Git设置白名单/"  title="Git设置白名单">
+ <strong>下一篇：</strong><br/> 
+ <span>Git设置白名单
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实践"><span class="toc-number">2.</span> <span class="toc-text">实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Debuggable属性"><span class="toc-number">2.1.</span> <span class="toc-text">使用Debuggable属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用build-prop属性"><span class="toc-number">2.2.</span> <span class="toc-text">使用build.prop属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Xposed进行HOOK"><span class="toc-number">2.3.</span> <span class="toc-text">Xposed进行HOOK</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简要介绍Xposed插件开发流程"><span class="toc-number">2.3.1.</span> <span class="toc-text">简要介绍Xposed插件开发流程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ref"><span class="toc-number">3.</span> <span class="toc-text">Ref</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Git/" title="Git">Git<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>32</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
