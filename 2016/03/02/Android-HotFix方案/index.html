@@ -1,0 +1,570 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Android HotFix方案 | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="目前关于Android的Hot Fix方案大概有三种，主要是基于[rovo89/Xposed](https://github.com/rovo89/Xposed)的[alibaba/dexposed](https://github.com/alibaba/dexposed)；以方法hook，从Field切入的[AndFix](https://github.com/alibaba/AndFix)；[">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android HotFix方案">
+<meta property="og:url" content="https://hwangjr.github.io/2016/03/02/Android-HotFix方案/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="目前关于Android的Hot Fix方案大概有三种，主要是基于[rovo89/Xposed](https://github.com/rovo89/Xposed)的[alibaba/dexposed](https://github.com/alibaba/dexposed)；以方法hook，从Field切入的[AndFix](https://github.com/alibaba/AndFix)；[">
+<meta property="og:updated_time" content="2016-03-02T12:15:17.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android HotFix方案">
+<meta name="twitter:description" content="目前关于Android的Hot Fix方案大概有三种，主要是基于[rovo89/Xposed](https://github.com/rovo89/Xposed)的[alibaba/dexposed](https://github.com/alibaba/dexposed)；以方法hook，从Field切入的[AndFix](https://github.com/alibaba/AndFix)；[">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/02/Android-HotFix方案/" title="Android HotFix方案" itemprop="url">Android HotFix方案</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-02T12:14:44.000Z" itemprop="datePublished"> 发表于 2016-03-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方案揭秘"><span class="toc-number">2.</span> <span class="toc-text">方案揭秘</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dexposed"><span class="toc-number">2.1.</span> <span class="toc-text">Dexposed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AndFix"><span class="toc-number">2.2.</span> <span class="toc-text">AndFix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multiple_Dex"><span class="toc-number">2.3.</span> <span class="toc-text">Multiple Dex</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方案对比"><span class="toc-number">3.</span> <span class="toc-text">方案对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#REF"><span class="toc-number">4.</span> <span class="toc-text">REF</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="背景">背景</h1><p>随着开发需求的不断迫切，目前开源已经涌现了很多Hot Fix项目，但是从方案上来说，主要是基于<a href="https://github.com/rovo89/Xposed" target="_blank" rel="external">rovo89/Xposed</a>的<a href="https://github.com/alibaba/dexposed" target="_blank" rel="external">alibaba/dexposed</a>；以方法hook，从Field切入的<a href="https://github.com/alibaba/AndFix" target="_blank" rel="external">AndFix</a>；<a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=16" target="_blank" rel="external">Dex分包</a>的<a href="https://github.com/jasonross/Nuwa" target="_blank" rel="external">Nuwa</a>。而相同原理的不同实现有很多，这里就不再累赘。这三个实现原理截然不同，各有各自优缺点，让我们走近这几个方案。</p>
+<h1 id="方案揭秘">方案揭秘</h1><h2 id="Dexposed">Dexposed</h2><p><a href="https://github.com/alibaba/dexposed" target="_blank" rel="external">alibaba/dexposed</a>是基于<a href="https://github.com/rovo89/Xposed" target="_blank" rel="external">rovo89/Xposed</a>的AOP框架，方法级别粒度，而且不仅可以Hot Fix，还可进行AOP编程、插桩、Hook等功能。</p>
+<p>Xposed是需要ROOT权限，因为其要修改其他应用及系统行为，而对于单个应用而言，不需要ROOT。Xposed基本原理是：通过修改Dalvik运行时的Zygote进程，使用Xposed Bridge来hook方法并注入自身代码，实现非侵入式的Runtime修改。包括小米（<a href="https://github.com/rovo89/Xposed/blob/master/libxposed_dalvik.cpp" target="_blank" rel="external">onVmCreated方法</a>），也利用此特性，做了自定义主题、沉浸式状态栏等功能。<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Called very early during VM startup. */</span></span><br><span class="line"><span class="literal">void</span> onVmCreated(JNIEnv* env) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="subst">!</span>initMemberOffsets(env))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    jclass classMiuiResources = env<span class="subst">-&gt;</span>FindClass(CLASS_MIUI_RESOURCES);</span><br><span class="line">    <span class="keyword">if</span> (classMiuiResources != <span class="built_in">NULL</span>) &#123;</span><br><span class="line">        ClassObject* clazz = (ClassObject*)dvmDecodeIndirectRef(dvmThreadSelf(), classMiuiResources);</span><br><span class="line">        <span class="keyword">if</span> (dvmIsFinalClass(clazz)) &#123;</span><br><span class="line">            ALOGD(<span class="string">"Removing final flag for class '%s'"</span>, CLASS_MIUI_RESOURCES);</span><br><span class="line">            clazz<span class="subst">-&gt;</span>accessFlags <span class="subst">&amp;</span>= ~ACC_FINAL;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    env<span class="subst">-&gt;</span>ExceptionClear();</span><br><span class="line">    <span class="attribute">...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>应用启动时，会fork zygote进程，装载class和invoke各种初始化方法，Xposed就是在这个过程替换了app_process，hook各个入口方法，加载XposedBridge.jar提供动态hook基础，具体查看<a href="https://github.com/rovo89/XposedBridge" target="_blank" rel="external">XposedBridge</a>。</p>
+<p>具体的Native实现则是在<a href="https://github.com/rovo89/Xposed/blob/master/libxposed_common.cpp" target="_blank" rel="external">libxposed_common.cpp</a>里面，根据系统版本进行分发到libxposed_dalvik或libxposed_art，记录下原来方法信息，将方法指针指向hookedMethodCallback，从而达到劫持目的。</p>
+<p>此方式只能对JAVA方法做拦截，不支持C方法。如果线上RELEASE版本进行混淆，patch也是一个痛苦事情，反射和内部类、包名和内部类冲突等处理很繁琐。</p>
+<p>针对Xposed<strong>不支持ART</strong>这个事情，现在应该已经解决了，具体移步<a href="https://github.com/rovo89/android_art" target="_blank" rel="external">rovo89/android_art</a>。</p>
+<h2 id="AndFix">AndFix</h2><p>简单来说，主要通过补丁工具，利用注解等，描述其与要打补丁的类和方法的对应关系，之后在应用中，加载并替换方法的信息和指针，从而达到热修复目的。里面的实现可能还涉及到其他的部分，比如Security检查、PATCH覆盖等。</p>
+<p>化繁为简，直接上核心代码，先以ART（不同版本差异不大，以6.0为例）为例：<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">void</span> replace_6_0(JNIEnv* env, jobject src, jobject dest) &#123;</span><br><span class="line">	art<span class="tag">::mirror</span><span class="tag">::ArtMethod</span>* smeth =</span><br><span class="line">			(art<span class="tag">::mirror</span><span class="tag">::ArtMethod</span>*) env<span class="subst">-&gt;</span>FromReflectedMethod(src);</span><br><span class="line"></span><br><span class="line">	art<span class="tag">::mirror</span><span class="tag">::ArtMethod</span>* dmeth =</span><br><span class="line">			(art<span class="tag">::mirror</span><span class="tag">::ArtMethod</span>*) env<span class="subst">-&gt;</span>FromReflectedMethod(dest);</span><br><span class="line"></span><br><span class="line">	dmeth<span class="subst">-&gt;</span>declaring_class_<span class="subst">-&gt;</span>class_loader_ =</span><br><span class="line">			smeth<span class="subst">-&gt;</span>declaring_class_<span class="subst">-&gt;</span>class_loader_; <span class="comment">//for plugin classloader</span></span><br><span class="line">	dmeth<span class="subst">-&gt;</span>declaring_class_<span class="subst">-&gt;</span>clinit_thread_id_ =</span><br><span class="line">			smeth<span class="subst">-&gt;</span>declaring_class_<span class="subst">-&gt;</span>clinit_thread_id_;</span><br><span class="line">	dmeth<span class="subst">-&gt;</span>declaring_class_<span class="subst">-&gt;</span>status_ = smeth<span class="subst">-&gt;</span>declaring_class_<span class="subst">-&gt;</span>status_-<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 修改原方法属性为补丁方法</span></span><br><span class="line">	smeth<span class="subst">-&gt;</span>declaring_class_ = dmeth<span class="subst">-&gt;</span>declaring_class_;</span><br><span class="line">	smeth<span class="subst">-&gt;</span>dex_cache_resolved_types_ = dmeth<span class="subst">-&gt;</span>dex_cache_resolved_types_;</span><br><span class="line">	smeth<span class="subst">-&gt;</span>access_flags_ = dmeth<span class="subst">-&gt;</span>access_flags_;</span><br><span class="line">	smeth<span class="subst">-&gt;</span>dex_cache_resolved_methods_ = dmeth<span class="subst">-&gt;</span>dex_cache_resolved_methods_;</span><br><span class="line">	smeth<span class="subst">-&gt;</span>dex_code_item_offset_ = dmeth<span class="subst">-&gt;</span>dex_code_item_offset_;</span><br><span class="line">	smeth<span class="subst">-&gt;</span>method_index_ = dmeth<span class="subst">-&gt;</span>method_index_;</span><br><span class="line">	smeth<span class="subst">-&gt;</span>dex_method_index_ = dmeth<span class="subst">-&gt;</span>dex_method_index_;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 修改实现指针</span></span><br><span class="line">	smeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_interpreter_ =</span><br><span class="line">			dmeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_interpreter_;</span><br><span class="line"></span><br><span class="line">	smeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_jni_ =</span><br><span class="line">			dmeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_jni_;</span><br><span class="line">	smeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_quick_compiled_code_ =</span><br><span class="line">			dmeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_quick_compiled_code_;</span><br><span class="line"></span><br><span class="line">	LOGD(<span class="string">"replace_6_0: %d , %d"</span>,</span><br><span class="line">			smeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_quick_compiled_code_,</span><br><span class="line">			dmeth<span class="subst">-&gt;</span>ptr_sized_fields_<span class="built_in">.</span>entry_point_from_quick_compiled_code_);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将方法修改为PUBLIC</span></span><br><span class="line"><span class="literal">void</span> setFieldFlag_6_0(JNIEnv* env, jobject field) &#123;</span><br><span class="line">	art<span class="tag">::mirror</span><span class="tag">::ArtField</span>* artField =</span><br><span class="line">			(art<span class="tag">::mirror</span><span class="tag">::ArtField</span>*) env<span class="subst">-&gt;</span>FromReflectedField(field);</span><br><span class="line">	artField<span class="subst">-&gt;</span>access_flags_ = artField<span class="subst">-&gt;</span>access_flags_ <span class="subst">&amp;</span> (~<span class="number">0x0002</span>) | <span class="number">0x0001</span>;</span><br><span class="line">	LOGD(<span class="string">"setFieldFlag_6_0: %d "</span>, artField<span class="subst">-&gt;</span>access_flags_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Dalvik上的实现略有不同，先指向到<code>dalvik_dispatcher</code>，之后在里面进行补丁方法的调用和返回，也就是通过JNI Bridge来指向补丁方法。<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">extern <span class="type">void</span> __attribute__ ((visibility (<span class="string">"hidden"</span>))) dalvik_replaceMethod(</span><br><span class="line">		<span class="type">JNIEnv</span>* env, jobject src, jobject dest) &#123;</span><br><span class="line">	jobject clazz = env-&gt;<span class="type">CallObjectMethod</span>(dest, jClassMethod);</span><br><span class="line">	<span class="type">ClassObject</span>* clz = (<span class="type">ClassObject</span>*) dvmDecodeIndirectRef_fnPtr(</span><br><span class="line">			dvmThreadSelf_fnPtr(), clazz);</span><br><span class="line">	clz-&gt;status = <span class="type">CLASS_INITIALIZED</span>;</span><br><span class="line"></span><br><span class="line">	<span class="type">Method</span>* meth = (<span class="type">Method</span>*) env-&gt;<span class="type">FromReflectedMethod</span>(src);</span><br><span class="line">	<span class="type">Method</span>* target = (<span class="type">Method</span>*) env-&gt;<span class="type">FromReflectedMethod</span>(dest);</span><br><span class="line">	<span class="type">LOGD</span>(<span class="string">"dalvikMethod: %s"</span>, meth-&gt;name);</span><br><span class="line"></span><br><span class="line">	meth-&gt;jniArgInfo = <span class="number">0x80000000</span>;</span><br><span class="line">	meth-&gt;accessFlags |= <span class="type">ACC_NATIVE</span>;</span><br><span class="line"></span><br><span class="line">    // 将目标方法赋值到附带值上</span><br><span class="line">	<span class="type">int</span> argsSize = dvmComputeMethodArgsSize_fnPtr(meth);</span><br><span class="line">	<span class="keyword">if</span> (!dvmIsStaticMethod(meth))</span><br><span class="line">		argsSize++;</span><br><span class="line">	meth-&gt;registersSize = meth-&gt;insSize = argsSize;</span><br><span class="line">	meth-&gt;insns = (<span class="type">void</span>*) target;</span><br><span class="line"></span><br><span class="line">    // 指向本地的dispatcher方法</span><br><span class="line">	meth-&gt;nativeFunc = dalvik_dispatcher;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="type">void</span> dalvik_dispatcher(<span class="keyword">const</span> u4* args, jvalue* pResult,</span><br><span class="line">		<span class="keyword">const</span> <span class="type">Method</span>* <span class="keyword">method</span>, <span class="type">void</span>* self) &#123;</span><br><span class="line">	<span class="type">ClassObject</span>* returnType;</span><br><span class="line">	jvalue <span class="literal">result</span>;</span><br><span class="line">	<span class="type">ArrayObject</span>* argArray;</span><br><span class="line"></span><br><span class="line">	<span class="type">LOGD</span>(<span class="string">"dalvik_dispatcher source method: %s %s"</span>, <span class="keyword">method</span>-&gt;name,</span><br><span class="line">			<span class="keyword">method</span>-&gt;shorty);</span><br><span class="line">	<span class="type">Method</span>* meth = (<span class="type">Method</span>*) <span class="keyword">method</span>-&gt;insns;</span><br><span class="line">	meth-&gt;accessFlags = meth-&gt;accessFlags | <span class="type">ACC_PUBLIC</span>;</span><br><span class="line">	<span class="type">LOGD</span>(<span class="string">"dalvik_dispatcher target method: %s %s"</span>, <span class="keyword">method</span>-&gt;name,</span><br><span class="line">			<span class="keyword">method</span>-&gt;shorty);</span><br><span class="line"></span><br><span class="line">	returnType = dvmGetBoxedReturnType_fnPtr(<span class="keyword">method</span>);</span><br><span class="line">	<span class="keyword">if</span> (returnType == <span class="type">NULL</span>) &#123;</span><br><span class="line">		assert(dvmCheckException_fnPtr(self));</span><br><span class="line">		goto bail;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">LOGD</span>(<span class="string">"dalvik_dispatcher start call-&gt;"</span>);</span><br><span class="line"></span><br><span class="line">    // 是否静态方法</span><br><span class="line">	<span class="keyword">if</span> (!dvmIsStaticMethod(meth)) &#123;</span><br><span class="line">		<span class="type">Object</span>* thisObj = (<span class="type">Object</span>*) args[<span class="number">0</span>];</span><br><span class="line">		<span class="type">ClassObject</span>* tmp = thisObj-&gt;clazz;</span><br><span class="line">		thisObj-&gt;clazz = meth-&gt;clazz;</span><br><span class="line">		argArray = boxMethodArgs(meth, args + <span class="number">1</span>);</span><br><span class="line">		<span class="keyword">if</span> (dvmCheckException_fnPtr(self))</span><br><span class="line">			goto bail;</span><br><span class="line"></span><br><span class="line">        // 调用</span><br><span class="line">		dvmCallMethod_fnPtr(self, (<span class="type">Method</span>*) jInvokeMethod,</span><br><span class="line">				dvmCreateReflectMethodObject_fnPtr(meth), &amp;<span class="literal">result</span>, thisObj,</span><br><span class="line">				argArray);</span><br><span class="line"></span><br><span class="line">		thisObj-&gt;clazz = tmp;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		argArray = boxMethodArgs(meth, args);</span><br><span class="line">		<span class="keyword">if</span> (dvmCheckException_fnPtr(self))</span><br><span class="line">			goto bail;</span><br><span class="line">        // 调用</span><br><span class="line">		dvmCallMethod_fnPtr(self, (<span class="type">Method</span>*) jInvokeMethod,</span><br><span class="line">				dvmCreateReflectMethodObject_fnPtr(meth), &amp;<span class="literal">result</span>, <span class="type">NULL</span>,</span><br><span class="line">				argArray);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (dvmCheckException_fnPtr(self)) &#123;</span><br><span class="line">		<span class="type">Object</span>* excep = dvmGetException_fnPtr(self);</span><br><span class="line">		jni_env-&gt;<span class="type">Throw</span>((jthrowable) excep);</span><br><span class="line">		goto bail;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (returnType-&gt;primitiveType == <span class="type">PRIM_VOID</span>) &#123;</span><br><span class="line">		<span class="type">LOGD</span>(<span class="string">"+++ ignoring return to void"</span>);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="literal">result</span>.l == <span class="type">NULL</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (dvmIsPrimitiveClass(returnType)) &#123;</span><br><span class="line">			jni_env-&gt;<span class="type">ThrowNew</span>(<span class="type">NPEClazz</span>, <span class="string">"null result when primitive expected"</span>);</span><br><span class="line">			goto bail;</span><br><span class="line">		&#125;</span><br><span class="line">		pResult-&gt;l = <span class="type">NULL</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (!dvmUnboxPrimitive_fnPtr(<span class="literal">result</span>.l, returnType, pResult)) &#123;</span><br><span class="line">			<span class="type">char</span> msg[<span class="number">1024</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">			snprintf(msg, sizeof(msg) - <span class="number">1</span>, <span class="string">"%s!=%s\0"</span>,</span><br><span class="line">					((<span class="type">Object</span>*) <span class="literal">result</span>.l)-&gt;clazz-&gt;descriptor,</span><br><span class="line">					returnType-&gt;descriptor);</span><br><span class="line">			jni_env-&gt;<span class="type">ThrowNew</span>(<span class="type">CastEClazz</span>, msg);</span><br><span class="line">			goto bail;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	bail: dvmReleaseTrackedAlloc_fnPtr((<span class="type">Object</span>*) argArray, self);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Multiple_Dex">Multiple Dex</h2><p>Multiple Dex的方案原来是为了突破65535的限制，其就是将多个Dex放到应用的ClassLoader之中，从而使所有的Dex的类都能被找到。实际上，在<code>findClass</code>过程中，如果重复的类，参照下面的类加载的实现，是会使用第一个找到的类。<br><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">Class</span> <span class="title">findClass</span>(<span class="title">String</span> <span class="title">name</span>, <span class="title">List</span>&lt;<span class="title">Throwable</span>&gt; <span class="title">suppressed</span>) &#123;  </span></span><br><span class="line">    <span class="keyword">for</span> (Element element : dexElements) &#123;</span><br><span class="line">        DexFile dex = element.dexFile;</span><br><span class="line">        <span class="keyword">if</span> (dex != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="class"><span class="keyword">Class</span> <span class="title">clazz</span> = <span class="title">dex</span>.<span class="title">loadClassBinaryName</span>(<span class="title">name</span>, <span class="title">definingContext</span>, <span class="title">suppressed</span>);</span></span><br><span class="line">            <span class="keyword">if</span> (clazz != <span class="literal">null</span>) &#123;</span><br><span class="line">              <span class="keyword">return</span> clazz;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (dexElementsSuppressedExceptions != <span class="literal">null</span>) &#123;  </span><br><span class="line">        suppressed.addAll(Arrays.asList(dexElementsSuppressedExceptions));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而方法过多的原因其实也很明显：因为在Dalvik指令集里，调用方法的<code>invoke-kind</code>指令中，method reference index只给了16bits，最多能调用65535个方法，所以在生成Dex文件的过程中，当方法数超过65535就会报错。</p>
+<blockquote>
+<p>This number is significant in that it represents the total number of references that can be invoked by the code within a single Dalvik Executable (dex) bytecode file.</p>
+</blockquote>
+<p>该方法就是从这入手，将问题修复后，放到一个单独的Dex中，通过反射插入到<code>dexElements</code>数组的最前面，完成虚拟机打补丁的操作。</p>
+<p>在此方案中，有一个问题就是，在运行加载类的时候会报<code>preverified</code>错误，在<code>DexPrepare.cpp</code>中，将Dex转化为ODex过程中，会在<code>DexVerify.cpp</code>中进行校验，验证如果直接引用到的类和clazz是否在同一个Dex，如果是则会打上<code>CLASS_ISPREVERIFIED</code>标志。通过在所有类（Application除外，此时还没加载自定义代码）的构造函数中插入一个对在单独Dex类的引用，来解决此问题。在空间中，是使用<code>javaassist</code>进行编译时字节码插入。</p>
+<blockquote>
+<p>当一个apk在安装的时候，apk中的classes.dex会被虚拟机(dexopt)优化成odex文件，然后才会拿去执行。<br>虚拟机在启动的时候，会有许多的启动参数，其中一项就是verify选项，当verify选项被打开的时候，就会执行dvmVerifyClass进行类的校验，如果dvmVerifyClass校验类成功，那么这个类会被打上CLASS_ISPREVERIFIED的标志。<br>怎么样算是校验类成功？如果static方法、private方法、构造函数等，其中的直接引用（第一层关系）到的类都在同一个Dex文件中，那么该类就会被打上CLASS_ISPREVERIFIED标志。<br>我们要做的就是，阻止该类打上CLASS_ISPREVERIFIED的标志。否则加载其他Dex的时候会报错。<br>注意下，是阻止引用者的类，也就是说，假设你的app里面有个类叫做LoadBugClass，再其内部引用了BugClass。发布过程中发现BugClass有编写错误，那么想要发布一个新的BugClass类，那么你就要阻止LoadBugClass这个类打上CLASS_ISPREVERIFIED的标志。<br>你在生成apk之前，就需要阻止相关类打上CLASS_ISPREVERIFIED的标志了。对于如何阻止，可让LoadBugClass在构造方法中，去引用别的dex文件，比如：hack.dex中的某个类即可。<br>空间使用的是在字节码插入代码,而不是源代码插入，使用的是javaassist库来进行字节码插入的。</p>
+</blockquote>
+<p>需要做的两件事：1、动态改变BaseDexClassLoader对象间接引用的dexElements；2、在app打包的时候，阻止相关类去打上CLASS_ISPREVERIFIED标志。</p>
+<p>另外混淆问题，需要保存每个版本的<code>mapping</code>混淆文件，后续编译用相同的<code>mapping</code>文件，保证混淆过后类名始终一致。</p>
+<p>此方式无法在已经加载好的类中实现动态替换，所以需要在类加载之前替换。也就是补丁下载下来之后，需要等待用户重启应用才可完成补丁效果。</p>
+<p>目前开源实现有：<a href="https://github.com/jasonross/Nuwa" target="_blank" rel="external">Nuwa</a>，<a href="https://github.com/dodola/HotFix" target="_blank" rel="external">HotFix</a>，<a href="https://github.com/bunnyblue/DroidFix" target="_blank" rel="external">DroidFix</a>，其各个版本也有做相应的兼容。</p>
+<h1 id="方案对比">方案对比</h1><ol>
+<li>Dexposed方法生成补丁难度较大，需要反射写混淆后的代码，粒度太细，如果替换方法很多的话，工作量巨大。</li>
+<li>AndFix支持2.3 - 6.0系统，但JNI不像JAVA那样标准，所以偶尔会有未知的机型异常。从实现来说，类似Dexposed，通过JNI来替代方法，更加简洁的完成补丁修复，应用PATCH不需要重启。但由于实现上直接跳过了类初始化，设置为初始化完毕，所以静态函数、静态成员、构造函数都会出现问题，复杂的类<code>Class.forName</code>很可能直接崩溃。</li>
+<li>Multiple Dex方案支持2.3 - 6.0系统，对启动速度会有略微影响，而且只能下次启动生效。</li>
+</ol>
+<p>相比而言，Multiple Dex方案较为可靠，但是如果Dex文件较为庞大，启动速度会变慢；而AndFix则适用于应用不重启即可修复，且方法够简单；Dexposed方案较为复杂，暂不考虑。</p>
+<h1 id="REF">REF</h1><p><a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=63&amp;highlight=ClassLoader" target="_blank" rel="external">当dex分包遇上NoClassDefFoundError&amp;ClassNotFoundException</a><br><a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=16" target="_blank" rel="external">让App像Web一样发布新版本</a><br><a href="http://blog.zhaiyifan.cn/2015/11/20/HotPatchCompare/" target="_blank" rel="external">各大热补丁方案分析和比较</a><br><a href="http://my.oschina.net/853294317/blog/308583" target="_blank" rel="external">Android dex分包方案</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&amp;mid=400118620&amp;idx=1&amp;sn=b4fdd5055731290eef12ad0d17f39d4a&amp;scene=1&amp;srcid=1106Imu9ZgwybID13e7y2nEi#wechat_redirect" target="_blank" rel="external">安卓App热补丁动态修复技术介绍</a><br><a href="http://blog.csdn.net/lmj623565791/article/details/49883661" target="_blank" rel="external">Android 热补丁动态修复框架小结</a><br><a href="https://github.com/dodola/HotFix" target="_blank" rel="external">dodola/HotFix: 安卓App热补丁动态修复框架</a><br><a href="http://tech.meituan.com/mt-android-auto-split-dex.html" target="_blank" rel="external">美团Android DEX自动拆包及动态加载简介</a><br><a href="https://m.oschina.net/blog/308583" target="_blank" rel="external">Android dex分包方案</a><br><a href="http://www.gitzx.com/android-inject-hook/" target="_blank" rel="external">Android下的挂钩(hook)和代码注入(inject)</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2016/03/02/Android-HotFix方案/" data-title="Android HotFix方案 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/01/27/调试Android应用/"  title="调试Android应用">
+ <strong>下一篇：</strong><br/> 
+ <span>调试Android应用
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方案揭秘"><span class="toc-number">2.</span> <span class="toc-text">方案揭秘</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dexposed"><span class="toc-number">2.1.</span> <span class="toc-text">Dexposed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AndFix"><span class="toc-number">2.2.</span> <span class="toc-text">AndFix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multiple_Dex"><span class="toc-number">2.3.</span> <span class="toc-text">Multiple Dex</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#方案对比"><span class="toc-number">3.</span> <span class="toc-text">方案对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#REF"><span class="toc-number">4.</span> <span class="toc-text">REF</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Git/" title="Git">Git<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>33</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>17</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

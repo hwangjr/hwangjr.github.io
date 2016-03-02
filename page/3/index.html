@@ -82,6 +82,84 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/18/GitHub-GitBook-Markdown来写一本自己的书/" title="GitHub + GitBook + Markdown来写一本自己的书" itemprop="url">GitHub + GitBook + Markdown来写一本自己的书</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-18T09:32:23.000Z" itemprop="datePublished"> 发表于 2015-08-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>近期想要自己沉淀，而且也有意学习下如何贡献自己的知识，给更多人分享我的所得，所以就萌生自己写一个系列的入门书。<br>本次主要通过GitHub上面来进行源码托管，通过GitBook来进行排版及线上阅读下载等，利用Markdown语法来进行撰写。所以最好有一些GitHub及Markdown使用经验最嘉。</p>
+<h2 id="作案工具准备">作案工具准备</h2><p>很简单：</p>
+<ol>
+<li>GitHub帐号</li>
+<li>GitBook帐号（可利用GitHub帐号登录，也可申请）</li>
+</ol>
+<h3 id="GitHub配置">GitHub配置</h3><p>新建一个repo，比如<a href="https://github.com/hwangjr/simple-android" target="_blank" rel="external">hwangjr/simple-android</a>，ignore可以选择git book，READ ME等自己可以配置。</p>
+<h3 id="GitBook配置">GitBook配置</h3><p>新建一本书籍<a href="https://www.gitbook.com/book/hwangjr/simple-android/welcome" target="_blank" rel="external">简易Android</a>。</p>
+<h4 id="将代码托管到GitHub上">将代码托管到GitHub上</h4><p>点击Settings，选择右侧GitHub，会让你先与你的GitHub帐号进行关联（如果还未进行关联的话），然后设置成你在GitHub上新建的项目即可，即hwangjr/simple-android。</p>
+<h4 id="绑定自定义域名">绑定自定义域名</h4><p>你可以绑定自己的自定义域名来进行解析到你的书籍。<br>1.在GitBook上设置你的域名。<br>点击右侧的Domains设置，即/settings/domains，然后输入你的HomePage及content的domain，这边设置为：<br>For homepage: simple-android.hwangjr.com<br>For content: content.simple-android.hwangjr.com</p>
+<p>2.在域名解析商那边进行解析配置。<br>这里主要以万网解析进行配置，其他配置可参考，大同小异。<br>新增两条解析规则：<br>CNAME   simple-android   默认   www.gitbook.com<br>CNAME   content.simple-android   默认   www.gitbook.com<br>这里需要注意，记录值需要设置为www.gitbook.com，不能设置为gitbook.com等其他。<br>绑定完可以测试下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">nslookup simple-android.hwangjr.com</span><br><span class="line">Server:		<span class="number">192.168</span>.<span class="number">1.1</span></span><br><span class="line">Address:	<span class="number">192.168</span>.<span class="number">1.1</span><span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">simple-android.hwangjr.com	canonical name = www.gitbook.com.</span><br><span class="line">www.gitbook.com	canonical name = saga-<span class="number">4658</span>.herokussl.com.</span><br><span class="line">saga-<span class="number">4658</span>.herokussl.com	canonical name = elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com.</span><br><span class="line">Name:	elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com</span><br><span class="line">Address: <span class="number">54.83</span>.<span class="number">21.67</span></span><br><span class="line">Name:	elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com</span><br><span class="line">Address: <span class="number">54.243</span>.<span class="number">203.15</span></span><br><span class="line">Name:	elb049689-<span class="number">1604000308</span>.us-east-<span class="number">1</span>.elb.amazonaws.com</span><br><span class="line">Address: <span class="number">54.197</span>.<span class="number">223.43</span></span><br></pre></td></tr></table></figure></p>
+<p>具体也可参考：<a href="http://help.gitbook.com/platform/domains.html" target="_blank" rel="external">Custom Domains</a></p>
+<h4 id="GitBook软件安装">GitBook软件安装</h4><p>首先需要Node.js环境，才能安装GitBook软件。简单说明下软件安装。<br>安装Node.js最好用<a href="https://github.com/creationix/nvm" target="_blank" rel="external">creationix/nvm</a>来进行版本管理。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br><span class="line">nvm install <span class="number">0.12</span></span><br><span class="line">nvm use <span class="number">0.12</span></span><br><span class="line">npm install gitbook -g</span><br></pre></td></tr></table></figure></p>
+<p>NPM较慢可以参考：<a href="https://npm.taobao.org/" target="_blank" rel="external">淘宝 NPM 镜像</a><br>之后即可用git book在本地进行书籍调试。</p>
+<h3 id="Markdown配置">Markdown配置</h3><p>Markdown目前一般用stackedit.io进行编写，之后进行同步~也有很多其他的软件，类似MarkdownPad等，都可以进行本地编写，VIM也有相应的Markdown插件。</p>
+<h3 id="总结">总结</h3><p>这里还可以设置书籍主题(/theme)等操作，这里就不详细说明了。<br>接下来就可以用Markdown进行书籍编写了~</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Books/">Books</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Books/">Books</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/18/GitHub-GitBook-Markdown来写一本自己的书/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/12/V8和项目SO库冲突/" title="V8和项目SO库冲突" itemprop="url">V8和项目SO库冲突</a>
   </h1>
   <p class="article-author">By
@@ -1384,70 +1462,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/19/Android-Project-Templete/" title="Android Project Templete" itemprop="url">Android Project Templete</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-19T08:25:20.000Z" itemprop="datePublished"> 发表于 2015-06-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Android更新迭代很快，而公司业务也在不断扩张，需要这个项目模板来帮助我们快速构建新的应用程序。而且Android的库也在不断的更新换代，包括网络请求库、图片库、JSON解析库等，需要我们不断的更新自身的项目结构，与Android系统保持同步更新，在兼容适配等会更有好处。<br>本库包含了通用的网络库、图片库、内存检测库、底部TAB库等，基本满足项目的前期构建。还包括了脚本编译多渠道包等其他功能，具体可以clone下来自己把玩把玩~~<br>如果有任何建议或者意见，随时联系，也可以pull request到分支。<br><a href="https://github.com/hwangjr/AndroidProjectTemplete" target="_blank" rel="external">AndroidProjectTemplete</a><br>目前已经包含的库有：<br>1、appcompat-v7:22.2.0<br>2、<a href="https://github.com/square/retrofit" target="_blank" rel="external">retrofit:1.9.0</a><br>3、<a href="https://github.com/square/okhttp/tree/master/okhttp-urlconnection" target="_blank" rel="external">okhttp-urlconnection:2.4.0</a><br>4、<a href="https://github.com/square/okhttp" target="_blank" rel="external">okhttp:2.4.0</a><br>5、<a href="https://github.com/square/okio" target="_blank" rel="external">okio:1.4.0</a><br>6、<a href="https://github.com/OrangeGangsters/SwipyRefreshLayout" target="_blank" rel="external">swipy:1.2</a><br>7、<a href="https://github.com/wasabeef/recyclerview-animators" target="_blank" rel="external">recyclerview-animators:1.2</a><br>8、support-v4:22.2.0<br>9、<a href="https://github.com/bumptech/glide" target="_blank" rel="external">glide:3.6.0</a><br>10、<a href="https://github.com/square/leakcanary" target="_blank" rel="external">leakcanary-android:1.3.1</a><br>11、<a href="https://github.com/google/gson" target="_blank" rel="external">GSON</a><br>11、自写底部Tab库（解决Fragment嵌套等问题）</p>
-<p>build.gradle:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    compile fileTree(dir: <span class="string">'libs'</span>, include: [<span class="string">'*.jar'</span>])</span><br><span class="line">    compile <span class="string">'com.android.support:appcompat-v7:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.retrofit:retrofit:1.9.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp-urlconnection:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okio:okio:1.4.0'</span></span><br><span class="line">    compile <span class="string">'com.github.orangegangsters:swipy:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'jp.wasabeef:recyclerview-animators:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'com.android.support:support-v4:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.github.bumptech.glide:glide:3.6.0'</span></span><br><span class="line">    debugCompile <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">    releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/19/Android-Project-Templete/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
@@ -1466,7 +1480,7 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/Android/" title="Android">Android<sup>16</sup></a></li>
+			<li><a href="/categories/Android/" title="Android">Android<sup>17</sup></a></li>
 		  
 		
 		  
@@ -1507,11 +1521,11 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>32</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>33</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Android/" title="Android">Android<sup>16</sup></a></li>
+				<li><a href="/tags/Android/" title="Android">Android<sup>17</sup></a></li>
 			
 		
 			
