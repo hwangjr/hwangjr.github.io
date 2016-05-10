@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>CentOS 7 Firewalld Basic Usage | HwangJR&#39;s Blog</title>
+    <title>破解Beyond Compare | HwangJR&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="HwangJR">
     
 
     
-    <meta name="description" content="Introduction about CentOS 7 Firewalld">
+    <meta name="description" content="利用Team ZWT来进行各个版本破解。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS 7 Firewalld Basic Usage">
-<meta property="og:url" content="https://hwangjr.github.io/2015/06/15/CentOS-7-Firewalld-Basic-Usage/index.html">
+<meta property="og:title" content="破解Beyond Compare">
+<meta property="og:url" content="https://hwangjr.github.io/2015/07/13/破解Beyond-Compare/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="Introduction about CentOS 7 Firewalld">
-<meta property="og:updated_time" content="2015-10-13T01:45:06.554Z">
+<meta property="og:description" content="利用Team ZWT来进行各个版本破解。">
+<meta property="og:updated_time" content="2016-05-10T10:24:34.712Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS 7 Firewalld Basic Usage">
-<meta name="twitter:description" content="Introduction about CentOS 7 Firewalld">
+<meta name="twitter:title" content="破解Beyond Compare">
+<meta name="twitter:description" content="利用Team ZWT来进行各个版本破解。">
 <meta name="twitter:creator" content="@HuangJR">
 <link rel="publisher" href="+JianrongHuang">
 
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" title="CentOS 7 Firewalld Basic Usage" itemprop="url">CentOS 7 Firewalld Basic Usage</a>
+      <a href="/2015/07/13/破解Beyond-Compare/" title="破解Beyond Compare" itemprop="url">破解Beyond Compare</a>
   </h1>
   <p class="article-author">By
        
 		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-15T04:13:32.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
+    <time datetime="2015-07-13T10:15:26.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
     
   </p>
 </header>
@@ -97,18 +97,15 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">1.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_Jenkins/Docker_Registry_Service"><span class="toc-number">2.</span> <span class="toc-text">Add Jenkins/Docker Registry Service</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用TIPS"><span class="toc-number">2.</span> <span class="toc-text">使用TIPS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TIPS1"><span class="toc-number">2.1.</span> <span class="toc-text">TIPS1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TIPS2"><span class="toc-number">2.2.</span> <span class="toc-text">TIPS2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TIPS3"><span class="toc-number">2.3.</span> <span class="toc-text">TIPS3</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-number">3.</span> <span class="toc-text">最后</span></a></li></ol>
 		
 		</div>
 		
-		<p>CentOS 7 has change its firewall manager to firewalld, this will discuss about the usage of this tool.<br>Next, i will add a jenkins and a docker registry service.</p>
-<h2 id="Usage">Usage</h2><p>The basic command:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># query port 80</span></span><br><span class="line">firewall-cmd --query-port=<span class="number">80</span>/tcp</span><br><span class="line">iptables -L -n | grep <span class="number">80</span></span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># list all</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line">firewall-cmd --zone=public --list-services</span><br><span class="line">firewall-cmd --list-ports</span><br><span class="line"><span class="comment"># add port</span></span><br><span class="line">firewall-cmd --add-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># help</span></span><br><span class="line">firewall-cmd --help</span><br></pre></td></tr></table></figure></p>
-<h2 id="Add_Jenkins/Docker_Registry_Service">Add Jenkins/Docker Registry Service</h2><p>There is two directory need to focus: /usr/lib/firewalld/, /etc/firewalld. First dir is for lib, second dir is for setup, so let’s do it.<br><strong>STEP 1:</strong><br>Add services to /etc/firewalld/services:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cp service from lib</span></span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/jenkins.xml</span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/docker-registry.xml</span><br></pre></td></tr></table></figure></p>
-<p><strong>STEP 2:</strong><br>Modify services like this:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jenkins.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Jenkins&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Jenkins <span class="keyword">for</span> CI.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"8080"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-registry.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Docker Registry&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Docker Registry <span class="keyword">for</span> manage the images.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"5000"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>STEP 3:</strong><br>Modify the zone config:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/firewalld/zones/public.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;zone&gt;</span><br><span class="line">  &lt;short&gt;Public&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;For use <span class="keyword">in</span> public areas. You <span class="keyword">do</span> not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.&lt;/description&gt;</span><br><span class="line">  &lt;service name=<span class="string">"dhcpv6-client"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"ssh"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"jenkins"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"docker-registry"</span>/&gt;</span><br><span class="line">&lt;/zone&gt;</span><br></pre></td></tr></table></figure></p>
-<p>U also can modify the firewall config: /etc/firewalld/firewalld.conf, like default zone etc..<br><strong>STEP 4:</strong><br>Now, just reload the firewall.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure></p>
-<p>That’s all, enjoy it!</p>
+		<h2 id="背景">背景</h2><p>支持原版<a href="http://www.scootersoftware.com/download.php" target="_blank" rel="external">BCompare</a>！<br>河蟹！！！Linux可以使用Kdiff3～</p>
+<h2 id="使用TIPS">使用TIPS</h2><h3 id="TIPS1">TIPS1</h3><p>在Beyond Compare 3里，整合了资源管理器菜单，可以直接选中两个文件夹进行比较，不用打开软件手动选路径。如果两个文件夹不在同一目录下，也可以分两次选择。</p>
+<h3 id="TIPS2">TIPS2</h3><p>打开比较视图后，点下<code>=？</code>按钮，才会做到真正的逐文件扫描，否则默认情况下是快速比较。</p>
+<h3 id="TIPS3">TIPS3</h3><p>比较完成后，可以设置一个过滤器，过滤不需要合并的文件。比如<code>.git</code>、<code>.svn</code>这类文件的过滤就可以在过滤器里设置。如果你不希望每次做代码合并都设置一次过滤器，只要在左下角选择<code>也更新会话默认值</code>就OK了。</p>
+<h2 id="最后">最后</h2><p>Enjoy it!</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -116,13 +113,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  <a class="article-category-link" href="/categories/tech/">tech</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  <span></span> <a href="/tags/tech/">tech</a>
   </div>
 
 </div>
@@ -131,7 +128,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://hwangjr.github.io/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" data-title="CentOS 7 Firewalld Basic Usage | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="https://hwangjr.github.io/2015/07/13/破解Beyond-Compare/" data-title="破解Beyond Compare | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -145,18 +142,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/06/15/Hexo-Basic-Usage/" title="Hexo Basic Usage">
+ <a href="/2015/07/29/HTML-In-TextView/" title="HTML In TextView">
   <strong>上一篇：</strong><br/>
   <span>
-  Hexo Basic Usage</span>
+  HTML In TextView</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/06/09/hello-world/"  title="Install Jenkins on CentOS 7">
+<a href="/2015/07/13/Android-Fragment-No-View-Found-For-ID-Error/"  title="Android Fragment - No View Found For ID Error">
  <strong>下一篇：</strong><br/> 
- <span>Install Jenkins on CentOS 7
+ <span>Android Fragment - No View Found For ID Error
 </span>
 </a>
 </div>
@@ -177,7 +174,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Usage"><span class="toc-number">1.</span> <span class="toc-text">Usage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_Jenkins/Docker_Registry_Service"><span class="toc-number">2.</span> <span class="toc-text">Add Jenkins/Docker Registry Service</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用TIPS"><span class="toc-number">2.</span> <span class="toc-text">使用TIPS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TIPS1"><span class="toc-number">2.1.</span> <span class="toc-text">TIPS1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TIPS2"><span class="toc-number">2.2.</span> <span class="toc-text">TIPS2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TIPS3"><span class="toc-number">2.3.</span> <span class="toc-text">TIPS3</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-number">3.</span> <span class="toc-text">最后</span></a></li></ol>
  
   </div>
 
