@@ -1,0 +1,612 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>SSH的公钥 | HwangJR&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HwangJR">
+    
+
+    
+    <meta name="description" content="在客户端生成密钥之后，将公钥上传到服务器，即可实现不用密码进行登陆，但是在这个过程中往往会出现问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSH的公钥">
+<meta property="og:url" content="https://hwangjr.github.io/2016/05/10/SSH的公钥/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="在客户端生成密钥之后，将公钥上传到服务器，即可实现不用密码进行登陆，但是在这个过程中往往会出现问题。">
+<meta property="og:updated_time" content="2016-05-10T07:36:25.842Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSH的公钥">
+<meta name="twitter:description" content="在客户端生成密钥之后，将公钥上传到服务器，即可实现不用密码进行登陆，但是在这个过程中往往会出现问题。">
+<meta name="twitter:creator" content="@HuangJR">
+<link rel="publisher" href="+JianrongHuang">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
+				<h2 class="blog-motto">Life is wonderful!</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/10/SSH的公钥/" title="SSH的公钥" itemprop="url">SSH的公钥</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-10T07:36:01.000Z" itemprop="datePublished"> 发表于 2016-05-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打怪兽"><span class="toc-number">2.</span> <span class="toc-text">打怪兽</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#怪兽显形"><span class="toc-number">2.1.</span> <span class="toc-text">怪兽显形</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怪兽跟踪"><span class="toc-number">2.2.</span> <span class="toc-text">怪兽跟踪</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一步，gitolite"><span class="toc-number">2.2.1.</span> <span class="toc-text">第一步，gitolite</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二步，ssh配置"><span class="toc-number">2.2.2.</span> <span class="toc-text">第二步，ssh配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三步，大招"><span class="toc-number">2.2.3.</span> <span class="toc-text">第三步，大招</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">2.3.</span> <span class="toc-text">解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">2.4.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#后记"><span class="toc-number">3.</span> <span class="toc-text">后记</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#REF"><span class="toc-number">4.</span> <span class="toc-text">REF</span></a></li></ol>
+		
+		</div>
+		
+		<h1 id="背景">背景</h1><p>在开发中，经常在客户端生成密钥和公钥（<code>ssh-keygen -t rsa</code>），将生成的公钥内容追加到服务器的<code>~/.ssh/authorized_keys</code>文件中，并重新加载服务器sshd服务。其中<code>gitolite</code>就是使用这种机制。但是我们在配置时候，经常会遇到问题，配置完成之后，还需要输入密码，下面针对这个问题，进行分析排查。</p>
+<h1 id="打怪兽">打怪兽</h1><h2 id="怪兽显形">怪兽显形</h2><p>还记得年轻时候，搭建了个<code>gitolite</code>服务，近期新配了本本，安装<code>openSUSE</code>系统，在原来<code>Ubuntu</code>上拷贝密钥到新本本发现无法正常clone，需要输入密码，由此展开一场惊心动魄的排查战争。</p>
+<h2 id="怪兽跟踪">怪兽跟踪</h2><h3 id="第一步，gitolite">第一步，<code>gitolite</code></h3><p>由于是在<code>gitolite</code>上引起的错误，自然而然谷歌关于<code>gitolite</code>相关帖子，发现内容内容针对性不多，而且大部分是权限。仔细再次阅读<code>gitolite</code>的<code>readme</code>，会发现其实是通过在<code>~/.ssh/authorized_keys</code>里面加入公钥来达到通信，那么简单，应该就是<code>ssh</code>连接出现问题了。</p>
+<p>在此期间发现<a href="http://gitolite.com/gitolite/sts.html#stsapp1" target="_blank" rel="external">ssh troubleshooting and tips</a>：</p>
+<blockquote>
+<p>This is a quick checklist:</p>
+<ul>
+<li><p>Make sure you’re being asked for a password and not a passphrase. Do not confuse or mistake a prompt saying <code>Enter passphrase for key &#39;/home/sitaram/.ssh/id_rsa&#39;:</code> for a password prompt from the remote server!<br>When you create an ssh keypair using <code>ssh-keygen</code>, you have the option of protecting it with a passphrase. When you subsequently use that keypair to access a remote host, your local ssh client needs to unlock the corresponding private key, and ssh will probably ask for the passphrase you set when you created the keypair.<br>You have two choices to avoid this prompt every time you try to use the private key. The first is to create keypairs without a passphrase (just hit enter when prompted for one). <strong>Be sure to add a passphrase later, once everything is working, using <code>ssh-keygen -p</code></strong>.<br>The second is to use <code>ssh-agent</code> (or <code>keychain</code>, which in turn uses <code>ssh-agent</code>) or something like that to manage your keys. Other than discussing one more potential trouble-spot with ssh-agent (see below), further discussion of ssh-agent/keychain is out of scope of this page.</p>
+</li>
+<li><p>Ssh is very sensitive to permissions. An extremely conservative setup is given below, but be sure to do this on <strong>both the client and the server</strong>:</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; cd <span class="variable">$HOME</span></span><br><span class="line">&gt; chmod go-rwx .</span><br><span class="line">&gt; chmod -R go-rwx .ssh</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Actually, every component of the path to <code>~/.ssh/authorized_keys</code> all the way upto the root directory must be at least <code>chmod go-w</code>. So be sure to check <code>/</code> and <code>/home</code> also.</p>
+</li>
+<li>While you’re doing this, make sure the owner and group info for each of these components are correct. <code>ls -ald ~ ~/.ssh ~/.ssh/authorized_keys</code> will tell you what they are.</li>
+<li>You may also want to check <code>/etc/ssh/sshd_config</code> to see if the “git” user is allowed to login at all. For example, if that file contains an <code>AllowUsers</code> config entry, then only users mentioned in that line are allowed to log in!</li>
+<li>While you’re in there, check that file does NOT have a setting for <code>AuthorizedKeysFile</code>. See <code>man sshd_config</code> for details. This setting is a show stopper for gitolite to use ssh.</li>
+<li>Some OSs/distributions require that the “git” user should have a password and/or not be a locked account. You may want to check that as well.</li>
+<li>If your server is running SELinux, and you install gitolite to <code>/var/gitolite</code> or another location unsupported by default SELinux policies, then SELinux will prevent sshd from reading <code>.ssh/authorized_keys</code>. Consider installing gitolite to <code>/var/lib/gitolite</code>, which is a supported location by default SELinux policies.</li>
+<li>If all that fails, log onto the server as root, <code>cd /var/log</code>, and look for a file called <code>auth.log</code> or <code>secure</code> or some such name. Look inside this file for messages matching the approximate time of your last attempt to login, to see if they tell you what is the problem.</li>
+</ul>
+</blockquote>
+<h3 id="第二步，ssh配置">第二步，<code>ssh</code>配置</h3><p>在此期间做了几件事：</p>
+<ul>
+<li>在<code>openSUSE</code>上安装虚拟机<code>Ubuntu</code>并进行<code>clone</code>，发现正常</li>
+<li>在<code>openSUSE</code>上生成密钥，并拷贝到<code>Ubuntu</code>上，发现正常</li>
+</ul>
+<p>由此判断，问题在<code>openSUSE</code>系统配置上，检查<code>/etc/ssh/ssh_config</code>文件配置，并与<code>Ubuntu</code>配置进行判断，并没有发现特殊配置，且修改为一致也无法解决此问题。</p>
+<p>进行大规模尝试，包括将<code>.ssh</code>权限修改为<code>0700</code>，<code>authorized_keys</code>和<code>id_rsa.pub</code>权限修改为<code>0644</code>，<code>id_rsa</code>为<code>0600</code>，但是不是权限问题。<br>进行排查是否是群组权限问题，通过修改用户群组，并未发现问题。</p>
+<h3 id="第三步，大招">第三步，大招</h3><p>经过上面进行解决之后，均无法发现问题，陷入疑惑，并进行咨询，排查信息。因为<code>gitolite</code>其实也是通过<code>ssh</code>来进行验证，那么其实是可以通过下面代码来进行验证并查看记录：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh -vvt git@xxx<span class="class">.xxx</span><span class="class">.xxx</span><span class="class">.xxx</span></span><br><span class="line">ssh -v git@xxx<span class="class">.xxx</span><span class="class">.xxx</span><span class="class">.xxx</span></span><br></pre></td></tr></table></figure></p>
+<p>排查发现，会默认寻找<code>id_rsa</code>进行公钥验证，而在ubuntu上，会对公钥进行轮询并进行验证，在<code>openSUSE</code>上将密钥修改为<code>id_rsa</code>成功！</p>
+<p><strong>原来是这个基本问题，被自己蠢哭了！！！</strong></p>
+<h2 id="解决">解决</h2><p>简单处理，新增<code>~/.ssh/config</code>文件，并针对各个key进行配置，上配置模板。<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Host github.com  <span class="comment">##主机别名</span></span><br><span class="line">    Hostname github.com  <span class="comment">##主机真实地址</span></span><br><span class="line">    PreferredAuthentications publickey</span><br><span class="line">    IdentityFile ~/.ssh/git/tudouya_id_rsa</span><br><span class="line">    <span class="built_in">User</span> <span class="built_in">user</span></span><br><span class="line">    Port port</span><br></pre></td></tr></table></figure></p>
+<p>或者使用<code>ssh-agent</code>来解决。</p>
+<h2 id="配置">配置</h2><p><code>ssh</code>配置文件为<code>/etc/ssh/ssh_config</code>，<code>sshd</code>配置<code>/etc/ssh/sshd_config</code>，参数配置：</p>
+<p><strong>Port 22 </strong><br>“Port”设置sshd监听的端口号。</p>
+<p><strong>ListenAddress 192.168.1.1 </strong><br>“ListenAddress”设置sshd服务器绑定的IP地址。</p>
+<p><strong>HostKey /etc/ssh/ssh_host_key</strong><br>“HostKey”设置包含计算机私人密匙的文件。</p>
+<p><strong>ServerKeyBits 1024 </strong><br>“ServerKeyBits”定义服务器密匙的位数。</p>
+<p><strong>LoginGraceTime 600 </strong><br>“LoginGraceTime”设置如果用户不能成功登录，在切断连接之前服务器需要等待的时间（以秒为单位）。</p>
+<p><strong>KeyRegenerationInterval 3600 </strong><br>“KeyRegenerationInterval”设置在多少秒之后自动重新生成服务器的密匙（如果使用密匙）。重新生成密匙是为了防止用盗用的密匙解密被截获的信息。</p>
+<p><strong>PermitRootLogin no </strong><br>“PermitRootLogin”设置root能不能用ssh登录。这个选项一定不要设成“yes”。</p>
+<p><strong>IgnoreRhosts yes </strong><br>“IgnoreRhosts”设置验证的时候是否使用“rhosts”和“shosts”文件。</p>
+<p><strong>IgnoreUserKnownHosts yes </strong><br>“IgnoreUserKnownHosts”设置ssh daemon是否在进行RhostsRSAAuthentication安全验证的时候忽略用户的“$HOME/.ssh/known_hosts”</p>
+<p><strong>StrictModes yes </strong><br>“StrictModes”设置ssh在接收登录请求之前是否检查用户家目录和rhosts文件的权限和所有权。这通常是必要的，因为新手经常会把自己的目录和文件设成任何人都有写权限。</p>
+<p><strong>X11Forwarding no </strong><br>“X11Forwarding”设置是否允许X11转发。</p>
+<p><strong>PrintMotd yes </strong><br>“PrintMotd”设置sshd是否在用户登录的时候显示“/etc/motd”中的信息。</p>
+<p><strong>SyslogFacility AUTH </strong><br>“SyslogFacility”设置在记录来自sshd的消息的时候，是否给出“facility code”。</p>
+<p><strong>LogLevel INFO </strong><br>“LogLevel”设置记录sshd日志消息的层次。INFO是一个好的选择。查看sshd的man帮助页，已获取更多的信息。</p>
+<p><strong>RhostsAuthentication no </strong><br>“RhostsAuthentication”设置只用rhosts或“/etc/hosts.equiv”进行安全验证是否已经足够了。</p>
+<p><strong>RhostsRSAAuthentication no </strong><br>“RhostsRSA”设置是否允许用rhosts或“/etc/hosts.equiv”加上RSA进行安全验证。</p>
+<p><strong>RSAAuthentication yes </strong><br>“RSAAuthentication”设置是否允许只有RSA安全验证。</p>
+<p><strong>PasswordAuthentication yes </strong><br>“PasswordAuthentication”设置是否允许口令验证。</p>
+<p><strong>PermitEmptyPasswords no </strong><br>“PermitEmptyPasswords”设置是否允许用口令为空的帐号登录。</p>
+<p><strong>AllowUsers admin </strong><br>“AllowUsers”的后面可以跟着任意的数量的用户名的匹配串（patterns）或user@host这样的匹配串，这些字符串用空格隔开。主机名可以是DNS名或IP地址。</p>
+<h1 id="后记">后记</h1><p><code>SSH</code>是很强大而安全的工具，使用它，了解它，完成各种任务！！！</p>
+<h1 id="REF">REF</h1><p><a href="http://gitolite.com/gitolite/sts.html#stsapp1" target="_blank" rel="external">ssh troubleshooting and tips</a><br><a href="http://www.robotgoblin.co.uk/blog/2012/07/24/managing-multiple-ssh-keys/" target="_blank" rel="external">Managing Multiple SSH Keys » Robot Goblin</a><br><a href="http://www.ibm.com/developerworks/cn/aix/library/au-sshsecurity/" target="_blank" rel="external">SSH 安全性和配置入门</a><br><a href="https://ruby-china.org/topics/14182" target="_blank" rel="external">SSH 上传公钥到服务器后还需要密码 » 社区 » Ruby China</a><br><a href="http://www.php101.cn/2014/10/12/%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90ssh-key%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AAssh-key/" target="_blank" rel="external">如何生成ssh key以及使用多个ssh key | php101</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://hwangjr.github.io/2016/05/10/SSH的公钥/" data-title="SSH的公钥 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/05/10/AI-Appreciative-Inquiry-欣赏式探询-初探/" title="AI(Appreciative Inquiry / 欣赏式探询) 初探">
+  <strong>上一篇：</strong><br/>
+  <span>
+  AI(Appreciative Inquiry / 欣赏式探询) 初探</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/05/10/XMind-In-OpenSUSE/"  title="XMind In OpenSUSE">
+ <strong>下一篇：</strong><br/> 
+ <span>XMind In OpenSUSE
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打怪兽"><span class="toc-number">2.</span> <span class="toc-text">打怪兽</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#怪兽显形"><span class="toc-number">2.1.</span> <span class="toc-text">怪兽显形</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怪兽跟踪"><span class="toc-number">2.2.</span> <span class="toc-text">怪兽跟踪</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一步，gitolite"><span class="toc-number">2.2.1.</span> <span class="toc-text">第一步，gitolite</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二步，ssh配置"><span class="toc-number">2.2.2.</span> <span class="toc-text">第二步，ssh配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三步，大招"><span class="toc-number">2.2.3.</span> <span class="toc-text">第三步，大招</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">2.3.</span> <span class="toc-text">解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">2.4.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#后记"><span class="toc-number">3.</span> <span class="toc-text">后记</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#REF"><span class="toc-number">4.</span> <span class="toc-text">REF</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/AI/" title="AI">AI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Android/" title="Android">Android<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Git/" title="Git">Git<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/tech/" title="tech">tech<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android/" title="Android">Android<sup>17</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Git/" title="Git">Git<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scrum/" title="scrum">scrum<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AI/" title="AI">AI<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, Welcome to my blog. <br/>
+			I&#39;m HwangJR, Tech change the world.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
+		
+		
+		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		
+		
+		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
+		
+		
+		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript">
+
+var disqus_shortname = 'HwangJR';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '6e8f6d9aa88722365432'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

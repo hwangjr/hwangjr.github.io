@@ -82,6 +82,184 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/07/10/Android-ToolBar-Widget-Usage/" title="Android ToolBar Widget Usage" itemprop="url">Android ToolBar Widget Usage</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-10T08:03:39.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="背景">背景</h2><p>从2014年Google I/O大会发表了Material Design之后，其也开始陆陆续续更新了Android APP的界面设计接口，在ActionBar之后，Android在support library里面也提供了更多的API给开发者使用。在Material Design之中有一个名称为App Bar，用来取代过去的Action Bar控件，本篇就以此为引，为大家介绍下Tool Bar的使用和自定义。<br>在推出Material Design之后，官方在某些方面也感觉到ActionBar限制了应用开发的弹性，接下来，将分为基本用法、自定义控件及针对ToolBar的总结，为大家介绍下这个控件。</p>
+<h2 id="基本用法">基本用法</h2><p>ToolBar已经集成在V7支持包中，要使用也相对较为简单，基本可分为三步：</p>
+<ol>
+<li>新增ToolBar样式</li>
+<li>XML布局中新增ToolBar</li>
+<li>在程序中替代ActionBar</li>
+</ol>
+<h3 id="一、新增ToolBar样式">一、新增ToolBar样式</h3><p>在低版本中，我们需要禁用windowActionBar及window title，在V21以上（5.0以上）可不用。<br>value/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Base application theme. --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"AppTheme.Base"</span>&gt;</span><span class="css"></span><br><span class="line">  </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme.Base"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat"</span>&gt;</span><span class="css"></span><br><span class="line">    &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">windowActionBar</span>"&gt;<span class="tag">false</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line">    &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">windowNoTitle<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line">  </span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在新版本中，也可直接继承自Theme.AppCompat.NoActionBar。<br>values-v21/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"AppTheme.Base"</span>&gt;</span><span class="css"></span><br><span class="line">    </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="二、XML布局中新增ToolBar">二、XML布局中新增ToolBar</h3><p>新增布局文件toolbar_actionbar.xml文件：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.v7.widget.Toolbar</span></span><br><span class="line">    <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_actionbar"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"?actionBarSize"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@null"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>之后，在主XML布局文件中，即可以include方式集成：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">include</span> <span class="attribute">layout</span>=<span class="value">"@layout/toolbar_actionbar"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在使用过程中，也可自定义样式，比如text appearance等，增加对ToolBar的定制。</p>
+<h3 id="三、程序中替代ActionBar">三、程序中替代ActionBar</h3><p>关键代码只有一行，即替代原有目前的ActionBar。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mActionBarToolbar = (Toolbar) activity.findViewById(R.id.toolbar_actionbar);</span><br><span class="line">setSupportActionBar(mActionBarToolbar);</span><br></pre></td></tr></table></figure></p>
+<p>之后，即可使用mActionBarToolBar进行操作，比如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mActionBarToolbar.setTitle();</span><br><span class="line">mActionBarToolbar.setSubtitle();</span><br><span class="line">mActionBarToolbar.setNavigationIcon()</span><br><span class="line">mActionBarToolbar.setLogo()</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h3 id="四、单独使用而不与ActionBar进行关联">四、单独使用而不与ActionBar进行关联</h3><p>在前一节中设置与ActionBar进行关联，如果不进行关联也是可以使用。即执行方法：setSupportActionBar，那么Menu的操作也不用在onCreateOptionsMenu方法，直接使用ToolBar的inflateMenu方法，Menu的事件也是独立的，需要通过设置ToolBar的setOnMenuItemClickListener来实现。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">toolbar.setOnMenuItemClickListener(<span class="keyword">new</span> Toolbar.OnMenuItemClickListener() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onMenuItemClick</span><span class="params">(MenuItem menuItem)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> id = menuItem.getItemId();</span><br><span class="line">        <span class="keyword">if</span> (id == R.id.action_add_new_item) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h2 id="自定义ToolBar">自定义ToolBar</h2><p>自定义ToolBar我们将从配色开始，到自定义我们的布局，比如Title居中等要求。</p>
+<ol>
+<li>自定义配色</li>
+<li>ToolBar控件</li>
+<li>自定义布局</li>
+</ol>
+<h3 id="一、自定义配色">一、自定义配色</h3><p>基本分为四块配色：<br>1、状态栏底色（看电量时间的那栏）：在style中设置主题的colorPrimaryDark属性<br>2、AppBar底色（应用栏）：分为两种，一个是ActionBar的话，在style中设置主题的colorPrimary属性；第二个是如果使用Tool Bar的话，直接设置ToolBar的background属性。<br>3、主窗口底色（就是我们AppBar下方的应用界面）：style设置主题windowBackground属性。<br>4、导航列底色：在V 21之后，在应用底部有新增导航列，即左右切换等快捷操作。在values-v21/style中设置主题的navigationBarColor属性。<br>values/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme.Base"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat"</span>&gt;</span><span class="css"></span><br><span class="line">  &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">windowActionBar</span>"&gt;<span class="tag">false</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line">  &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">windowNoTitle<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line"> </span><br><span class="line">  &lt;!-- Actionbar color --&gt;</span><br><span class="line">  &lt;item name="</span>colorPrimary<span class="string">"&gt;@color/accent_material_dark&lt;/item&gt;</span><br><span class="line">  &lt;!--Status bar color--&gt;</span><br><span class="line">  &lt;item name="</span>colorPrimaryDark<span class="string">"&gt;@color/accent_material_light&lt;/item&gt;</span><br><span class="line">  &lt;!--Window color--&gt;</span><br><span class="line">  &lt;item name="</span>android:windowBackground<span class="string">"&gt;@color/dim_foreground_material_dark&lt;/item&gt;</span><br><span class="line"></span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>values-v21/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"AppTheme.Base"</span>&gt;</span><span class="css"></span><br><span class="line">  &lt;!<span class="tag">--Navigation</span> <span class="tag">bar</span> <span class="tag">color--</span>&gt;</span><br><span class="line">  &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">navigationBarColor<span class="string">"&gt;@color/accent_material_light&lt;/item&gt;</span><br><span class="line"></span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Tool Bar背景色：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.v7.widget.Toolbar</span></span><br><span class="line">  <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_actionbar"</span></span><br><span class="line">  <span class="attribute">android:layout_height</span>=<span class="value">"?attr/actionBarSize"</span></span><br><span class="line">  <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">  <span class="attribute">android:background</span>=<span class="value">"?attr/colorPrimary"</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">android.support.v7.widget.Toolbar</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="二、ToolBar控件">二、ToolBar控件</h3><p>从做到右依次为：<br>Icon —- Logo —- Title —- —- —- —- Menu</p>
+<ol>
+<li>Icon：设置向上的图标，即在二级页面时候，返回上级图标，调用setNavigationIcon方法设置，在Material Design上，新的向上图标也有别于ActionBar。</li>
+<li>Logo：应用的LOGO，setLogo方法。</li>
+<li>Title：标题，调用setTitle方法。还有副标题可设置，setSubtitle方法。</li>
+<li>Menu：设置菜单按钮及事件，setOnMenuItemClickListener方法。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);</span><br><span class="line"><span class="comment">// App Logo</span></span><br><span class="line">toolbar.setLogo(R.drawable.ic_launcher);</span><br><span class="line"><span class="comment">// Title</span></span><br><span class="line">toolbar.setTitle(<span class="string">"My Title"</span>);</span><br><span class="line"><span class="comment">// Sub Title</span></span><br><span class="line">toolbar.setSubtitle(<span class="string">"Sub title"</span>);</span><br><span class="line">setSupportActionBar(toolbar);</span><br><span class="line"><span class="comment">// Navigation Icon 设置需要在设置完 setSupoortActionBar 之后</span></span><br><span class="line"><span class="comment">// 否则会出现 back button</span></span><br><span class="line">toolbar.setNavigationIcon(R.drawable.ab_android);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Menu的设置也很简单：<br>首先设置menu.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">menu</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">      <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">      <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">      <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/action_edit"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"@string/action_edit"</span></span><br><span class="line">        <span class="attribute">android:orderInCategory</span>=<span class="value">"80"</span></span><br><span class="line">        <span class="attribute">android:icon</span>=<span class="value">"@drawable/ab_edit"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"ifRoom"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/action_share"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"@string/action_edit"</span></span><br><span class="line">        <span class="attribute">android:orderInCategory</span>=<span class="value">"90"</span></span><br><span class="line">        <span class="attribute">android:icon</span>=<span class="value">"@drawable/ab_share"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"ifRoom"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/action_settings"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"@string/action_settings"</span></span><br><span class="line">        <span class="attribute">android:orderInCategory</span>=<span class="value">"100"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"never"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">menu</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>其次代码中设置监听：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Toolbar.OnMenuItemClickListener onMenuItemClick = <span class="keyword">new</span> Toolbar.OnMenuItemClickListener() &#123;</span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onMenuItemClick</span><span class="params">(MenuItem menuItem)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (menuItem.getItemId()) &#123;</span><br><span class="line">      <span class="keyword">case</span> R.id.action_edit:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> R.id.action_share:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> R.id.action_settings:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Menu item click 的监听事件要在设置完 setSupportActionBar 之后才可以</span></span><br><span class="line">toolbar.setOnMenuItemClickListener(onMenuItemClick);</span><br></pre></td></tr></table></figure></p>
+<h3 id="三、自定义布局">三、自定义布局</h3><p>如果想将title修改为居中，此时系统自带的ToolBar的setTitle已经无法满足我们的需求了，此时需要自定义ToolBar布局及控件。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.v7.widget.Toolbar</span></span><br><span class="line">    <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_actionbar"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"?actionBarSize"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@null"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_title"</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/TextAppearance.AppCompat.Widget.ActionBar.Title"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_gravity</span>=<span class="value">"center"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">android.support.v7.widget.Toolbar</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>重载setContentView(int resid)方法，并调用此方法，需要注意的是，因为我们使用自己的title视图，所以需要禁用系统的title显示，也就是setDisplayShowTitleEnabled方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Toolbar <span class="title">getActionBarToolbar</span><span class="params">(AppCompatActivity activity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mActionBarToolbar == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mActionBarToolbar = (Toolbar) activity.findViewById(R.id.toolbar_actionbar);</span><br><span class="line">        mTitleView = (TextView) mActionBarToolbar.findViewById(R.id.toolbar_title);</span><br><span class="line">        <span class="keyword">if</span> (mActionBarToolbar != <span class="keyword">null</span>) &#123;</span><br><span class="line">            activity.setSupportActionBar(mActionBarToolbar);</span><br><span class="line">            <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">                activity.getSupportActionBar().setDisplayShowTitleEnabled(<span class="keyword">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mActionBarToolbar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后，我们需要设置标题联动，这里可以使用activity里面的一个onTitleChanged监听，这个监听在Activity的onPostCreate和setTitle方法都会调用，在Fragment切换时候，也可以很方便的调用getActivity().setTitle()即可修改标题栏。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onTitleChanged</span><span class="params">(CharSequence title, <span class="keyword">int</span> color)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onTitleChanged(title, color);</span><br><span class="line">    <span class="keyword">if</span>(mToolBarHelper != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mToolBarHelper.setTitle(title);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>附带上所有java代码：<br>activity中代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentView</span><span class="params">(<span class="keyword">int</span> layoutResID)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.setContentView(layoutResID);</span><br><span class="line">    mToolBarHelper = <span class="keyword">new</span> ToolBarHelper();</span><br><span class="line">    mToolBarHelper.getActionBarToolbar(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> ToolBarHelper <span class="title">getToolBarHelper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mToolBarHelper;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onTitleChanged</span><span class="params">(CharSequence title, <span class="keyword">int</span> color)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onTitleChanged(title, color);</span><br><span class="line">    <span class="keyword">if</span>(mToolBarHelper != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mToolBarHelper.setTitle(title);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ToolBarHelper.java代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ToolBarHelper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Toolbar mActionBarToolbar;</span><br><span class="line">    <span class="keyword">private</span> TextView mTitleView;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Toolbar <span class="title">getActionBarToolbar</span><span class="params">(AppCompatActivity activity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mActionBarToolbar == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mActionBarToolbar = (Toolbar) activity.findViewById(R.id.toolbar_actionbar);</span><br><span class="line">            mTitleView = (TextView) mActionBarToolbar.findViewById(R.id.toolbar_title);</span><br><span class="line">            <span class="keyword">if</span> (mActionBarToolbar != <span class="keyword">null</span>) &#123;</span><br><span class="line">                activity.setSupportActionBar(mActionBarToolbar);</span><br><span class="line">                <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    activity.getSupportActionBar().setDisplayShowTitleEnabled(<span class="keyword">false</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mActionBarToolbar;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(<span class="keyword">int</span> resid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mTitleView.setText(resid);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(CharSequence title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mTitleView.setText(title);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="结语">结语</h2><p>相比而言，ToolBar比ActionBar改进很多，而且其易用性方面也有很大提高，我们也可以不用再自己手动去制作应用标题了。</p>
+<h2 id="Ref">Ref</h2><p><a href="http://angeldevil.me/2014/12/24/toolbar-as-actionbar-and-centered-title/" target="_blank" rel="external">Toolbar作为ActionBar与标题居中</a><br><a href="http://developer.android.com/intl/zh-cn/reference/android/support/v7/widget/Toolbar.html" target="_blank" rel="external">Class Toolbar</a><br><a href="http://blog.mosil.biz/2014/10/android-toolbar/" target="_blank" rel="external">ANDROID-TOOLBAR STEP BY STEP</a><br><a href="http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html" target="_blank" rel="external">Material Design for Pre-Lollipop Devices</a><br><a href="http://www.google.com/design/spec/layout/structure.html#structure-app-bar" target="_blank" rel="external">structure-app-bar</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/10/Android-ToolBar-Widget-Usage/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/08/Android-Studio-With-SVN/" title="Android Studio With SVN" itemprop="url">Android Studio With SVN</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-08T12:17:08.000Z" itemprop="datePublished"> 发表于 2015-07-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="环境">环境</h2><p>系统使用Ubuntu 12.04，SVN版本1.8.8，AS使用最新稳定1.2.2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">svn, version <span class="number">1.8</span>.<span class="number">8</span> (r1568071)</span><br><span class="line">   compiled Aug <span class="number">13</span> <span class="number">2014</span>, <span class="number">17</span>:<span class="number">12</span>:<span class="number">39</span> on x86_64-pc-linux-gnu</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置AS">配置AS</h2><p>配置AS很简单。<br>1、配置SVN执行目录：<br>File -&gt; Settings -&gt; Version Control -&gt; Subversion -&gt; General Tab里面的Use command line client，如果你已经安装SVN，AS应该默认是配置好的。<br>2、上传你的文件到SVN：<br>VCS -&gt; Import into Version Control -&gt; Import into Subversion…之后就可在线上版本查看到文件已经同步。<br>3、为项目新增SVN管理：<br>VCS -&gt; Enable Version Control Integration… 简单配置，即可在面板上有UP和CI等版本操作的图标。<br>至此，AS配置完成。</p>
+<h2 id="设置SVN_IGNORE">设置SVN IGNORE</h2><p>一直不知道SVN如何设置忽略命令，网上看的很多都是不准确或者理解有偏差。<br>1、设置全局忽略文件列表：<br>编辑~/.subversion/config文件，修改此文件中的global-ignores，里面也有提供实例。<br>当然，如果你想修改所有用户的ignore，文件目录在/etc/subversion/config。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo</span></span><br><span class="line"><span class="comment">#   *.rej *~ #*# .#* .*.swp .DS_Store</span></span><br></pre></td></tr></table></figure></p>
+<p>2、设置某目录svn ignore：<br>关键是使用svn的property set命令，此命令不可递归，只能设置当前目录下的ignore规则。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore path</span><br><span class="line"><span class="comment"># svn propedit svn:ignore path</span></span><br><span class="line">svn pd svn:ignore path</span><br><span class="line"><span class="comment"># svn propdel svn:ignore path</span></span><br><span class="line">svn ps svn:ignore path</span><br><span class="line"><span class="comment"># svn propset svn:ignore path</span></span><br></pre></td></tr></table></figure></p>
+<p>如果当前目录结构为：<br>.<br>|<br>|-Android<br>|   |<br>|   - trunk<br>|   - branches<br>|   - tags<br>|-iOS<br>想要过滤trunk目录下某些文件或目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore Android/trunk</span><br></pre></td></tr></table></figure></p>
+<p>之后会打开编辑窗口，输入下方文件即可：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
+<p>附带完整svn ignore命令（svn st命令，可以查看当前状态）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> project-path</span><br><span class="line">svn pe Android/trunk</span><br><span class="line">svn pe Android/trunk/.idea</span><br><span class="line">svn pe Android/trunk/app</span><br></pre></td></tr></table></figure></p>
+<p>Android/trunk的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
+<p>Android/trunk/.idea下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workspace.xml</span><br><span class="line">libraries</span><br></pre></td></tr></table></figure></p>
+<p>Android/trunk/app下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build</span><br></pre></td></tr></table></figure></p>
+<p>设置完成，使用svn ci -m ‘ignore files’即可。<br>附带.ignore文件为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Built application files</span></span><br><span class="line">*.apk</span><br><span class="line">*.ap_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Files for the Dalvik VM</span></span><br><span class="line">*.dex</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java class files</span></span><br><span class="line">*.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generated files</span></span><br><span class="line">bin/</span><br><span class="line">gen/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Gradle files</span></span><br><span class="line">.gradle/</span><br><span class="line">build/</span><br><span class="line">/*/build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local configuration file (sdk path, etc)</span></span><br><span class="line">local.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># Proguard folder generated by Eclipse</span></span><br><span class="line">proguard/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Log Files</span></span><br><span class="line">*.log</span><br><span class="line"></span><br><span class="line">/.idea/workspace.xml</span><br><span class="line">/.idea/libraries</span><br><span class="line">.DS_Store</span><br><span class="line">/capture</span><br></pre></td></tr></table></figure></p>
+<p>附带命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn <span class="built_in">export</span> dir dir_bak</span><br><span class="line">svn rm dir</span><br><span class="line">svn commit -m <span class="string">'delete dir'</span></span><br><span class="line">mv dir-bak dir</span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile1</span><br><span class="line">ignorefile2</span><br><span class="line">ignorefile3'</span> dir</span><br></pre></td></tr></table></figure></p>
+<h2 id="SVN常用命令">SVN常用命令</h2><p>Show The Code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">svn co svn://xxx</span><br><span class="line">svn checkout svn://</span><br><span class="line">svn <span class="built_in">export</span> [-r version] svn://</span><br><span class="line">svn add file</span><br><span class="line">svn commit -m <span class="string">''</span></span><br><span class="line">svn ci -m <span class="string">''</span></span><br><span class="line">svn up</span><br><span class="line">svn update</span><br><span class="line">svn update -r <span class="number">200</span> file</span><br><span class="line">svn delete svn:// -m <span class="string">''</span></span><br><span class="line">svn delete file</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android/">Android</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/08/Android-Studio-With-SVN/#disqus_thread" class="comments-count-link">Comments</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/06/19/Android-Project-Templete/" title="Android Project Templete" itemprop="url">Android Project Templete</a>
   </h1>
   <p class="article-author">By
@@ -439,6 +617,10 @@
 		<ul>
 		
 		  
+			<li><a href="/categories/AI/" title="AI">AI<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/Android/" title="Android">Android<sup>17</sup></a></li>
 		  
 		
@@ -459,11 +641,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>11</sup></a></li>
 		  
 		
 		  
@@ -480,7 +658,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/tech/" title="tech">tech<sup>33</sup></a></li>
+				<li><a href="/tags/tech/" title="tech">tech<sup>34</sup></a></li>
 			
 		
 			
@@ -488,7 +666,7 @@
 			
 		
 			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>9</sup></a></li>
+				<li><a href="/tags/Linux/" title="Linux">Linux<sup>11</sup></a></li>
 			
 		
 			
@@ -509,6 +687,14 @@
 		
 			
 				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/scrum/" title="scrum">scrum<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AI/" title="AI">AI<sup>1</sup></a></li>
 			
 		
 		</ul>
