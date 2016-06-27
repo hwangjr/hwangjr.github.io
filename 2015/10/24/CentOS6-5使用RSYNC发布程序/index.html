@@ -1,17 +1,68 @@
+<!doctype html>
 
- <!DOCTYPE HTML>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
+
+
   
-    <title>CentOS6.5使用RSYNC发布程序 | HwangJR&#39;s Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="HwangJR">
-    
 
-    
-    <meta name="description" content="配置SVN版本控制之后，需要实时发布代码到线上，人懒，故有了此工具。">
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="HwangJR's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="配置SVN版本控制之后，需要实时发布代码到线上，人懒，故有了此工具。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS6.5使用RSYNC发布程序">
 <meta property="og:url" content="https://hwangjr.github.io/2015/10/24/CentOS6-5使用RSYNC发布程序/index.html">
@@ -21,113 +72,269 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS6.5使用RSYNC发布程序">
 <meta name="twitter:description" content="配置SVN版本控制之后，需要实时发布代码到线上，人懒，故有了此工具。">
-<meta name="twitter:creator" content="@HuangJR">
-<link rel="publisher" href="+JianrongHuang">
 
-    
-    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
-    
-    
-    <link rel="icon" href="/img/favicon.ico">
-    
-    
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://hwangjr.github.io/2015/10/24/CentOS6-5使用RSYNC发布程序/"/>
+
+  <title> CentOS6.5使用RSYNC发布程序 | HwangJR's Blog </title>
 </head>
 
-  <body>
-    <header>
-      
-<div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
-			</div>
-			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
-				<h2 class="blog-motto">Life is wonderful!</h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">Home</a></li>
-					
-						<li><a href="/archives">Archives</a></li>
-					
-						<li><a href="/about">About</a></li>
-					
-					<li>
- 					
-						<form class="search">
-							<label>Search</label>
-						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
-    </header>
-    <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
   
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-63911310-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
     
-      <a href="/2015/10/24/CentOS6-5使用RSYNC发布程序/" title="CentOS6.5使用RSYNC发布程序" itemprop="url">CentOS6.5使用RSYNC发布程序</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-24T11:53:51.000Z" itemprop="datePublished"> 发表于 2015-10-24</time>
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HwangJR's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Life is wonderful!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
     
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始配置"><span class="toc-number">3.1.</span> <span class="toc-text">初始配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置设置"><span class="toc-number">3.2.</span> <span class="toc-text">配置设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动同步"><span class="toc-number">3.3.</span> <span class="toc-text">自动同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端配置"><span class="toc-number">3.4.</span> <span class="toc-text">客户端配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置语法"><span class="toc-number">3.5.</span> <span class="toc-text">配置语法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SVN同步实例"><span class="toc-number">4.</span> <span class="toc-text">SVN同步实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器配置文件"><span class="toc-number">4.1.</span> <span class="toc-text">服务器配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端测试"><span class="toc-number">4.2.</span> <span class="toc-text">客户端测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SVN配置"><span class="toc-number">4.3.</span> <span class="toc-text">SVN配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拓展"><span class="toc-number">5.</span> <span class="toc-text">拓展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通过exclude排除多个文件/目录"><span class="toc-number">5.1.</span> <span class="toc-text">通过exclude排除多个文件/目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#REF"><span class="toc-number">6.</span> <span class="toc-text">REF</span></a></li></ol>
-		
-		</div>
-		
-		<h2 id="背景">背景</h2><p>Rsync（remote synchronize）是一个远程数据同步工具，可通过LAN/WAN快速同步多台主机间的文件，也可以使用 Rsync 同步本地硬盘中的不同目录。</p>
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CentOS6.5使用RSYNC发布程序
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-10-24T19:53:51+08:00" content="2015-10-24">
+              2015-10-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/10/24/CentOS6-5使用RSYNC发布程序/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/24/CentOS6-5使用RSYNC发布程序/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/10/24/CentOS6-5使用RSYNC发布程序/" class="leancloud_visitors" data-flag-title="CentOS6.5使用RSYNC发布程序">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Rsync（remote synchronize）是一个远程数据同步工具，可通过LAN/WAN快速同步多台主机间的文件，也可以使用 Rsync 同步本地硬盘中的不同目录。</p>
 <blockquote>
 <p>rsync is an <a href="http://www.opensource.org/" target="_blank" rel="external">open source</a> utility that provides fast incremental file transfer. rsync is freely available under the <a href="https://rsync.samba.org/GPL.html" target="_blank" rel="external">GNU General Public License</a> and is currently being maintained by <a href="http://opencoder.net/" target="_blank" rel="external">Wayne Davison</a>.<br>If you are running (1) an xattr-enabled rsync older than 3.0.2, (2) a writable rsync daemon older than 3.0.0, or (3) a version of rsync older than 2.6.6, please see the <a href="https://rsync.samba.org/security.html" target="_blank" rel="external">rsync security advisory page</a>.</p>
 </blockquote>
 <p>本次将使用此工具与SVN配合，通过SVN进行版本控制，上传代码之后，自动同步发布到线上。</p>
-<h2 id="安装">安装</h2><p>查询现有版本并安装。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询</span></span><br><span class="line">rpm -qa | grep rsync</span><br><span class="line"><span class="comment"># 卸载</span></span><br><span class="line">rpm <span class="operator">-e</span> rsync</span><br><span class="line"><span class="comment"># 下载</span></span><br><span class="line">wget http://pkgs.repoforge.org/rsync/rsync-<span class="number">3.1</span>.<span class="number">1</span>-<span class="number">1</span>.el6.rfx.x86_64.rpm</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">rpm -ivh rsync-<span class="number">3.1</span>.<span class="number">1</span>-<span class="number">1</span>.el6.rfx.x86_64.rpm</span><br><span class="line"><span class="comment"># 直接升级</span></span><br><span class="line">rpm -Uvh rsync-<span class="number">3.1</span>.<span class="number">1</span>-<span class="number">1</span>.el6.rfx.x86_64.rpm</span><br></pre></td></tr></table></figure></p>
-<p>自然，你可以通过<code>yum</code>安装，不过版本较低：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install rsync</span><br><span class="line">--&gt; Running transaction check</span><br><span class="line">---&gt; Package rsync.x86_64 <span class="number">0</span>:<span class="number">3.0</span>.<span class="number">6</span>-<span class="number">9</span>.el6_4.<span class="number">1</span> will be updated</span><br><span class="line">---&gt; Package rsync.x86_64 <span class="number">0</span>:<span class="number">3.0</span>.<span class="number">6</span>-<span class="number">12</span>.el6 will be an update</span><br><span class="line">--&gt; Finished Dependency Resolution</span><br></pre></td></tr></table></figure></p>
-<h2 id="配置">配置</h2><h3 id="初始配置">初始配置</h3><ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>查询现有版本并安装。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询</span></span><br><span class="line">rpm -qa | grep rsync</span><br><span class="line"><span class="comment"># 卸载</span></span><br><span class="line">rpm <span class="_">-e</span> rsync</span><br><span class="line"><span class="comment"># 下载</span></span><br><span class="line">wget http://pkgs.repoforge.org/rsync/rsync-3.1.1-1.el6.rfx.x86_64.rpm</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">rpm -ivh rsync-3.1.1-1.el6.rfx.x86_64.rpm</span><br><span class="line"><span class="comment"># 直接升级</span></span><br><span class="line">rpm -Uvh rsync-3.1.1-1.el6.rfx.x86_64.rpm</span><br></pre></td></tr></table></figure></p>
+<p>自然，你可以通过<code>yum</code>安装，不过版本较低：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install rsync</span><br><span class="line">--&gt; Running transaction check</span><br><span class="line">---&gt; Package rsync.x86_64 0:3.0.6-9.el6_4.1 will be updated</span><br><span class="line">---&gt; Package rsync.x86_64 0:3.0.6-12.el6 will be an update</span><br><span class="line">--&gt; Finished Dependency Resolution</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="初始配置"><a href="#初始配置" class="headerlink" title="初始配置"></a>初始配置</h3><ul>
 <li>选择rsync服务器启动方式：<ol>
 <li>rsync服务器负载较高，则使用独立启动模式</li>
 <li>rsync服务器负载较低，使用xinetd运行方式</li>
 </ol>
 </li>
 <li>创建配置文件rsyncd.conf</li>
-<li>对于非匿名方式访问的rsync服务器创建配置口令（建议配置需要口令访问）<br>CentOS 默认以xinetd模式运行rsync，rsync的xinetd配置文件是/etc/xinetd.d/rsync<br>如果配置rsync以xinetd模式运行，执行如下命令<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chkconfig rsync on</span><br><span class="line">service xinetd restart</span><br><span class="line"><span class="preprocessor"># 如果执行 service xinetd restart 发现 xinetd: unrecognized service 则未安装xinetd服务</span></span><br><span class="line"><span class="preprocessor"># 执行 yum install xinetd 安装 xinetd服务</span></span><br><span class="line"><span class="preprocessor"># 安装之后启动 xinetd服务(service xinetd start)</span></span><br></pre></td></tr></table></figure>
+<li>对于非匿名方式访问的rsync服务器创建配置口令（建议配置需要口令访问）<br>CentOS 默认以xinetd模式运行rsync，rsync的xinetd配置文件是/etc/xinetd.d/rsync<br>如果配置rsync以xinetd模式运行，执行如下命令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chkconfig rsync on</span><br><span class="line">service xinetd restart</span><br><span class="line"># 如果执行 service xinetd restart 发现 xinetd: unrecognized service 则未安装xinetd服务</span><br><span class="line"># 执行 yum install xinetd 安装 xinetd服务</span><br><span class="line"># 安装之后启动 xinetd服务(service xinetd start)</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>编辑rsync的xinetd配置文件/etc/xinetd.d/rsync文件，修改参数 server_args = —daemon —config=/etc/rsyncd/rsyncd.conf 可以配置rsync服务器启动时的参数</p>
-<p>如果使用独立运行模式，则执行如下命令<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/rsync <span class="comment">--daemon</span></span><br><span class="line">#编辑 /etc/rc.<span class="keyword">local</span>文件 加入 /usr/bin/rsync <span class="comment">--daemon 保证每次开机启动都会自动启动rsync服务</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="配置设置">配置设置</h3><p>创建配置目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建rsync服务目录</span></span><br><span class="line">mkdir /etc/rsyncd</span><br><span class="line"><span class="comment"># 创建配置文件</span></span><br><span class="line">touch /etc/rsyncd/rsyncd.conf</span><br><span class="line"><span class="comment"># 创建密码文件</span></span><br><span class="line">touch /etc/rsyncd/rsyncd.passwd</span><br><span class="line"><span class="comment">#权限修改</span></span><br><span class="line">chown root:root /etc/rsyncd/rsyncd.passwd</span><br><span class="line">chmod <span class="number">600</span> /etc/rsyncd/rsyncd.passwd</span><br></pre></td></tr></table></figure></p>
-<p>配置文件：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"># GLOBAL OPTIONS</span><br><span class="line">uid = root                         </span><br><span class="line">gid = root                                  </span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">use</span> chroot = <span class="keyword">no</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">read</span> <span class="keyword">only</span> = yes</span><br><span class="line"></span><br><span class="line">#<span class="keyword">limit</span> <span class="keyword">access</span> <span class="keyword">to</span> <span class="keyword">private</span> LANs</span><br><span class="line"><span class="keyword">hosts</span> <span class="keyword">allow</span>=<span class="number">172.16</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.0</span><span class="number">.0</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span> <span class="number">10.0</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span></span><br><span class="line"><span class="keyword">hosts</span> deny=*</span><br><span class="line"><span class="keyword">max</span> connections = <span class="number">5</span>                      </span><br><span class="line"></span><br><span class="line">pid <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsyncd.pid             </span><br><span class="line"></span><br><span class="line">secrets <span class="keyword">file</span> = /etc/rsyncd/rsyncd.passwd</span><br><span class="line">#<span class="keyword">lock</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsync.<span class="keyword">lock</span>           </span><br><span class="line"></span><br><span class="line">#motd <span class="keyword">file</span> = /etc/rsyncd/rsyncd.motd        </span><br><span class="line"></span><br><span class="line">#This will give you a separate <span class="keyword">log</span> <span class="keyword">file</span></span><br><span class="line">#<span class="keyword">log</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/<span class="keyword">log</span>/rsync.<span class="keyword">log</span></span><br><span class="line"></span><br><span class="line">#This will <span class="keyword">log</span> every <span class="keyword">file</span> transferred - up <span class="keyword">to</span> <span class="number">85</span>,<span class="number">000</span>+ per <span class="keyword">user</span>, per <span class="keyword">sync</span></span><br><span class="line">transfer <span class="keyword">logging</span> = yes</span><br><span class="line"></span><br><span class="line"><span class="keyword">log</span> <span class="keyword">format</span> = %<span class="keyword">t</span> %a %<span class="keyword">m</span> %<span class="keyword">f</span> %b</span><br><span class="line">syslog facility = local3</span><br><span class="line"><span class="keyword">timeout</span> = <span class="number">300</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">MODULE</span> OPTIONS</span><br><span class="line">[hwangjrhome]</span><br><span class="line"><span class="keyword">path</span> = /home/hwangjr/</span><br><span class="line"><span class="keyword">list</span>=yes</span><br><span class="line"><span class="keyword">ignore</span> <span class="keyword">errors</span></span><br><span class="line">auth <span class="keyword">users</span> = hwangjr</span><br><span class="line"><span class="keyword">comment</span> = HwangJR home</span><br><span class="line"><span class="keyword">exclude</span> = important/</span><br><span class="line"></span><br><span class="line">[chinatmp]</span><br><span class="line"><span class="keyword">path</span> = /tmp/china/</span><br><span class="line"><span class="keyword">list</span>=<span class="keyword">no</span></span><br><span class="line"><span class="keyword">ignore</span> <span class="keyword">errors</span></span><br><span class="line">auth <span class="keyword">users</span> = china</span><br><span class="line"><span class="keyword">comment</span> = tmp china</span></span><br></pre></td></tr></table></figure></p>
-<p>密码文件：<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">hwangjr:</span>asdf             <span class="preprocessor">#格式   用户名:口令</span></span><br><span class="line"><span class="label">china:</span>jk               <span class="preprocessor">#该用户不要求是系统用户</span></span><br></pre></td></tr></table></figure></p>
-<p>查看服务是否启动：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -an <span class="string">| grep 873</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="自动同步">自动同步</h3><p>编辑crontab<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab <span class="operator">-e</span></span><br></pre></td></tr></table></figure></p>
-<p>加入同步命令：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 每天<span class="number">0</span>点<span class="number">10</span>分执行后面的命令</span></span><br><span class="line"><span class="number">10</span> <span class="number">0</span> * * * rsync -avzP  --<span class="keyword">delete</span>  --password-file=/tmp/rsync.password hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br></pre></td></tr></table></figure></p>
-<h3 id="客户端配置">客户端配置</h3><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 安装客户端</span></span><br><span class="line">yum -y install rsync</span><br><span class="line"><span class="preprocessor"># 同步命令</span></span><br><span class="line"><span class="preprocessor"># -a 参数，相当于-rlptgoD</span></span><br><span class="line"><span class="preprocessor">#   -r 是递归 -l 是链接文件，意思是拷贝链接文件；-p 表示保持文件原有权限</span></span><br><span class="line"><span class="preprocessor">#   -t 保持文件原有时间；-g 保持文#件原有用户组；-o 保持文件原有属主；-D 相当于块设备文件</span></span><br><span class="line"><span class="preprocessor"># -z 传输时压缩；</span></span><br><span class="line"><span class="preprocessor"># -P 传输进度；</span></span><br><span class="line"><span class="preprocessor"># -v 传输时的进度等信息，和-P有点关系，自己试试。可以看文档；</span></span><br><span class="line"><span class="preprocessor"># 同步</span></span><br><span class="line">rsync -avzP hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 客户端数据和服务器端数据保持一致</span></span><br><span class="line"><span class="preprocessor"># –delete 选项，表示客户端上的数据要与服务器端完全一致，如果 /tmp/hwangjr/目录中有服务器上不存在的文件，则删除。最终目的是让/tmp/hwangjr/目录上的数据完全与服务器上保持一致；用的时候要小心点，最好不要把已经有重要数所据的目录，当做本地更新目录，否则会把你的数据全部删除</span></span><br><span class="line">rsync -avzP  --delete hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 指定传输时候的密码文件，密码文件权限 600</span></span><br><span class="line"><span class="preprocessor"># –password-file=rsync.password ，这时当我们以hwangjr用户登录rsync服务器同步数据时，密码将读取 /tmp/rsync.password 这个文件。这个文件内容只是hwangjr用户的密码。我们要如下做；</span></span><br><span class="line"><span class="preprocessor"># touch /tmp/rsync.password</span></span><br><span class="line"><span class="preprocessor"># chmod 600 /tmp/rsync.password</span></span><br><span class="line"><span class="preprocessor"># echo "asdf"&gt; /tmp/rsync.password</span></span><br><span class="line"><span class="preprocessor"># rsync -avzP  --delete  --password-file=/tmp/rsync.password hwangjr@172.16.1.135::hwangjrhome  /tmp/hwangjr/</span></span><br><span class="line"><span class="preprocessor"># 注： 这样就不需要密码了，服务器通过crond 计划任务自动同步</span></span><br><span class="line">rsync -avzP  --delete  --password-file=/tmp/rsync.password hwangjr@<span class="number">172.16</span><span class="number">.1</span><span class="number">.135</span>::hwangjrhome  /tmp/hwangjr/</span><br></pre></td></tr></table></figure>
-<h3 id="配置语法">配置语法</h3><blockquote>
+<p>编辑rsync的xinetd配置文件/etc/xinetd.d/rsync文件，修改参数 server_args = –daemon –config=/etc/rsyncd/rsyncd.conf 可以配置rsync服务器启动时的参数</p>
+<p>如果使用独立运行模式，则执行如下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/rsync --daemon</span><br><span class="line">#编辑 /etc/rc.local文件 加入 /usr/bin/rsync --daemon 保证每次开机启动都会自动启动rsync服务</span><br></pre></td></tr></table></figure></p>
+<h3 id="配置设置"><a href="#配置设置" class="headerlink" title="配置设置"></a>配置设置</h3><p>创建配置目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建rsync服务目录</span></span><br><span class="line">mkdir /etc/rsyncd</span><br><span class="line"><span class="comment"># 创建配置文件</span></span><br><span class="line">touch /etc/rsyncd/rsyncd.conf</span><br><span class="line"><span class="comment"># 创建密码文件</span></span><br><span class="line">touch /etc/rsyncd/rsyncd.passwd</span><br><span class="line"><span class="comment">#权限修改</span></span><br><span class="line">chown root:root /etc/rsyncd/rsyncd.passwd</span><br><span class="line">chmod 600 /etc/rsyncd/rsyncd.passwd</span><br></pre></td></tr></table></figure></p>
+<p>配置文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"># GLOBAL OPTIONS</span><br><span class="line">uid = root                         </span><br><span class="line">gid = root                                  </span><br><span class="line"></span><br><span class="line">use chroot = no</span><br><span class="line"></span><br><span class="line">read only = yes</span><br><span class="line"></span><br><span class="line">#limit access to private LANs</span><br><span class="line">hosts allow=172.16.0.0/255.255.0.0 192.168.1.0/255.255.255.0 10.0.1.0/255.255.255.0</span><br><span class="line">hosts deny=*</span><br><span class="line">max connections = 5                      </span><br><span class="line"></span><br><span class="line">pid file = /var/run/rsyncd.pid             </span><br><span class="line"></span><br><span class="line">secrets file = /etc/rsyncd/rsyncd.passwd</span><br><span class="line">#lock file = /var/run/rsync.lock           </span><br><span class="line"></span><br><span class="line">#motd file = /etc/rsyncd/rsyncd.motd        </span><br><span class="line"></span><br><span class="line">#This will give you a separate log file</span><br><span class="line">#log file = /var/log/rsync.log</span><br><span class="line"></span><br><span class="line">#This will log every file transferred - up to 85,000+ per user, per sync</span><br><span class="line">transfer logging = yes</span><br><span class="line"></span><br><span class="line">log format = %t %a %m %f %b</span><br><span class="line">syslog facility = local3</span><br><span class="line">timeout = 300</span><br><span class="line"></span><br><span class="line"># MODULE OPTIONS</span><br><span class="line">[hwangjrhome]</span><br><span class="line">path = /home/hwangjr/</span><br><span class="line">list=yes</span><br><span class="line">ignore errors</span><br><span class="line">auth users = hwangjr</span><br><span class="line">comment = HwangJR home</span><br><span class="line">exclude = important/</span><br><span class="line"></span><br><span class="line">[chinatmp]</span><br><span class="line">path = /tmp/china/</span><br><span class="line">list=no</span><br><span class="line">ignore errors</span><br><span class="line">auth users = china</span><br><span class="line">comment = tmp china</span><br></pre></td></tr></table></figure></p>
+<p>密码文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hwangjr:asdf             #格式   用户名:口令</span><br><span class="line">china:jk               #该用户不要求是系统用户</span><br></pre></td></tr></table></figure></p>
+<p>查看服务是否启动：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -an | grep 873</span><br></pre></td></tr></table></figure></p>
+<h3 id="自动同步"><a href="#自动同步" class="headerlink" title="自动同步"></a>自动同步</h3><p>编辑crontab<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure></p>
+<p>加入同步命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 每天0点10分执行后面的命令</span><br><span class="line">10 0 * * * rsync -avzP  --delete  --password-file=/tmp/rsync.password hwangjr@172.16.1.135::hwangjrhome  /tmp/hwangjr/</span><br></pre></td></tr></table></figure></p>
+<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># 安装客户端</span><br><span class="line">yum -y install rsync</span><br><span class="line"># 同步命令</span><br><span class="line"># -a 参数，相当于-rlptgoD</span><br><span class="line">#   -r 是递归 -l 是链接文件，意思是拷贝链接文件；-p 表示保持文件原有权限</span><br><span class="line">#   -t 保持文件原有时间；-g 保持文#件原有用户组；-o 保持文件原有属主；-D 相当于块设备文件</span><br><span class="line"># -z 传输时压缩；</span><br><span class="line"># -P 传输进度；</span><br><span class="line"># -v 传输时的进度等信息，和-P有点关系，自己试试。可以看文档；</span><br><span class="line"># 同步</span><br><span class="line">rsync -avzP hwangjr@172.16.1.135::hwangjrhome  /tmp/hwangjr/</span><br><span class="line"></span><br><span class="line"># 客户端数据和服务器端数据保持一致</span><br><span class="line"># –delete 选项，表示客户端上的数据要与服务器端完全一致，如果 /tmp/hwangjr/目录中有服务器上不存在的文件，则删除。最终目的是让/tmp/hwangjr/目录上的数据完全与服务器上保持一致；用的时候要小心点，最好不要把已经有重要数所据的目录，当做本地更新目录，否则会把你的数据全部删除</span><br><span class="line">rsync -avzP  --delete hwangjr@172.16.1.135::hwangjrhome  /tmp/hwangjr/</span><br><span class="line"></span><br><span class="line"># 指定传输时候的密码文件，密码文件权限 600</span><br><span class="line"># –password-file=rsync.password ，这时当我们以hwangjr用户登录rsync服务器同步数据时，密码将读取 /tmp/rsync.password 这个文件。这个文件内容只是hwangjr用户的密码。我们要如下做；</span><br><span class="line"># touch /tmp/rsync.password</span><br><span class="line"># chmod 600 /tmp/rsync.password</span><br><span class="line"># echo &quot;asdf&quot;&gt; /tmp/rsync.password</span><br><span class="line"># rsync -avzP  --delete  --password-file=/tmp/rsync.password hwangjr@172.16.1.135::hwangjrhome  /tmp/hwangjr/</span><br><span class="line"># 注： 这样就不需要密码了，服务器通过crond 计划任务自动同步</span><br><span class="line">rsync -avzP  --delete  --password-file=/tmp/rsync.password hwangjr@172.16.1.135::hwangjrhome  /tmp/hwangjr/</span><br></pre></td></tr></table></figure>
+<h3 id="配置语法"><a href="#配置语法" class="headerlink" title="配置语法"></a>配置语法</h3><blockquote>
 <ul>
 <li><strong>模块</strong>：<br>  以[模块名称]开始</li>
 <li><strong>参数配置行</strong>：<br>  格式 name = value<br>  其中 value的值可以是string(可以不使用引号)或者boolean(0/1,true/false,yes/no)</li>
@@ -152,478 +359,514 @@
 <blockquote>
 <p>rsync 认证口令文件的权限一定是 600，否则客户端将不能连接服务器。<br>rsync 认证口令文件中每一行指定一个 用户名:口令 对，格式为：username:passwd<br>一般来说口令最好不要超过8个字符。若您只配置匿名访问的 rsync 服务器，则无需设置上述参数。</p>
 </blockquote>
-<h2 id="SVN同步实例">SVN同步实例</h2><p>基本思路就是，当发生commit时，触发服务端svn数据目录update，也触发rsync去同步网站目录。</p>
-<h3 id="服务器配置文件">服务器配置文件</h3><p>编辑配置文件：<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">vim</span> /etc/rsyncd/rsyncd.<span class="keyword">conf</span></span><br></pre></td></tr></table></figure></p>
-<p>配置文件为：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># GLOBAL OPTIONS</span><br><span class="line">uid = root</span><br><span class="line">gid = root</span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">use</span> chroot = <span class="keyword">no</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">read</span> <span class="keyword">only</span> = yes</span><br><span class="line"></span><br><span class="line">#<span class="keyword">limit</span> <span class="keyword">access</span> <span class="keyword">to</span> <span class="keyword">private</span> LANs</span><br><span class="line"><span class="keyword">hosts</span> <span class="keyword">allow</span>=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"><span class="keyword">hosts</span> deny=*</span><br><span class="line"><span class="keyword">max</span> connections = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">pid <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsyncd.pid</span><br><span class="line">secrets <span class="keyword">file</span> = /etc/rsyncd/rsyncd.passwd</span><br><span class="line"><span class="keyword">lock</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/run/rsync.<span class="keyword">lock</span></span><br><span class="line">#motd <span class="keyword">file</span> = /etc/rsyncd/rsyncd.motd</span><br><span class="line"></span><br><span class="line">#This will give you a separate <span class="keyword">log</span> <span class="keyword">file</span></span><br><span class="line">#<span class="keyword">log</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/<span class="keyword">log</span>/rsync.<span class="keyword">log</span></span><br><span class="line"></span><br><span class="line">#This will <span class="keyword">log</span> every <span class="keyword">file</span> transferred - up <span class="keyword">to</span> <span class="number">85</span>,<span class="number">000</span>+ per <span class="keyword">user</span>, per <span class="keyword">sync</span></span><br><span class="line">transfer <span class="keyword">logging</span> = yes</span><br><span class="line"><span class="keyword">log</span> <span class="keyword">format</span> = %<span class="keyword">t</span> %a %<span class="keyword">m</span> %<span class="keyword">f</span> %b</span><br><span class="line">syslog facility = local3</span><br><span class="line"><span class="keyword">timeout</span> = <span class="number">300</span></span><br><span class="line"></span><br><span class="line"># <span class="keyword">MODULE</span> OPTIONS</span><br><span class="line">[kksvn]</span><br><span class="line"><span class="keyword">path</span> = /home/svn/rsyncd/kk</span><br><span class="line"><span class="keyword">list</span>=yes</span><br><span class="line"><span class="keyword">ignore</span> <span class="keyword">errors</span></span><br><span class="line">auth <span class="keyword">users</span> = kksvn</span><br><span class="line"><span class="keyword">comment</span> = KK SVN</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="SVN同步实例"><a href="#SVN同步实例" class="headerlink" title="SVN同步实例"></a>SVN同步实例</h2><p>基本思路就是，当发生commit时，触发服务端svn数据目录update，也触发rsync去同步网站目录。</p>
+<h3 id="服务器配置文件"><a href="#服务器配置文件" class="headerlink" title="服务器配置文件"></a>服务器配置文件</h3><p>编辑配置文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rsyncd/rsyncd.conf</span><br></pre></td></tr></table></figure></p>
+<p>配置文件为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># GLOBAL OPTIONS</span><br><span class="line">uid = root</span><br><span class="line">gid = root</span><br><span class="line"></span><br><span class="line">use chroot = no</span><br><span class="line"></span><br><span class="line">read only = yes</span><br><span class="line"></span><br><span class="line">#limit access to private LANs</span><br><span class="line">hosts allow=127.0.0.1</span><br><span class="line">hosts deny=*</span><br><span class="line">max connections = 5</span><br><span class="line"></span><br><span class="line">pid file = /var/run/rsyncd.pid</span><br><span class="line">secrets file = /etc/rsyncd/rsyncd.passwd</span><br><span class="line">lock file = /var/run/rsync.lock</span><br><span class="line">#motd file = /etc/rsyncd/rsyncd.motd</span><br><span class="line"></span><br><span class="line">#This will give you a separate log file</span><br><span class="line">#log file = /var/log/rsync.log</span><br><span class="line"></span><br><span class="line">#This will log every file transferred - up to 85,000+ per user, per sync</span><br><span class="line">transfer logging = yes</span><br><span class="line">log format = %t %a %m %f %b</span><br><span class="line">syslog facility = local3</span><br><span class="line">timeout = 300</span><br><span class="line"></span><br><span class="line"># MODULE OPTIONS</span><br><span class="line">[kksvn]</span><br><span class="line">path = /home/svn/rsyncd/kk</span><br><span class="line">list=yes</span><br><span class="line">ignore errors</span><br><span class="line">auth users = kksvn</span><br><span class="line">comment = KK SVN</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>use chroot=no 时，同步后DES的文件主或组如果有，则显示名，即使ID不一样；<br>use chroot=yes时，如果两台机器同名的ID不同，则服务端只会显示SRC的ID，造成权限问题。</p>
 </blockquote>
-<p>编辑rsync的用户认证配置文件<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># vim /etc/rsyncd/rsyncd.passwd</span></span><br><span class="line">kksvn:kksvn</span><br><span class="line"><span class="preprocessor">#chmod 600 /etc/rsyncd/rsyncd.passwd</span></span><br></pre></td></tr></table></figure></p>
-<p>启动服务：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>bin<span class="regexp">/rsync --daemon --config=/</span>etc<span class="regexp">/rsyncd/</span>rsyncd.conf</span><br><span class="line">echo <span class="string">"/usr/bin/rsync --daemon"</span> &gt;&gt;<span class="regexp">/etc/</span>rc.local</span><br></pre></td></tr></table></figure></p>
+<p>编辑rsync的用户认证配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># vim /etc/rsyncd/rsyncd.passwd</span><br><span class="line">kksvn:kksvn</span><br><span class="line">#chmod 600 /etc/rsyncd/rsyncd.passwd</span><br></pre></td></tr></table></figure></p>
+<p>启动服务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/rsync --daemon --config=/etc/rsyncd/rsyncd.conf</span><br><span class="line">echo &quot;/usr/bin/rsync --daemon&quot; &gt;&gt;/etc/rc.local</span><br></pre></td></tr></table></figure></p>
 <p>注：修改配置文件和用户密码不需要重启服务</p>
-<h3 id="客户端测试">客户端测试</h3><p>客户端测试：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># vim /home/svn/rsyncd/conf/rsyncd.passwd</span></span><br><span class="line">kksvn</span><br><span class="line"><span class="preprocessor"># chmod <span class="number">600</span> /home/svn/rsyncd/conf/rsyncd.passwd</span></span><br><span class="line"><span class="preprocessor"># rsync -avzp --progress --delete --exclude=.svn --password-file=/home/svn/rsyncd/conf/rsyncd.passwd kksvn@<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>::kksvn /tmp/kk</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="SVN配置">SVN配置</h3><p>配置钩子：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="regexp">/home/</span>svn<span class="regexp">/repos/</span>kk<span class="regexp">/hooks/</span>post-commit</span><br><span class="line">chmod +x <span class="regexp">/home/</span>svn<span class="regexp">/repos/</span>kk<span class="regexp">/hooks/</span>post-commit</span><br></pre></td></tr></table></figure></p>
-<p>post-commit内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span><br><span class="line"></span></span><br><span class="line">REPOS=<span class="string">"<span class="variable">$1</span>"</span></span><br><span class="line">REV=<span class="string">"<span class="variable">$2</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LANG=zh_CN.UTF-<span class="number">8</span></span><br><span class="line">/usr/bin/svn update /home/svn/rsyncd/kke</span><br><span class="line"><span class="keyword">if</span> [ $? <span class="operator">-eq</span> <span class="number">0</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    /bin/bash /home/svn/rsyncd/scripts/kke_rsync.sh &gt; /dev/null <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="客户端测试"><a href="#客户端测试" class="headerlink" title="客户端测试"></a>客户端测试</h3><p>客户端测试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># vim /home/svn/rsyncd/conf/rsyncd.passwd</span><br><span class="line">kksvn</span><br><span class="line"># chmod 600 /home/svn/rsyncd/conf/rsyncd.passwd</span><br><span class="line"># rsync -avzp --progress --delete --exclude=.svn --password-file=/home/svn/rsyncd/conf/rsyncd.passwd kksvn@127.0.0.1::kksvn /tmp/kk</span><br></pre></td></tr></table></figure></p>
+<h3 id="SVN配置"><a href="#SVN配置" class="headerlink" title="SVN配置"></a>SVN配置</h3><p>配置钩子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /home/svn/repos/kk/hooks/post-commit</span><br><span class="line">chmod +x /home/svn/repos/kk/hooks/post-commit</span><br></pre></td></tr></table></figure></p>
+<p>post-commit内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">REPOS=&quot;$1&quot;</span><br><span class="line">REV=&quot;$2&quot;</span><br><span class="line"></span><br><span class="line">export LANG=zh_CN.UTF-8</span><br><span class="line">/usr/bin/svn update /home/svn/rsyncd/kke</span><br><span class="line">if [ $? -eq 0 ]</span><br><span class="line">then</span><br><span class="line">    /bin/bash /home/svn/rsyncd/scripts/kke_rsync.sh &gt; /dev/null 2&gt;&amp;1</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></p>
 <p>kke_rsync.sh内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#/bin/bash</span></span><br><span class="line"></span><br><span class="line">IP=<span class="string">"127.0.0.1"</span></span><br><span class="line">Auth_module=<span class="string">"kksvn"</span></span><br><span class="line">Localdir=<span class="string">"/tmp/kk"</span></span><br><span class="line">Auth_user=<span class="string">"kksvn"</span></span><br><span class="line">Passwd_file=<span class="string">"/home/svn/rsyncd/conf/rsyncd.passwd"</span></span><br><span class="line">Exc=<span class="string">" --exclude=.svn"</span></span><br><span class="line">/usr/bin/rsync -vrtopgl --progress --delete <span class="variable">$&#123;Exc&#125;</span> --password-file=<span class="variable">$&#123;Passwd_file&#125;</span> <span class="variable">$Auth_user</span>@<span class="variable">$&#123;IP&#125;</span>::<span class="variable">$&#123;Auth_module&#125;</span> <span class="variable">$&#123;Localdir&#125;</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="拓展">拓展</h2><h3 id="通过exclude排除多个文件/目录">通过exclude排除多个文件/目录</h3><p>使用rsync -av –exclude=.svn /home/hwangjr/t1 /home/hwangjr/t2 只能排除.svn文件/目录。但如果要排除多个文件/目录，就需要新建个exclude.list，然后rsync -av –exclude-from=”exclude.list”指定不需要同步的文件/目录。<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将/home/hwangjr/t1目录拷贝到/home/hwangjr/t2目录下，/home/hwangjr/exclude.list中指定文件不拷贝</span></span><br><span class="line">rsync -av --exclude-from=<span class="regexp">/home/hwangjr</span><span class="regexp">/exclude.list /home</span><span class="regexp">/hwangjr/t</span>1 /home/hwangjr/t2</span><br></pre></td></tr></table></figure></p>
-<p>exclude.list里面填写要排除的文件/目录，一行一个，直接写文件名即可。如果要排除a,b.1,b.2,tmp/g，那么exclude.list里就应该写：<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">a</span></span><br><span class="line"><span class="regexp">b.*</span></span><br><span class="line">tmp/g</span><br></pre></td></tr></table></figure></p>
-<p>不应该写成：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>a</span><br><span class="line"><span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>b.*</span><br><span class="line"><span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>tmp<span class="regexp">/g</span></span><br></pre></td></tr></table></figure></p>
-<p>也不应该写成：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.<span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>a</span><br><span class="line">.<span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>b.*</span><br><span class="line">.<span class="regexp">/home/</span>hwangjr<span class="regexp">/t1/</span>tmp<span class="regexp">/g</span></span><br></pre></td></tr></table></figure></p>
-<p>SO：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">–<span class="keyword">exclude</span>=PATTERN <span class="keyword">exclude</span> files matching PATTERN</span><br><span class="line">–<span class="keyword">exclude</span>-<span class="keyword">from</span>=<span class="keyword">FILE</span> <span class="keyword">read</span> <span class="keyword">exclude</span> patterns <span class="keyword">from</span> <span class="keyword">FILE</span></span><br><span class="line">–<span class="keyword">include</span>=PATTERN don’t <span class="keyword">exclude</span> files matching PATTERN</span><br><span class="line">–<span class="keyword">include</span>-<span class="keyword">from</span>=<span class="keyword">FILE</span> <span class="keyword">read</span> <span class="keyword">include</span> patterns <span class="keyword">from</span> <span class="keyword">FILE</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="REF">REF</h2><p><a href="https://download.samba.org/pub/rsync/src/" target="_blank" rel="external">Index of /pub/rsync/src</a><br><a href="https://rsync.samba.org/" target="_blank" rel="external">rsync</a><br><a href="http://pkgs.repoforge.org/rsync/" target="_blank" rel="external">Index of /rsync</a><br><a href="http://segmentfault.com/a/1190000002502991" target="_blank" rel="external">CentOS 6.5下rsync服务器安装配置 - SegmentFault</a><br><a href="http://my.oschina.net/duguaoxue/blog/496228" target="_blank" rel="external">CentOS 6.3下rsync服务器的安装与配置 - longjian的个人页面 - 开源中国社区</a><br><a href="http://wjw7702.blog.51cto.com/5210820/1148808" target="_blank" rel="external">Rsync常见错误及命令详细参数 - 彼岸 - 51CTO技术博客</a><br><a href="http://sndapk.blog.51cto.com/5385144/1360384" target="_blank" rel="external">svn+rsync实时发布程序 - notepad - 51CTO技术博客</a><br><a href="http://www.ttlsa.com/svn/linux-svn-rsync-inotify/" target="_blank" rel="external">linux下svn+rsync+inotify实现代码自动同步 - 运维生存时间</a></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
+<h2 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h2><h3 id="通过exclude排除多个文件-目录"><a href="#通过exclude排除多个文件-目录" class="headerlink" title="通过exclude排除多个文件/目录"></a>通过exclude排除多个文件/目录</h3><p>使用rsync -av –exclude=.svn /home/hwangjr/t1 /home/hwangjr/t2 只能排除.svn文件/目录。但如果要排除多个文件/目录，就需要新建个exclude.list，然后rsync -av –exclude-from=”exclude.list”指定不需要同步的文件/目录。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 将/home/hwangjr/t1目录拷贝到/home/hwangjr/t2目录下，/home/hwangjr/exclude.list中指定文件不拷贝</span><br><span class="line">rsync -av --exclude-from=/home/hwangjr/exclude.list /home/hwangjr/t1 /home/hwangjr/t2</span><br></pre></td></tr></table></figure></p>
+<p>exclude.list里面填写要排除的文件/目录，一行一个，直接写文件名即可。如果要排除a,b.1,b.2,tmp/g，那么exclude.list里就应该写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a</span><br><span class="line">b.*</span><br><span class="line">tmp/g</span><br></pre></td></tr></table></figure></p>
+<p>不应该写成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/home/hwangjr/t1/a</span><br><span class="line">/home/hwangjr/t1/b.*</span><br><span class="line">/home/hwangjr/t1/tmp/g</span><br></pre></td></tr></table></figure></p>
+<p>也不应该写成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./home/hwangjr/t1/a</span><br><span class="line">./home/hwangjr/t1/b.*</span><br><span class="line">./home/hwangjr/t1/tmp/g</span><br></pre></td></tr></table></figure></p>
+<p>SO：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">–exclude=PATTERN exclude files matching PATTERN</span><br><span class="line">–exclude-from=FILE read exclude patterns from FILE</span><br><span class="line">–include=PATTERN don’t exclude files matching PATTERN</span><br><span class="line">–include-from=FILE read include patterns from FILE</span><br></pre></td></tr></table></figure></p>
+<h2 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h2><p><a href="https://download.samba.org/pub/rsync/src/" target="_blank" rel="external">Index of /pub/rsync/src</a><br><a href="https://rsync.samba.org/" target="_blank" rel="external">rsync</a><br><a href="http://pkgs.repoforge.org/rsync/" target="_blank" rel="external">Index of /rsync</a><br><a href="http://segmentfault.com/a/1190000002502991" target="_blank" rel="external">CentOS 6.5下rsync服务器安装配置 - SegmentFault</a><br><a href="http://my.oschina.net/duguaoxue/blog/496228" target="_blank" rel="external">CentOS 6.3下rsync服务器的安装与配置 - longjian的个人页面 - 开源中国社区</a><br><a href="http://wjw7702.blog.51cto.com/5210820/1148808" target="_blank" rel="external">Rsync常见错误及命令详细参数 - 彼岸 - 51CTO技术博客</a><br><a href="http://sndapk.blog.51cto.com/5385144/1360384" target="_blank" rel="external">svn+rsync实时发布程序 - notepad - 51CTO技术博客</a><br><a href="http://www.ttlsa.com/svn/linux-svn-rsync-inotify/" target="_blank" rel="external">linux下svn+rsync+inotify实现代码自动同步 - 运维生存时间</a></p>
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="https://hwangjr.github.io/2015/10/24/CentOS6-5使用RSYNC发布程序/" data-title="CentOS6.5使用RSYNC发布程序 | HwangJR&#39;s Blog" data-tsina="null" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/10/27/Crontabs-Guide/" title="Crontabs Guide">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Crontabs Guide</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/10/23/阿里CentOS-6-iptables配置/"  title="阿里CentOS 6 iptables配置">
- <strong>下一篇：</strong><br/> 
- <span>阿里CentOS 6 iptables配置
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-
-<section id="comments" class="comment">
-  <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始配置"><span class="toc-number">3.1.</span> <span class="toc-text">初始配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置设置"><span class="toc-number">3.2.</span> <span class="toc-text">配置设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动同步"><span class="toc-number">3.3.</span> <span class="toc-text">自动同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端配置"><span class="toc-number">3.4.</span> <span class="toc-text">客户端配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置语法"><span class="toc-number">3.5.</span> <span class="toc-text">配置语法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SVN同步实例"><span class="toc-number">4.</span> <span class="toc-text">SVN同步实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器配置文件"><span class="toc-number">4.1.</span> <span class="toc-text">服务器配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端测试"><span class="toc-number">4.2.</span> <span class="toc-text">客户端测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SVN配置"><span class="toc-number">4.3.</span> <span class="toc-text">SVN配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拓展"><span class="toc-number">5.</span> <span class="toc-text">拓展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通过exclude排除多个文件/目录"><span class="toc-number">5.1.</span> <span class="toc-text">通过exclude排除多个文件/目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#REF"><span class="toc-number">6.</span> <span class="toc-text">REF</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/AI/" title="AI">AI<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Android/" title="Android">Android<sup>17</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Git/" title="Git">Git<sup>4</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/tech/" title="tech">tech<sup>35</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Android/" title="Android">Android<sup>17</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>11</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Git/" title="Git">Git<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/scrum/" title="scrum">scrum<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AI/" title="AI">AI<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-</aside>
-</div>
-    </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> Hello, Welcome to my blog. <br/>
-			I&#39;m HwangJR, Tech change the world.</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
-		
-		
-		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
-		
-		
-		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
-		
-		
-		
-		
-		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
-		
-		
-		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
       
-      $('#toc.toc-aside').css('display', 'none');
+    </div>
+
+    <div>
+      
         
-    }
-  });
-});
-</script>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/23/阿里CentOS-6-iptables配置/" rel="next" title="阿里CentOS 6 iptables配置">
+                <i class="fa fa-chevron-left"></i> 阿里CentOS 6 iptables配置
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/27/Crontabs-Guide/" rel="prev" title="Crontabs Guide">
+                Crontabs Guide <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/author.jpg"
+               alt="HwangJR" />
+          <p class="site-author-name" itemprop="name">HwangJR</p>
+          <p class="site-description motion-element" itemprop="description">Some stuff about tech etc..</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/HwangJR" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="huangjianrong2010@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://stackoverflow.com/users/4827228/hwang-jr" target="_blank" title="StackOverFlow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                  StackOverFlow
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/u/0/+JianrongHuang" target="_blank" title="GooglePlus">
+                  
+                    <i class="fa fa-fw fa-google-plus-official"></i>
+                  
+                  GooglePlus
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hwangjr.com" title="HwangJR" target="_blank">HwangJR</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hwangjr.com" title="HwangJR's Blog" target="_blank">HwangJR's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始配置"><span class="nav-number">3.1.</span> <span class="nav-text">初始配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置设置"><span class="nav-number">3.2.</span> <span class="nav-text">配置设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动同步"><span class="nav-number">3.3.</span> <span class="nav-text">自动同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端配置"><span class="nav-number">3.4.</span> <span class="nav-text">客户端配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置语法"><span class="nav-number">3.5.</span> <span class="nav-text">配置语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SVN同步实例"><span class="nav-number">4.</span> <span class="nav-text">SVN同步实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器配置文件"><span class="nav-number">4.1.</span> <span class="nav-text">服务器配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端测试"><span class="nav-number">4.2.</span> <span class="nav-text">客户端测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SVN配置"><span class="nav-number">4.3.</span> <span class="nav-text">SVN配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拓展"><span class="nav-number">5.</span> <span class="nav-text">拓展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过exclude排除多个文件-目录"><span class="nav-number">5.1.</span> <span class="nav-text">通过exclude排除多个文件/目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REF"><span class="nav-number">6.</span> <span class="nav-text">REF</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HwangJR</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
 
 <script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<a href="#" class="overlay" id="qrcode"></a>',
-  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-  $('.article-share-qrcode').click(function(){
-    var imgSrc = $('#qrcode-pic').attr('data-src');
-    $('#qrcode-pic').attr('src', imgSrc);
-    $('#qrcode-pic').load(function(){
-        $('.qrcode strong').text(' ');
-    });
-  });
-});     
-</script>
-
-
-
-
-<script type="text/javascript">
-
-var disqus_shortname = 'HwangJR';
-
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
-</script>
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
   }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-<script type="text/javascript">
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
-ga('send', 'pageview');
 </script>
 
 
 
 
 
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
 
 
-<!-- MathJax End -->
 
-<!-- Tiny_search Begin -->
 
-<script>
-var option = {
-  engineKey: '6e8f6d9aa88722365432'
-};
-(function(w,d,t,u,n,s,e){
-  s = d.createElement(t);
-  s.src = u;
-  s.async = 1;
-  w[n] = function(r){
-    w[n].opts = r;
-  };
-  e = d.getElementsByTagName(t)[0];
-  e.parentNode.insertBefore(s, e);
-})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
-_ts(option);
-</script>
+  
 
-<!-- Tiny_search End -->
 
-  </body>
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'HwangJR';
+      var disqus_identifier = '2015/10/24/CentOS6-5使用RSYNC发布程序/';
+      var disqus_title = "CentOS6.5使用RSYNC发布程序";
+      var disqus_url = 'https://hwangjr.github.io/2015/10/24/CentOS6-5使用RSYNC发布程序/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E4RdA2t1IWUMTnpbUiYPLI2R-gzGzoHsz", "Az2eDtflRtdPhMbKQeXqDr7z");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
 </html>

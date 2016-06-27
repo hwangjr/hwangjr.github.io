@@ -1,17 +1,68 @@
+<!doctype html>
 
- <!DOCTYPE HTML>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
+
+
   
-    <title>HwangJR&#39;s Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="HwangJR">
-    
 
-    
-    <meta name="description" content="Some stuff about tech etc..">
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="HwangJR, HwangJR's Blog" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="HwangJR's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Some stuff about tech etc..">
 <meta property="og:type" content="website">
 <meta property="og:title" content="HwangJR's Blog">
 <meta property="og:url" content="https://hwangjr.github.io/page/4/index.html">
@@ -20,993 +71,1597 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HwangJR's Blog">
 <meta name="twitter:description" content="Some stuff about tech etc..">
-<meta name="twitter:creator" content="@HuangJR">
-<link rel="publisher" href="+JianrongHuang">
 
-    
-    <link rel="alternative" href="/atom.xml" title="HwangJR&#39;s Blog" type="application/atom+xml">
-    
-    
-    <link rel="icon" href="/img/favicon.ico">
-    
-    
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://hwangjr.github.io/page/4/"/>
+
+  <title> HwangJR's Blog </title>
 </head>
 
-  <body>
-    <header>
-      
-<div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="HwangJR&#39;s Blog" title="HwangJR&#39;s Blog"/></a>
-			</div>
-			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a></h1>
-				<h2 class="blog-motto">Life is wonderful!</h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">Home</a></li>
-					
-						<li><a href="/archives">Archives</a></li>
-					
-						<li><a href="/about">About</a></li>
-					
-					<li>
- 					
-						<form class="search">
-							<label>Search</label>
-						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
-    </header>
-    <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/10/Android-实现毛玻璃效果/" title="Android 实现毛玻璃效果" itemprop="url">Android 实现毛玻璃效果</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-10T12:05:22.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>由于项目需要，需要实现毛玻璃效果，就是高斯模糊效果，实现方式如下。</p>
-<h2 id="利用V_8包提供Render接口实现">利用V 8包提供Render接口实现</h2><p>利用现有ANDROID结构，通过RenderScript调用底层接口来实现。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">blur</span><span class="params">(Bitmap bkg, View view)</span> </span>&#123;</span><br><span class="line">    …</span><br><span class="line">    RenderScript rs = RenderScript.create(getActivity());</span><br><span class="line">    Allocation overlayAlloc = Allocation.createFromBitmap(rs, overlay);</span><br><span class="line">    ScriptIntrinsicBlur blur = </span><br><span class="line">        ScriptIntrinsicBlur.create(rs, overlayAlloc.getElement());</span><br><span class="line">    blur.setInput(overlayAlloc);</span><br><span class="line">    blur.setRadius(radius);</span><br><span class="line">    blur.forEach(overlayAlloc);</span><br><span class="line">    overlayAlloc.copyTo(overlay);</span><br><span class="line">    view.setBackground(<span class="keyword">new</span> BitmapDrawable(getResources(), overlay));</span><br><span class="line">    rs.destroy();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这种方法直接利用Android系统提供的机制，从代码实现上是最简单也相对高效的实现。在此过程中遇到的很现实的问题是，直接使用ScriptIntrinsicBlur不能得到模糊程度较高的图片：</p>
-<ol>
-<li>当模糊半径 (radius)变大后会直接出现计算性能问题。</li>
-<li>ScriptIntrinsicBlur脚本模糊半径不能大于25。<br>考虑到高斯模糊是计算周边像素平均值，在模糊程度很高的情况下，逐点计算平均值从显示效果上优势并不明显。可以通过将图片压缩成小图，计算小图的高斯模糊，再将小图放大的方法来模拟大半径高斯模糊的效果。</li>
-</ol>
-<h2 id="Java版实现">Java版实现</h2><p>这种方式通过在Java层中直接实现高斯模糊算法。在大模糊半径和大图片情况下，性能会出现问题。基本目前只作为对低版本Android客户端的兼容性方案使用。<br><a href="https://github.com/paveldudka/blurring/blob/master/app/src/main/java/com/paveldudka/util/FastBlur.java" target="_blank" rel="external">blurring/FastBlur.java</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.graphics.Bitmap;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">/** </span><br><span class="line"> * Created by paveld on 3/6/14. </span><br><span class="line"> */</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FastBlur</span> </span>&#123; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">doBlur</span><span class="params">(Bitmap sentBitmap, <span class="keyword">int</span> radius, <span class="keyword">boolean</span> canReuseInBitmap)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="comment">// Stack Blur v1.0 from </span></span><br><span class="line">        <span class="comment">// http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html </span></span><br><span class="line">        <span class="comment">// </span></span><br><span class="line">        <span class="comment">// Java Author: Mario Klingemann &lt;mario at quasimondo.com&gt; </span></span><br><span class="line">        <span class="comment">// http://incubator.quasimondo.com </span></span><br><span class="line">        <span class="comment">// created Feburary 29, 2004 </span></span><br><span class="line">        <span class="comment">// Android port : Yahel Bouaziz &lt;yahel at kayenko.com&gt; </span></span><br><span class="line">        <span class="comment">// http://www.kayenko.com </span></span><br><span class="line">        <span class="comment">// ported april 5th, 2012 </span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="comment">// This is a compromise between Gaussian Blur and Box blur </span></span><br><span class="line">        <span class="comment">// It creates much better looking blurs than Box Blur, but is </span></span><br><span class="line">        <span class="comment">// 7x faster than my Gaussian Blur implementation. </span></span><br><span class="line">        <span class="comment">// </span></span><br><span class="line">        <span class="comment">// I called it Stack Blur because this describes best how this </span></span><br><span class="line">        <span class="comment">// filter works internally: it creates a kind of moving stack </span></span><br><span class="line">        <span class="comment">// of colors whilst scanning through the image. Thereby it </span></span><br><span class="line">        <span class="comment">// just has to add one new block of color to the right side </span></span><br><span class="line">        <span class="comment">// of the stack and remove the leftmost color. The remaining </span></span><br><span class="line">        <span class="comment">// colors on the topmost layer of the stack are either added on </span></span><br><span class="line">        <span class="comment">// or reduced by one, depending on if they are on the right or </span></span><br><span class="line">        <span class="comment">// on the left side of the stack. </span></span><br><span class="line">        <span class="comment">// </span></span><br><span class="line">        <span class="comment">// If you are using this algorithm in your code please add </span></span><br><span class="line">        <span class="comment">// the following line: </span></span><br><span class="line">        <span class="comment">// </span></span><br><span class="line">        <span class="comment">// Stack Blur Algorithm by Mario Klingemann &lt;mario@quasimondo.com&gt; </span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        Bitmap bitmap;</span><br><span class="line">        <span class="keyword">if</span> (canReuseInBitmap) &#123;</span><br><span class="line">            bitmap = sentBitmap;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">            bitmap = sentBitmap.copy(sentBitmap.getConfig(), <span class="keyword">true</span>);</span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">if</span> (radius &lt; <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">null</span>); </span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">int</span> w = bitmap.getWidth();</span><br><span class="line">        <span class="keyword">int</span> h = bitmap.getHeight();</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">int</span>[] pix = <span class="keyword">new</span> <span class="keyword">int</span>[w * h];</span><br><span class="line">        bitmap.getPixels(pix, <span class="number">0</span>, w, <span class="number">0</span>, <span class="number">0</span>, w, h);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">int</span> wm = w - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> hm = h - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> wh = w * h;</span><br><span class="line">        <span class="keyword">int</span> div = radius + radius + <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">int</span> r[] = <span class="keyword">new</span> <span class="keyword">int</span>[wh];</span><br><span class="line">        <span class="keyword">int</span> g[] = <span class="keyword">new</span> <span class="keyword">int</span>[wh];</span><br><span class="line">        <span class="keyword">int</span> b[] = <span class="keyword">new</span> <span class="keyword">int</span>[wh];</span><br><span class="line">        <span class="keyword">int</span> rsum, gsum, bsum, x, y, i, p, yp, yi, yw;</span><br><span class="line">        <span class="keyword">int</span> vmin[] = <span class="keyword">new</span> <span class="keyword">int</span>[Math.max(w, h)];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">int</span> divsum = (div + <span class="number">1</span>) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        divsum *= divsum;</span><br><span class="line">        <span class="keyword">int</span> dv[] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">256</span> * divsum];</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">256</span> * divsum; i++) &#123;</span><br><span class="line">            dv[i] = (i / divsum);</span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        yw = yi = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">int</span>[][] stack = <span class="keyword">new</span> <span class="keyword">int</span>[div][<span class="number">3</span>];</span><br><span class="line">        <span class="keyword">int</span> stackpointer;</span><br><span class="line">        <span class="keyword">int</span> stackstart;</span><br><span class="line">        <span class="keyword">int</span>[] sir;</span><br><span class="line">        <span class="keyword">int</span> rbs;</span><br><span class="line">        <span class="keyword">int</span> r1 = radius + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> routsum, goutsum, boutsum;</span><br><span class="line">        <span class="keyword">int</span> rinsum, ginsum, binsum;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">for</span> (y = <span class="number">0</span>; y &lt; h; y++) &#123;</span><br><span class="line">            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (i = -radius; i &lt;= radius; i++) &#123;</span><br><span class="line">                p = pix[yi + Math.min(wm, Math.max(i, <span class="number">0</span>))];</span><br><span class="line">                sir = stack[i + radius];</span><br><span class="line">                sir[<span class="number">0</span>] = (p &amp; <span class="number">0xff0000</span>) &gt;&gt; <span class="number">16</span>;</span><br><span class="line">                sir[<span class="number">1</span>] = (p &amp; <span class="number">0x00ff00</span>) &gt;&gt; <span class="number">8</span>;</span><br><span class="line">                sir[<span class="number">2</span>] = (p &amp; <span class="number">0x0000ff</span>);</span><br><span class="line">                rbs = r1 - Math.abs(i);</span><br><span class="line">                rsum += sir[<span class="number">0</span>] * rbs;</span><br><span class="line">                gsum += sir[<span class="number">1</span>] * rbs;</span><br><span class="line">                bsum += sir[<span class="number">2</span>] * rbs;</span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    rinsum += sir[<span class="number">0</span>];</span><br><span class="line">                    ginsum += sir[<span class="number">1</span>];</span><br><span class="line">                    binsum += sir[<span class="number">2</span>];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                    routsum += sir[<span class="number">0</span>];</span><br><span class="line">                    goutsum += sir[<span class="number">1</span>];</span><br><span class="line">                    boutsum += sir[<span class="number">2</span>];</span><br><span class="line">                &#125; </span><br><span class="line">            &#125; </span><br><span class="line">            stackpointer = radius;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">            <span class="keyword">for</span> (x = <span class="number">0</span>; x &lt; w; x++) &#123;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                r[yi] = dv[rsum];</span><br><span class="line">                g[yi] = dv[gsum];</span><br><span class="line">                b[yi] = dv[bsum];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rsum -= routsum;</span><br><span class="line">                gsum -= goutsum;</span><br><span class="line">                bsum -= boutsum;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                stackstart = stackpointer - radius + div;</span><br><span class="line">                sir = stack[stackstart % div];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                routsum -= sir[<span class="number">0</span>];</span><br><span class="line">                goutsum -= sir[<span class="number">1</span>];</span><br><span class="line">                boutsum -= sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                <span class="keyword">if</span> (y == <span class="number">0</span>) &#123;</span><br><span class="line">                    vmin[x] = Math.min(x + radius + <span class="number">1</span>, wm);</span><br><span class="line">                &#125; </span><br><span class="line">                p = pix[yw + vmin[x]];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                sir[<span class="number">0</span>] = (p &amp; <span class="number">0xff0000</span>) &gt;&gt; <span class="number">16</span>;</span><br><span class="line">                sir[<span class="number">1</span>] = (p &amp; <span class="number">0x00ff00</span>) &gt;&gt; <span class="number">8</span>;</span><br><span class="line">                sir[<span class="number">2</span>] = (p &amp; <span class="number">0x0000ff</span>);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rinsum += sir[<span class="number">0</span>];</span><br><span class="line">                ginsum += sir[<span class="number">1</span>];</span><br><span class="line">                binsum += sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rsum += rinsum;</span><br><span class="line">                gsum += ginsum;</span><br><span class="line">                bsum += binsum;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                stackpointer = (stackpointer + <span class="number">1</span>) % div;</span><br><span class="line">                sir = stack[(stackpointer) % div];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                routsum += sir[<span class="number">0</span>];</span><br><span class="line">                goutsum += sir[<span class="number">1</span>];</span><br><span class="line">                boutsum += sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rinsum -= sir[<span class="number">0</span>];</span><br><span class="line">                ginsum -= sir[<span class="number">1</span>];</span><br><span class="line">                binsum -= sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                yi++;</span><br><span class="line">            &#125; </span><br><span class="line">            yw += w;</span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">for</span> (x = <span class="number">0</span>; x &lt; w; x++) &#123;</span><br><span class="line">            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = <span class="number">0</span>;</span><br><span class="line">            yp = -radius * w;</span><br><span class="line">            <span class="keyword">for</span> (i = -radius; i &lt;= radius; i++) &#123;</span><br><span class="line">                yi = Math.max(<span class="number">0</span>, yp) + x;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                sir = stack[i + radius];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                sir[<span class="number">0</span>] = r[yi];</span><br><span class="line">                sir[<span class="number">1</span>] = g[yi];</span><br><span class="line">                sir[<span class="number">2</span>] = b[yi];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rbs = r1 - Math.abs(i);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rsum += r[yi] * rbs;</span><br><span class="line">                gsum += g[yi] * rbs;</span><br><span class="line">                bsum += b[yi] * rbs;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    rinsum += sir[<span class="number">0</span>];</span><br><span class="line">                    ginsum += sir[<span class="number">1</span>];</span><br><span class="line">                    binsum += sir[<span class="number">2</span>];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                    routsum += sir[<span class="number">0</span>];</span><br><span class="line">                    goutsum += sir[<span class="number">1</span>];</span><br><span class="line">                    boutsum += sir[<span class="number">2</span>];</span><br><span class="line">                &#125; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                <span class="keyword">if</span> (i &lt; hm) &#123;</span><br><span class="line">                    yp += w;</span><br><span class="line">                &#125; </span><br><span class="line">            &#125; </span><br><span class="line">            yi = x;</span><br><span class="line">            stackpointer = radius;</span><br><span class="line">            <span class="keyword">for</span> (y = <span class="number">0</span>; y &lt; h; y++) &#123;</span><br><span class="line">                <span class="comment">// Preserve alpha channel: ( 0xff000000 &amp; pix[yi] ) </span></span><br><span class="line">                pix[yi] = (<span class="number">0xff000000</span> &amp; pix[yi]) | (dv[rsum] &lt;&lt; <span class="number">16</span>) | (dv[gsum] &lt;&lt; <span class="number">8</span>) | dv[bsum];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rsum -= routsum;</span><br><span class="line">                gsum -= goutsum;</span><br><span class="line">                bsum -= boutsum;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                stackstart = stackpointer - radius + div;</span><br><span class="line">                sir = stack[stackstart % div];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                routsum -= sir[<span class="number">0</span>];</span><br><span class="line">                goutsum -= sir[<span class="number">1</span>];</span><br><span class="line">                boutsum -= sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                <span class="keyword">if</span> (x == <span class="number">0</span>) &#123;</span><br><span class="line">                    vmin[y] = Math.min(y + r1, hm) * w;</span><br><span class="line">                &#125; </span><br><span class="line">                p = x + vmin[y];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                sir[<span class="number">0</span>] = r[p];</span><br><span class="line">                sir[<span class="number">1</span>] = g[p];</span><br><span class="line">                sir[<span class="number">2</span>] = b[p];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rinsum += sir[<span class="number">0</span>];</span><br><span class="line">                ginsum += sir[<span class="number">1</span>];</span><br><span class="line">                binsum += sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rsum += rinsum;</span><br><span class="line">                gsum += ginsum;</span><br><span class="line">                bsum += binsum;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                stackpointer = (stackpointer + <span class="number">1</span>) % div;</span><br><span class="line">                sir = stack[stackpointer];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                routsum += sir[<span class="number">0</span>];</span><br><span class="line">                goutsum += sir[<span class="number">1</span>];</span><br><span class="line">                boutsum += sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                rinsum -= sir[<span class="number">0</span>];</span><br><span class="line">                ginsum -= sir[<span class="number">1</span>];</span><br><span class="line">                binsum -= sir[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">                yi += w;</span><br><span class="line">            &#125; </span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        bitmap.setPixels(pix, <span class="number">0</span>, w, <span class="number">0</span>, <span class="number">0</span>, w, h);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> (bitmap);</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>第二个方式通过直接计算高斯并直接在视图画布上实现。<br>BlurLinearLayout.java<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.graphics.Canvas;</span><br><span class="line"><span class="keyword">import</span> android.util.AttributeSet;</span><br><span class="line"><span class="keyword">import</span> android.widget.LinearLayout;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlurLinearLayout</span> <span class="keyword">extends</span> <span class="title">LinearLayout</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> BlurCalculate mBlurCalculate;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BlurLinearLayout</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        mBlurCalculate = <span class="keyword">new</span> BlurCalculate(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BlurLinearLayout</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * radius for linearlayout**</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRadius</span><span class="params">(<span class="keyword">int</span> radius)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mBlurCalculate != <span class="keyword">null</span>)</span><br><span class="line">            mBlurCalculate.setRadius(radius);</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onAttachedToWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow();</span><br><span class="line">        mBlurCalculate.onAttachedToWindow();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDetachedFromWindow();</span><br><span class="line">        mBlurCalculate.bluronDetachedFromWindow();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">dispatchDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mBlurCalculate.isCanvasChanged(canvas))</span><br><span class="line">            mBlurCalculate.blurCanvas();</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            mBlurCalculate.drawCanvas(canvas);</span><br><span class="line">            <span class="keyword">super</span>.dispatchDraw(canvas);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>BlurCalculate.java<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.graphics.Bitmap;</span><br><span class="line"><span class="keyword">import</span> android.graphics.Canvas;</span><br><span class="line"><span class="keyword">import</span> android.graphics.Matrix;</span><br><span class="line"><span class="keyword">import</span> android.graphics.Rect;</span><br><span class="line"><span class="keyword">import</span> android.support.v8.renderscript.Allocation;</span><br><span class="line"><span class="keyword">import</span> android.support.v8.renderscript.Element;</span><br><span class="line"><span class="keyword">import</span> android.support.v8.renderscript.RenderScript;</span><br><span class="line"><span class="keyword">import</span> android.support.v8.renderscript.ScriptIntrinsicBlur;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewTreeObserver;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlurCalculate</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> BITMAP_RATIO = <span class="number">0.1f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> View mView;</span><br><span class="line">    <span class="keyword">private</span> Bitmap mBitmap;</span><br><span class="line">    <span class="keyword">private</span> Canvas mCanvas;</span><br><span class="line">    <span class="keyword">private</span> Rect mRect;</span><br><span class="line">    <span class="keyword">private</span> Matrix mMatrix;</span><br><span class="line">    <span class="keyword">private</span> Matrix mDrawMatrix;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mRealHeight, mRealWidth;</span><br><span class="line">    <span class="keyword">private</span> RenderScript mRenderScript;</span><br><span class="line">    <span class="keyword">private</span> Allocation mInput;</span><br><span class="line">    <span class="keyword">private</span> Allocation mOutput;</span><br><span class="line">    <span class="keyword">private</span> ScriptIntrinsicBlur mScript;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mRadius = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mAction = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BlurCalculate</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mView = view;</span><br><span class="line">        mRenderScript = RenderScript.create(view.getContext());</span><br><span class="line">        mCanvas = <span class="keyword">new</span> Canvas();</span><br><span class="line">        mRect = <span class="keyword">new</span> Rect();</span><br><span class="line">        mMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">        mDrawMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line"></span><br><span class="line">        mDrawMatrix.setScale(<span class="number">10.0f</span>, <span class="number">10.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAction</span><span class="params">(<span class="keyword">int</span> action)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mAction = action;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isCanvasChanged</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> canvas == mCanvas;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAttachedToWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mView.getViewTreeObserver().addOnPreDrawListener(onPreDrawListener);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bluronDetachedFromWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mView.getViewTreeObserver().removeOnPreDrawListener(onPreDrawListener);</span><br><span class="line">        <span class="keyword">if</span> (mBitmap != <span class="keyword">null</span>)</span><br><span class="line">            mBitmap.recycle();</span><br><span class="line">        mBitmap = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawCanvas</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mBitmap != <span class="keyword">null</span>)</span><br><span class="line">            canvas.drawBitmap(mBitmap, mDrawMatrix, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">blurCanvas</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mInput = Allocation.createFromBitmap(mRenderScript, mBitmap, Allocation.MipmapControl.MIPMAP_NONE,</span><br><span class="line">                Allocation.USAGE_SCRIPT);</span><br><span class="line">        mOutput = Allocation.createTyped(mRenderScript, mInput.getType());</span><br><span class="line">        mScript = ScriptIntrinsicBlur.create(mRenderScript, Element.U8_4(mRenderScript));</span><br><span class="line">        mScript.setRadius(mRadius);</span><br><span class="line">        mScript.setInput(mInput);</span><br><span class="line">        mScript.forEach(mOutput);</span><br><span class="line">        mOutput.copyTo(mBitmap);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRadius</span><span class="params">(<span class="keyword">int</span> radius)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mRadius = radius;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getScreenBitmap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mView.getGlobalVisibleRect(mRect);</span><br><span class="line">        mRealHeight = mView.getHeight();</span><br><span class="line">        mRealWidth = mView.getWidth();</span><br><span class="line">        <span class="keyword">int</span> w = Math.round(mRealWidth * BITMAP_RATIO) + <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">int</span> h = Math.round(mRealHeight * BITMAP_RATIO) + (mAction == <span class="number">0</span> ? -<span class="number">4</span> : <span class="number">4</span>);</span><br><span class="line">        w = w &amp; ~<span class="number">0x03</span>;</span><br><span class="line">        h = h &amp; ~<span class="number">0x03</span>;</span><br><span class="line">        <span class="keyword">if</span> (w &lt;= <span class="number">0</span> || h &lt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">if</span> (mBitmap == <span class="keyword">null</span> || mBitmap.getWidth() != w || mBitmap.getHeight() != h) &#123;</span><br><span class="line">            mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);</span><br><span class="line">            mMatrix.setScale(BITMAP_RATIO, BITMAP_RATIO);</span><br><span class="line">            mMatrix.invert(mDrawMatrix);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//(mView.getBottom()-mView.getTop())</span></span><br><span class="line">        <span class="keyword">float</span> dx = -(Math.min(<span class="number">0</span>, mView.getLeft()) + mRect.left);</span><br><span class="line">        <span class="keyword">float</span> dy = mAction == <span class="number">0</span> ? (-(Math.min(<span class="number">0</span>, mView.getTop()) + mRect.top)) : -(mRect.bottom - ((mView.getBottom() - mView.getTop())));</span><br><span class="line">        mCanvas.restoreToCount(<span class="number">1</span>);</span><br><span class="line">        mCanvas.setBitmap(mBitmap);</span><br><span class="line">        mCanvas.setMatrix(mMatrix);</span><br><span class="line">        mCanvas.translate(dx, dy);</span><br><span class="line">        mCanvas.save();</span><br><span class="line">        mView.getRootView().draw(mCanvas);</span><br><span class="line">        <span class="comment">//mCanvas.setBitmap(null);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ViewTreeObserver.OnPreDrawListener onPreDrawListener = <span class="keyword">new</span> ViewTreeObserver.OnPreDrawListener() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onPreDraw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (mView.getVisibility() == View.VISIBLE)</span><br><span class="line">                getScreenBitmap();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果是android studio的话，添加V8包方法：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    renderscriptTargetApi <span class="number">18</span></span><br><span class="line">    renderscriptSupportModeEnabled <span class="keyword">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="第三方库实现">第三方库实现</h2><p><a href="https://github.com/harism/android_anndblur" target="_blank" rel="external">android_anndblur</a>:<br>Project for implementing background blur effect for Android devices<br><a href="https://github.com/kikoso/android-stackblur" target="_blank" rel="external">android-stackblur</a>:<br>Android StackBlur is a library that can perform a blurry effect on a Bitmap based on a gradient or radius, and return the result. The library is based on the code of Mario Klingemann.</p>
-<h2 id="OpenGL实现">OpenGL实现</h2><p>无论从效果和实时性来讲都是最好的，但需要根据需求来看是否真的有这样的实时性要求。这种方式从显示效果上会优于第一种方法，甚至可以达到渐变的效果，但这些计算都是以耗电作为代价的。作为Launcher这种系统级别的应用，在显示效果差异并不明显的情况下，建议综合考虑耗电量，以及内存和计算性能的消耗。</p>
-<h2 id="Ref">Ref</h2><p><a href="https://github.com/paveldudka/blurring" target="_blank" rel="external">blurring</a><br><a href="http://www.zhihu.com/question/27017363" target="_blank" rel="external">Android（Android5.0）下毛玻璃（磨砂）效果如何实现？</a><br><a href="http://blog.jobbole.com/63894/" target="_blank" rel="external">Android高级模糊技术</a><br><a href="https://github.com/harism/android_anndblur" target="_blank" rel="external">android_anndblur</a><br><a href="https://github.com/kikoso/android-stackblur" target="_blank" rel="external">android-stackblur</a><br><a href="https://developer.android.com/intl/zh-cn/tools/support-library/features.html#v8" target="_blank" rel="external">v8 Support Library</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/10/Android-实现毛玻璃效果/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/10/Android-ToolBar-Widget-Usage/" title="Android ToolBar Widget Usage" itemprop="url">Android ToolBar Widget Usage</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-10T08:03:39.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="背景">背景</h2><p>从2014年Google I/O大会发表了Material Design之后，其也开始陆陆续续更新了Android APP的界面设计接口，在ActionBar之后，Android在support library里面也提供了更多的API给开发者使用。在Material Design之中有一个名称为App Bar，用来取代过去的Action Bar控件，本篇就以此为引，为大家介绍下Tool Bar的使用和自定义。<br>在推出Material Design之后，官方在某些方面也感觉到ActionBar限制了应用开发的弹性，接下来，将分为基本用法、自定义控件及针对ToolBar的总结，为大家介绍下这个控件。</p>
-<h2 id="基本用法">基本用法</h2><p>ToolBar已经集成在V7支持包中，要使用也相对较为简单，基本可分为三步：</p>
-<ol>
-<li>新增ToolBar样式</li>
-<li>XML布局中新增ToolBar</li>
-<li>在程序中替代ActionBar</li>
-</ol>
-<h3 id="一、新增ToolBar样式">一、新增ToolBar样式</h3><p>在低版本中，我们需要禁用windowActionBar及window title，在V21以上（5.0以上）可不用。<br>value/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Base application theme. --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"AppTheme.Base"</span>&gt;</span><span class="css"></span><br><span class="line">  </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme.Base"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat"</span>&gt;</span><span class="css"></span><br><span class="line">    &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">windowActionBar</span>"&gt;<span class="tag">false</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line">    &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">windowNoTitle<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line">  </span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>在新版本中，也可直接继承自Theme.AppCompat.NoActionBar。<br>values-v21/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"AppTheme.Base"</span>&gt;</span><span class="css"></span><br><span class="line">    </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="二、XML布局中新增ToolBar">二、XML布局中新增ToolBar</h3><p>新增布局文件toolbar_actionbar.xml文件：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.v7.widget.Toolbar</span></span><br><span class="line">    <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_actionbar"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"?actionBarSize"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@null"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>之后，在主XML布局文件中，即可以include方式集成：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">include</span> <span class="attribute">layout</span>=<span class="value">"@layout/toolbar_actionbar"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>在使用过程中，也可自定义样式，比如text appearance等，增加对ToolBar的定制。</p>
-<h3 id="三、程序中替代ActionBar">三、程序中替代ActionBar</h3><p>关键代码只有一行，即替代原有目前的ActionBar。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mActionBarToolbar = (Toolbar) activity.findViewById(R.id.toolbar_actionbar);</span><br><span class="line">setSupportActionBar(mActionBarToolbar);</span><br></pre></td></tr></table></figure></p>
-<p>之后，即可使用mActionBarToolBar进行操作，比如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mActionBarToolbar.setTitle();</span><br><span class="line">mActionBarToolbar.setSubtitle();</span><br><span class="line">mActionBarToolbar.setNavigationIcon()</span><br><span class="line">mActionBarToolbar.setLogo()</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<h3 id="四、单独使用而不与ActionBar进行关联">四、单独使用而不与ActionBar进行关联</h3><p>在前一节中设置与ActionBar进行关联，如果不进行关联也是可以使用。即执行方法：setSupportActionBar，那么Menu的操作也不用在onCreateOptionsMenu方法，直接使用ToolBar的inflateMenu方法，Menu的事件也是独立的，需要通过设置ToolBar的setOnMenuItemClickListener来实现。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">toolbar.setOnMenuItemClickListener(<span class="keyword">new</span> Toolbar.OnMenuItemClickListener() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onMenuItemClick</span><span class="params">(MenuItem menuItem)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> id = menuItem.getItemId();</span><br><span class="line">        <span class="keyword">if</span> (id == R.id.action_add_new_item) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h2 id="自定义ToolBar">自定义ToolBar</h2><p>自定义ToolBar我们将从配色开始，到自定义我们的布局，比如Title居中等要求。</p>
-<ol>
-<li>自定义配色</li>
-<li>ToolBar控件</li>
-<li>自定义布局</li>
-</ol>
-<h3 id="一、自定义配色">一、自定义配色</h3><p>基本分为四块配色：<br>1、状态栏底色（看电量时间的那栏）：在style中设置主题的colorPrimaryDark属性<br>2、AppBar底色（应用栏）：分为两种，一个是ActionBar的话，在style中设置主题的colorPrimary属性；第二个是如果使用Tool Bar的话，直接设置ToolBar的background属性。<br>3、主窗口底色（就是我们AppBar下方的应用界面）：style设置主题windowBackground属性。<br>4、导航列底色：在V 21之后，在应用底部有新增导航列，即左右切换等快捷操作。在values-v21/style中设置主题的navigationBarColor属性。<br>values/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme.Base"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat"</span>&gt;</span><span class="css"></span><br><span class="line">  &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">windowActionBar</span>"&gt;<span class="tag">false</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line">  &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">windowNoTitle<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line"> </span><br><span class="line">  &lt;!-- Actionbar color --&gt;</span><br><span class="line">  &lt;item name="</span>colorPrimary<span class="string">"&gt;@color/accent_material_dark&lt;/item&gt;</span><br><span class="line">  &lt;!--Status bar color--&gt;</span><br><span class="line">  &lt;item name="</span>colorPrimaryDark<span class="string">"&gt;@color/accent_material_light&lt;/item&gt;</span><br><span class="line">  &lt;!--Window color--&gt;</span><br><span class="line">  &lt;item name="</span>android:windowBackground<span class="string">"&gt;@color/dim_foreground_material_dark&lt;/item&gt;</span><br><span class="line"></span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>values-v21/styles.xml：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"AppTheme.Base"</span>&gt;</span><span class="css"></span><br><span class="line">  &lt;!<span class="tag">--Navigation</span> <span class="tag">bar</span> <span class="tag">color--</span>&gt;</span><br><span class="line">  &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">navigationBarColor<span class="string">"&gt;@color/accent_material_light&lt;/item&gt;</span><br><span class="line"></span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>Tool Bar背景色：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.v7.widget.Toolbar</span></span><br><span class="line">  <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_actionbar"</span></span><br><span class="line">  <span class="attribute">android:layout_height</span>=<span class="value">"?attr/actionBarSize"</span></span><br><span class="line">  <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">  <span class="attribute">android:background</span>=<span class="value">"?attr/colorPrimary"</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">android.support.v7.widget.Toolbar</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="二、ToolBar控件">二、ToolBar控件</h3><p>从做到右依次为：<br>Icon —- Logo —- Title —- —- —- —- Menu</p>
-<ol>
-<li>Icon：设置向上的图标，即在二级页面时候，返回上级图标，调用setNavigationIcon方法设置，在Material Design上，新的向上图标也有别于ActionBar。</li>
-<li>Logo：应用的LOGO，setLogo方法。</li>
-<li>Title：标题，调用setTitle方法。还有副标题可设置，setSubtitle方法。</li>
-<li>Menu：设置菜单按钮及事件，setOnMenuItemClickListener方法。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);</span><br><span class="line"><span class="comment">// App Logo</span></span><br><span class="line">toolbar.setLogo(R.drawable.ic_launcher);</span><br><span class="line"><span class="comment">// Title</span></span><br><span class="line">toolbar.setTitle(<span class="string">"My Title"</span>);</span><br><span class="line"><span class="comment">// Sub Title</span></span><br><span class="line">toolbar.setSubtitle(<span class="string">"Sub title"</span>);</span><br><span class="line">setSupportActionBar(toolbar);</span><br><span class="line"><span class="comment">// Navigation Icon 设置需要在设置完 setSupoortActionBar 之后</span></span><br><span class="line"><span class="comment">// 否则会出现 back button</span></span><br><span class="line">toolbar.setNavigationIcon(R.drawable.ab_android);</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>Menu的设置也很简单：<br>首先设置menu.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">menu</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">      <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">      <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">      <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/action_edit"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"@string/action_edit"</span></span><br><span class="line">        <span class="attribute">android:orderInCategory</span>=<span class="value">"80"</span></span><br><span class="line">        <span class="attribute">android:icon</span>=<span class="value">"@drawable/ab_edit"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"ifRoom"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/action_share"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"@string/action_edit"</span></span><br><span class="line">        <span class="attribute">android:orderInCategory</span>=<span class="value">"90"</span></span><br><span class="line">        <span class="attribute">android:icon</span>=<span class="value">"@drawable/ab_share"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"ifRoom"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/action_settings"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"@string/action_settings"</span></span><br><span class="line">        <span class="attribute">android:orderInCategory</span>=<span class="value">"100"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"never"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">menu</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>其次代码中设置监听：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Toolbar.OnMenuItemClickListener onMenuItemClick = <span class="keyword">new</span> Toolbar.OnMenuItemClickListener() &#123;</span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onMenuItemClick</span><span class="params">(MenuItem menuItem)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (menuItem.getItemId()) &#123;</span><br><span class="line">      <span class="keyword">case</span> R.id.action_edit:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> R.id.action_share:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> R.id.action_settings:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Menu item click 的监听事件要在设置完 setSupportActionBar 之后才可以</span></span><br><span class="line">toolbar.setOnMenuItemClickListener(onMenuItemClick);</span><br></pre></td></tr></table></figure></p>
-<h3 id="三、自定义布局">三、自定义布局</h3><p>如果想将title修改为居中，此时系统自带的ToolBar的setTitle已经无法满足我们的需求了，此时需要自定义ToolBar布局及控件。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.v7.widget.Toolbar</span></span><br><span class="line">    <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_actionbar"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"?actionBarSize"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@null"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/toolbar_title"</span></span><br><span class="line">        <span class="attribute">style</span>=<span class="value">"@style/TextAppearance.AppCompat.Widget.ActionBar.Title"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_gravity</span>=<span class="value">"center"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">android.support.v7.widget.Toolbar</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>重载setContentView(int resid)方法，并调用此方法，需要注意的是，因为我们使用自己的title视图，所以需要禁用系统的title显示，也就是setDisplayShowTitleEnabled方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Toolbar <span class="title">getActionBarToolbar</span><span class="params">(AppCompatActivity activity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mActionBarToolbar == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mActionBarToolbar = (Toolbar) activity.findViewById(R.id.toolbar_actionbar);</span><br><span class="line">        mTitleView = (TextView) mActionBarToolbar.findViewById(R.id.toolbar_title);</span><br><span class="line">        <span class="keyword">if</span> (mActionBarToolbar != <span class="keyword">null</span>) &#123;</span><br><span class="line">            activity.setSupportActionBar(mActionBarToolbar);</span><br><span class="line">            <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">                activity.getSupportActionBar().setDisplayShowTitleEnabled(<span class="keyword">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mActionBarToolbar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>最后，我们需要设置标题联动，这里可以使用activity里面的一个onTitleChanged监听，这个监听在Activity的onPostCreate和setTitle方法都会调用，在Fragment切换时候，也可以很方便的调用getActivity().setTitle()即可修改标题栏。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onTitleChanged</span><span class="params">(CharSequence title, <span class="keyword">int</span> color)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onTitleChanged(title, color);</span><br><span class="line">    <span class="keyword">if</span>(mToolBarHelper != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mToolBarHelper.setTitle(title);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>附带上所有java代码：<br>activity中代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentView</span><span class="params">(<span class="keyword">int</span> layoutResID)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.setContentView(layoutResID);</span><br><span class="line">    mToolBarHelper = <span class="keyword">new</span> ToolBarHelper();</span><br><span class="line">    mToolBarHelper.getActionBarToolbar(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> ToolBarHelper <span class="title">getToolBarHelper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mToolBarHelper;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onTitleChanged</span><span class="params">(CharSequence title, <span class="keyword">int</span> color)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onTitleChanged(title, color);</span><br><span class="line">    <span class="keyword">if</span>(mToolBarHelper != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mToolBarHelper.setTitle(title);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>ToolBarHelper.java代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ToolBarHelper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Toolbar mActionBarToolbar;</span><br><span class="line">    <span class="keyword">private</span> TextView mTitleView;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Toolbar <span class="title">getActionBarToolbar</span><span class="params">(AppCompatActivity activity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mActionBarToolbar == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mActionBarToolbar = (Toolbar) activity.findViewById(R.id.toolbar_actionbar);</span><br><span class="line">            mTitleView = (TextView) mActionBarToolbar.findViewById(R.id.toolbar_title);</span><br><span class="line">            <span class="keyword">if</span> (mActionBarToolbar != <span class="keyword">null</span>) &#123;</span><br><span class="line">                activity.setSupportActionBar(mActionBarToolbar);</span><br><span class="line">                <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    activity.getSupportActionBar().setDisplayShowTitleEnabled(<span class="keyword">false</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mActionBarToolbar;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(<span class="keyword">int</span> resid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mTitleView.setText(resid);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(CharSequence title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mTitleView.setText(title);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="结语">结语</h2><p>相比而言，ToolBar比ActionBar改进很多，而且其易用性方面也有很大提高，我们也可以不用再自己手动去制作应用标题了。</p>
-<h2 id="Ref">Ref</h2><p><a href="http://angeldevil.me/2014/12/24/toolbar-as-actionbar-and-centered-title/" target="_blank" rel="external">Toolbar作为ActionBar与标题居中</a><br><a href="http://developer.android.com/intl/zh-cn/reference/android/support/v7/widget/Toolbar.html" target="_blank" rel="external">Class Toolbar</a><br><a href="http://blog.mosil.biz/2014/10/android-toolbar/" target="_blank" rel="external">ANDROID-TOOLBAR STEP BY STEP</a><br><a href="http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html" target="_blank" rel="external">Material Design for Pre-Lollipop Devices</a><br><a href="http://www.google.com/design/spec/layout/structure.html#structure-app-bar" target="_blank" rel="external">structure-app-bar</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/10/Android-ToolBar-Widget-Usage/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/08/Android-Studio-With-SVN/" title="Android Studio With SVN" itemprop="url">Android Studio With SVN</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-08T12:17:08.000Z" itemprop="datePublished"> 发表于 2015-07-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="环境">环境</h2><p>系统使用Ubuntu 12.04，SVN版本1.8.8，AS使用最新稳定1.2.2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">svn, version <span class="number">1.8</span>.<span class="number">8</span> (r1568071)</span><br><span class="line">   compiled Aug <span class="number">13</span> <span class="number">2014</span>, <span class="number">17</span>:<span class="number">12</span>:<span class="number">39</span> on x86_64-pc-linux-gnu</span><br></pre></td></tr></table></figure></p>
-<h2 id="配置AS">配置AS</h2><p>配置AS很简单。<br>1、配置SVN执行目录：<br>File -&gt; Settings -&gt; Version Control -&gt; Subversion -&gt; General Tab里面的Use command line client，如果你已经安装SVN，AS应该默认是配置好的。<br>2、上传你的文件到SVN：<br>VCS -&gt; Import into Version Control -&gt; Import into Subversion…之后就可在线上版本查看到文件已经同步。<br>3、为项目新增SVN管理：<br>VCS -&gt; Enable Version Control Integration… 简单配置，即可在面板上有UP和CI等版本操作的图标。<br>至此，AS配置完成。</p>
-<h2 id="设置SVN_IGNORE">设置SVN IGNORE</h2><p>一直不知道SVN如何设置忽略命令，网上看的很多都是不准确或者理解有偏差。<br>1、设置全局忽略文件列表：<br>编辑~/.subversion/config文件，修改此文件中的global-ignores，里面也有提供实例。<br>当然，如果你想修改所有用户的ignore，文件目录在/etc/subversion/config。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo</span></span><br><span class="line"><span class="comment">#   *.rej *~ #*# .#* .*.swp .DS_Store</span></span><br></pre></td></tr></table></figure></p>
-<p>2、设置某目录svn ignore：<br>关键是使用svn的property set命令，此命令不可递归，只能设置当前目录下的ignore规则。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore path</span><br><span class="line"><span class="comment"># svn propedit svn:ignore path</span></span><br><span class="line">svn pd svn:ignore path</span><br><span class="line"><span class="comment"># svn propdel svn:ignore path</span></span><br><span class="line">svn ps svn:ignore path</span><br><span class="line"><span class="comment"># svn propset svn:ignore path</span></span><br></pre></td></tr></table></figure></p>
-<p>如果当前目录结构为：<br>.<br>|<br>|-Android<br>|   |<br>|   - trunk<br>|   - branches<br>|   - tags<br>|-iOS<br>想要过滤trunk目录下某些文件或目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore Android/trunk</span><br></pre></td></tr></table></figure></p>
-<p>之后会打开编辑窗口，输入下方文件即可：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>附带完整svn ignore命令（svn st命令，可以查看当前状态）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> project-path</span><br><span class="line">svn pe Android/trunk</span><br><span class="line">svn pe Android/trunk/.idea</span><br><span class="line">svn pe Android/trunk/app</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/.idea下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workspace.xml</span><br><span class="line">libraries</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/app下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build</span><br></pre></td></tr></table></figure></p>
-<p>设置完成，使用svn ci -m ‘ignore files’即可。<br>附带.ignore文件为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Built application files</span></span><br><span class="line">*.apk</span><br><span class="line">*.ap_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Files for the Dalvik VM</span></span><br><span class="line">*.dex</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java class files</span></span><br><span class="line">*.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generated files</span></span><br><span class="line">bin/</span><br><span class="line">gen/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Gradle files</span></span><br><span class="line">.gradle/</span><br><span class="line">build/</span><br><span class="line">/*/build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local configuration file (sdk path, etc)</span></span><br><span class="line">local.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># Proguard folder generated by Eclipse</span></span><br><span class="line">proguard/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Log Files</span></span><br><span class="line">*.log</span><br><span class="line"></span><br><span class="line">/.idea/workspace.xml</span><br><span class="line">/.idea/libraries</span><br><span class="line">.DS_Store</span><br><span class="line">/capture</span><br></pre></td></tr></table></figure></p>
-<p>附带命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn <span class="built_in">export</span> dir dir_bak</span><br><span class="line">svn rm dir</span><br><span class="line">svn commit -m <span class="string">'delete dir'</span></span><br><span class="line">mv dir-bak dir</span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile1</span><br><span class="line">ignorefile2</span><br><span class="line">ignorefile3'</span> dir</span><br></pre></td></tr></table></figure></p>
-<h2 id="SVN常用命令">SVN常用命令</h2><p>Show The Code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">svn co svn://xxx</span><br><span class="line">svn checkout svn://</span><br><span class="line">svn <span class="built_in">export</span> [-r version] svn://</span><br><span class="line">svn add file</span><br><span class="line">svn commit -m <span class="string">''</span></span><br><span class="line">svn ci -m <span class="string">''</span></span><br><span class="line">svn up</span><br><span class="line">svn update</span><br><span class="line">svn update -r <span class="number">200</span> file</span><br><span class="line">svn delete svn:// -m <span class="string">''</span></span><br><span class="line">svn delete file</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/08/Android-Studio-With-SVN/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/19/Android-Project-Templete/" title="Android Project Templete" itemprop="url">Android Project Templete</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-19T08:25:20.000Z" itemprop="datePublished"> 发表于 2015-06-19</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Android更新迭代很快，而公司业务也在不断扩张，需要这个项目模板来帮助我们快速构建新的应用程序。而且Android的库也在不断的更新换代，包括网络请求库、图片库、JSON解析库等，需要我们不断的更新自身的项目结构，与Android系统保持同步更新，在兼容适配等会更有好处。<br>本库包含了通用的网络库、图片库、内存检测库、底部TAB库等，基本满足项目的前期构建。还包括了脚本编译多渠道包等其他功能，具体可以clone下来自己把玩把玩~~<br>如果有任何建议或者意见，随时联系，也可以pull request到分支。<br><a href="https://github.com/hwangjr/AndroidProjectTemplete" target="_blank" rel="external">AndroidProjectTemplete</a><br>目前已经包含的库有：<br>1、appcompat-v7:22.2.0<br>2、<a href="https://github.com/square/retrofit" target="_blank" rel="external">retrofit:1.9.0</a><br>3、<a href="https://github.com/square/okhttp/tree/master/okhttp-urlconnection" target="_blank" rel="external">okhttp-urlconnection:2.4.0</a><br>4、<a href="https://github.com/square/okhttp" target="_blank" rel="external">okhttp:2.4.0</a><br>5、<a href="https://github.com/square/okio" target="_blank" rel="external">okio:1.4.0</a><br>6、<a href="https://github.com/OrangeGangsters/SwipyRefreshLayout" target="_blank" rel="external">swipy:1.2</a><br>7、<a href="https://github.com/wasabeef/recyclerview-animators" target="_blank" rel="external">recyclerview-animators:1.2</a><br>8、support-v4:22.2.0<br>9、<a href="https://github.com/bumptech/glide" target="_blank" rel="external">glide:3.6.0</a><br>10、<a href="https://github.com/square/leakcanary" target="_blank" rel="external">leakcanary-android:1.3.1</a><br>11、<a href="https://github.com/google/gson" target="_blank" rel="external">GSON</a><br>11、自写底部Tab库（解决Fragment嵌套等问题）</p>
-<p>build.gradle:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    compile fileTree(dir: <span class="string">'libs'</span>, include: [<span class="string">'*.jar'</span>])</span><br><span class="line">    compile <span class="string">'com.android.support:appcompat-v7:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.retrofit:retrofit:1.9.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp-urlconnection:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okhttp:okhttp:2.4.0'</span></span><br><span class="line">    compile <span class="string">'com.squareup.okio:okio:1.4.0'</span></span><br><span class="line">    compile <span class="string">'com.github.orangegangsters:swipy:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'jp.wasabeef:recyclerview-animators:1.2.0@aar'</span></span><br><span class="line">    compile <span class="string">'com.android.support:support-v4:22.2.0'</span></span><br><span class="line">    compile <span class="string">'com.github.bumptech.glide:glide:3.6.0'</span></span><br><span class="line">    debugCompile <span class="string">'com.squareup.leakcanary:leakcanary-android:1.3.1'</span></span><br><span class="line">    releaseCompile <span class="string">'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/19/Android-Project-Templete/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/16/Android-Network-Library/" title="Android Network Library" itemprop="url">Android Network Library</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-16T13:09:18.000Z" itemprop="datePublished"> 发表于 2015-06-16</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>There are so many android library to help us to develop the better apps:<br><a href="https://android.googlesource.com/platform/frameworks/volley" target="_blank" rel="external">Volley</a><br><a href="https://github.com/mcxiaoke/android-volley" target="_blank" rel="external">android-volley</a><br><a href="http://square.github.io/retrofit/" target="_blank" rel="external">Retrofit</a><br><a href="http://square.github.io/okhttp/" target="_blank" rel="external">OkHttp</a><br><a href="https://github.com/koush/ion" target="_blank" rel="external">ion</a><br><a href="http://loopj.com/android-async-http/" target="_blank" rel="external">Android Asynchronous Http Client</a></p>
-<p>The installation of volley is:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://android.googlesource.com/platform/frameworks/volley</span><br><span class="line"><span class="built_in">cd</span> volley</span><br><span class="line">android update project -p</span><br><span class="line">ant jar</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>Volley is encourage by google io, and google use it for many products.</li>
-<li>Retrofit is a type-safe REST client for Android and Java.</li>
-<li>Retrofit introduce the api design like twiter, separate api into many modules.</li>
-<li>Retrofit is ridiculously fast, use gson for default json parser.</li>
-<li>Retrofit meshes quite well with api architecture.<br>etc..<br>So, i decide to use Retrofit for my new project.</li>
-</ol>
-<p>Further reading:<br><a href="http://instructure.github.io/blog/2013/12/09/volley-vs-retrofit/" target="_blank" rel="external">Android Async HTTP Clients: Volley vs Retrofit</a><br><a href="http://stackoverflow.com/questions/16902716/comparison-of-android-networking-libraries-okhttp-retrofit-volley" target="_blank" rel="external">Comparison of Android Networking Libraries: OkHTTP, Retrofit, Volley</a><br><a href="https://www.bignerdranch.com/blog/solving-the-android-image-loading-problem-volley-vs-picasso/" target="_blank" rel="external">Solving the Android image loading problem: Volley vs. Picasso</a><br><a href="https://futurestud.io/blog/retrofit-getting-started-and-android-client/" target="_blank" rel="external">Retrofit — Getting Started and Create an Android Client</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Android/">Android</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Android/">Android</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/16/Android-Network-Library/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/15/Hexo-Basic-Usage/" title="Hexo Basic Usage" itemprop="url">Hexo Basic Usage</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-15T08:10:02.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>This is just a tips about Hexo.</p>
-<h2 id="Installation">Installation</h2><p>Just node.js and git:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># node.js</span></span><br><span class="line">wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br><span class="line">nvm install <span class="number">0.12</span></span><br><span class="line"><span class="comment"># hexo</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># update</span></span><br><span class="line"><span class="comment"># npm update -g hexo-cli</span></span><br><span class="line"><span class="comment"># git</span></span><br><span class="line">yum install git</span><br><span class="line"><span class="comment"># apt-get install git</span></span><br></pre></td></tr></table></figure></p>
-<p>When computer reboot, u need to reload the node.js:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvm ls</span><br><span class="line">nvm use <span class="number">0.12</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="Common_Usage">Common Usage</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># new blog</span></span><br><span class="line">hexo n <span class="string">""</span></span><br><span class="line"><span class="comment"># generate</span></span><br><span class="line">hexo g</span><br><span class="line"><span class="comment"># deploy</span></span><br><span class="line">hexo d</span><br><span class="line"><span class="comment"># publish</span></span><br><span class="line">hexo p</span><br><span class="line"><span class="comment"># server</span></span><br><span class="line">hexo s</span><br><span class="line"><span class="comment"># clean</span></span><br><span class="line">hexo clean</span><br><span class="line"><span class="comment"># deploy with comment</span></span><br><span class="line">hexo d -m <span class="string">""</span></span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><p><a href="https://hexo.io/docs/index.html" target="_blank" rel="external">Hexo Doc</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Hexo/">Hexo</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Hexo/">Hexo</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/15/Hexo-Basic-Usage/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" title="CentOS 7 Firewalld Basic Usage" itemprop="url">CentOS 7 Firewalld Basic Usage</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-15T04:13:32.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>CentOS 7 has change its firewall manager to firewalld, this will discuss about the usage of this tool.<br>Next, i will add a jenkins and a docker registry service.</p>
-<h2 id="Usage">Usage</h2><p>The basic command:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># query port 80</span></span><br><span class="line">firewall-cmd --query-port=<span class="number">80</span>/tcp</span><br><span class="line">iptables -L -n | grep <span class="number">80</span></span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># list all</span></span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">firewall-cmd --zone=public --list-all</span><br><span class="line">firewall-cmd --zone=public --list-services</span><br><span class="line">firewall-cmd --list-ports</span><br><span class="line"><span class="comment"># add port</span></span><br><span class="line">firewall-cmd --add-port=<span class="number">80</span>/tcp</span><br><span class="line"><span class="comment"># help</span></span><br><span class="line">firewall-cmd --help</span><br></pre></td></tr></table></figure></p>
-<h2 id="Add_Jenkins/Docker_Registry_Service">Add Jenkins/Docker Registry Service</h2><p>There is two directory need to focus: /usr/lib/firewalld/, /etc/firewalld. First dir is for lib, second dir is for setup, so let’s do it.<br><strong>STEP 1:</strong><br>Add services to /etc/firewalld/services:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cp service from lib</span></span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/jenkins.xml</span><br><span class="line">cp /usr/lib/firewalld/services/http.xml /etc/firewalld/docker-registry.xml</span><br></pre></td></tr></table></figure></p>
-<p><strong>STEP 2:</strong><br>Modify services like this:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jenkins.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Jenkins&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Jenkins <span class="keyword">for</span> CI.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"8080"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-registry.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;service&gt;</span><br><span class="line">  &lt;short&gt;Docker Registry&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;Docker Registry <span class="keyword">for</span> manage the images.&lt;/description&gt;</span><br><span class="line">  &lt;port protocol=<span class="string">"tcp"</span> port=<span class="string">"5000"</span>/&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>STEP 3:</strong><br>Modify the zone config:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/firewalld/zones/public.xml</span></span><br><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;zone&gt;</span><br><span class="line">  &lt;short&gt;Public&lt;/short&gt;</span><br><span class="line">  &lt;description&gt;For use <span class="keyword">in</span> public areas. You <span class="keyword">do</span> not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.&lt;/description&gt;</span><br><span class="line">  &lt;service name=<span class="string">"dhcpv6-client"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"ssh"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"jenkins"</span>/&gt;</span><br><span class="line">  &lt;service name=<span class="string">"docker-registry"</span>/&gt;</span><br><span class="line">&lt;/zone&gt;</span><br></pre></td></tr></table></figure></p>
-<p>U also can modify the firewall config: /etc/firewalld/firewalld.conf, like default zone etc..<br><strong>STEP 4:</strong><br>Now, just reload the firewall.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure></p>
-<p>That’s all, enjoy it!</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/09/hello-world/" title="Install Jenkins on CentOS 7" itemprop="url">Install Jenkins on CentOS 7</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" title="HwangJR" target="_blank" itemprop="author">HwangJR</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-09T07:39:16.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Installation">Installation</h2><p>The Jenkins Installation is quit simple, because Jenkins has its own repo, so just show the code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo</span><br><span class="line">rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key</span><br><span class="line"><span class="comment"># V 1.617-1.1</span></span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>we also need java environment:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install openjdk 1.8</span></span><br><span class="line">yum install java</span><br></pre></td></tr></table></figure></p>
-<p>or u can search java version and install:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search java | grep <span class="string">'java-'</span></span><br></pre></td></tr></table></figure></p>
-<p>Next, we should expose port 8080:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line">firewall-cmd --add-port=<span class="number">8080</span>/tcp</span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure></p>
-<p>then u can open browser and request the page:<br><a href="http://ip:8080/" target="_blank" rel="external">http://ip:8080/</a></p>
-<p>Same installation on Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -</span><br><span class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins-ci.org/debian binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Update">Update</h2><p>Just run:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure></p>
-<p>Ubuntu:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install jenkins</span><br></pre></td></tr></table></figure></p>
-<h2 id="Errors">Errors</h2><p>if you get the error, u can try to fix it:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># error: Delta RPMs disabled because /usr/bin/applydeltarpm not installed.</span></span><br><span class="line">yum install deltarpm</span><br></pre></td></tr></table></figure></p>
-<h2 id="Reference">Reference</h2><p><a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins" target="_blank" rel="external">Installing Jenkins</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/CI/">CI</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/ci/">ci</a><a href="/tags/tech/">tech</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/09/hello-world/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
-  </nav>
-
-</div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/AI/" title="AI">AI<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Android/" title="Android">Android<sup>17</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Books/" title="Books">Books<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/CI/" title="CI">CI<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Git/" title="Git">Git<sup>4</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/tech/" title="tech">tech<sup>1</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/创业/" title="创业">创业<sup>1</sup></a></li>
-		  
-		
-		</ul>
-</div>
 
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/tech/" title="tech">tech<sup>35</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Android/" title="Android">Android<sup>17</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>11</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Git/" title="Git">Git<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/创业/" title="创业">创业<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/ci/" title="ci">ci<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Books/" title="Books">Books<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/scrum/" title="scrum">scrum<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/AI/" title="AI">AI<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://blog.hwangjr.com" target="_blank" title="HwangJR&#39;s Blog">HwangJR&#39;s Blog</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-</aside>
-</div>
-    </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> Hello, Welcome to my blog. <br/>
-			I&#39;m HwangJR, Tech change the world.</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/1234193120" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/https://github.com/hwangjr" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		<a href="http://stackoverflow.com/users/4827228" target="_blank" class="icon-stack-overflow" title="stackoverflow"></a>
-		
-		
-		<a href="https://twitter.com/HuangJR" target="_blank" class="icon-twitter" title="twitter"></a>
-		
-		
-		<a href="https://www.facebook.com/https://facebook.com/jr.hwang.2010" target="_blank" class="icon-facebook" title="facebook"></a>
-		
-		
-		
-		
-		<a href="https://www.zhihu.com/people/hwangjr" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		<a href="https://plus.google.com/+JianrongHuang?rel=author" target="_blank" class="icon-google_plus" title="Google+"></a>
-		
-		
-		<a href="mailto:huangjianrong2010@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="HwangJR">HwangJR</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-
-
-
-
-<script type="text/javascript">
-
-var disqus_shortname = 'HwangJR';
-
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
-</script>
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-<script type="text/javascript">
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-63911310-1', 'hwangjr.github.io');  
-ga('send', 'pageview');
-</script>
-
-
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
 
 <script>
-var option = {
-  engineKey: '6e8f6d9aa88722365432'
-};
-(function(w,d,t,u,n,s,e){
-  s = d.createElement(t);
-  s.src = u;
-  s.async = 1;
-  w[n] = function(r){
-    w[n].opts = r;
-  };
-  e = d.getElementsByTagName(t)[0];
-  e.parentNode.insertBefore(s, e);
-})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
-_ts(option);
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-63911310-1', 'auto');
+  ga('send', 'pageview');
 </script>
 
-<!-- Tiny_search End -->
 
-  </body>
- </html>
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HwangJR's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Life is wonderful!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/07/10/Android-实现毛玻璃效果/" itemprop="url">
+                  Android 实现毛玻璃效果
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-07-10T20:05:22+08:00" content="2015-07-10">
+              2015-07-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/07/10/Android-实现毛玻璃效果/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/10/Android-实现毛玻璃效果/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/07/10/Android-实现毛玻璃效果/" class="leancloud_visitors" data-flag-title="Android 实现毛玻璃效果">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          Android下实现毛玻璃效果的几种方式。
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/07/10/Android-实现毛玻璃效果/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/07/10/Android-ToolBar-Widget-Usage/" itemprop="url">
+                  Android ToolBar Widget Usage
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-07-10T16:03:39+08:00" content="2015-07-10">
+              2015-07-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/07/10/Android-ToolBar-Widget-Usage/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/10/Android-ToolBar-Widget-Usage/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/07/10/Android-ToolBar-Widget-Usage/" class="leancloud_visitors" data-flag-title="Android ToolBar Widget Usage">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          ToolBar基础用法及自定义ToolBar。
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/07/10/Android-ToolBar-Widget-Usage/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/07/08/Android-Studio-With-SVN/" itemprop="url">
+                  Android Studio With SVN
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-07-08T20:17:08+08:00" content="2015-07-08">
+              2015-07-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/07/08/Android-Studio-With-SVN/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/08/Android-Studio-With-SVN/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/07/08/Android-Studio-With-SVN/" class="leancloud_visitors" data-flag-title="Android Studio With SVN">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          使用Android Studio来管理SVN版本，进行协同工作。
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/07/08/Android-Studio-With-SVN/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/06/19/Android-Project-Templete/" itemprop="url">
+                  Android Project Templete
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-06-19T16:25:20+08:00" content="2015-06-19">
+              2015-06-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/06/19/Android-Project-Templete/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/19/Android-Project-Templete/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/06/19/Android-Project-Templete/" class="leancloud_visitors" data-flag-title="Android Project Templete">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          利用Android Studio开发出一个项目模板，包括常用类库、底部TAB、左滑返回、下拉刷新、上拉更多、内存溢出排查、自动化构建等操作，为后续项目做筹备。
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/06/19/Android-Project-Templete/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/06/16/Android-Network-Library/" itemprop="url">
+                  Android Network Library
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-06-16T21:09:18+08:00" content="2015-06-16">
+              2015-06-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/06/16/Android-Network-Library/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/16/Android-Network-Library/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/06/16/Android-Network-Library/" class="leancloud_visitors" data-flag-title="Android Network Library">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          Android Network Library Introduction
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/06/16/Android-Network-Library/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/06/15/Hexo-Basic-Usage/" itemprop="url">
+                  Hexo Basic Usage
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-06-15T16:10:02+08:00" content="2015-06-15">
+              2015-06-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">Hexo</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/06/15/Hexo-Basic-Usage/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/15/Hexo-Basic-Usage/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/06/15/Hexo-Basic-Usage/" class="leancloud_visitors" data-flag-title="Hexo Basic Usage">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          Introduction about Hexo
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/06/15/Hexo-Basic-Usage/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" itemprop="url">
+                  CentOS 7 Firewalld Basic Usage
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-06-15T12:13:32+08:00" content="2015-06-15">
+              2015-06-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/15/CentOS-7-Firewalld-Basic-Usage/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/" class="leancloud_visitors" data-flag-title="CentOS 7 Firewalld Basic Usage">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          Introduction about CentOS 7 Firewalld
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/06/15/CentOS-7-Firewalld-Basic-Usage/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/06/09/hello-world/" itemprop="url">
+                  Install Jenkins on CentOS 7
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-06-09T15:39:16+08:00" content="2015-06-09">
+              2015-06-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CI/" itemprop="url" rel="index">
+                    <span itemprop="name">CI</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/06/09/hello-world/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/09/hello-world/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/06/09/hello-world/" class="leancloud_visitors" data-flag-title="Install Jenkins on CentOS 7">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          Install jenkins on centos 7
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/06/09/hello-world/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/author.jpg"
+               alt="HwangJR" />
+          <p class="site-author-name" itemprop="name">HwangJR</p>
+          <p class="site-description motion-element" itemprop="description">Some stuff about tech etc..</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/HwangJR" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="huangjianrong2010@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://stackoverflow.com/users/4827228/hwang-jr" target="_blank" title="StackOverFlow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                  StackOverFlow
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/u/0/+JianrongHuang" target="_blank" title="GooglePlus">
+                  
+                    <i class="fa fa-fw fa-google-plus-official"></i>
+                  
+                  GooglePlus
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hwangjr.com" title="HwangJR" target="_blank">HwangJR</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hwangjr.com" title="HwangJR's Blog" target="_blank">HwangJR's Blog</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HwangJR</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'HwangJR';
+      var disqus_identifier = 'page/4/index.html';
+      var disqus_title = "";
+      var disqus_url = '';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E4RdA2t1IWUMTnpbUiYPLI2R-gzGzoHsz", "Az2eDtflRtdPhMbKQeXqDr7z");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
