@@ -79,7 +79,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     scheme: 'Pisces',
-    sidebar: {"position":"left","display":"post"},
+    sidebar: {"position":"right","display":"post"},
     fancybox: true,
     motion: true,
     duoshuo: {
@@ -124,7 +124,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -334,7 +334,7 @@
 <h2 id="GPG密钥"><a href="#GPG密钥" class="headerlink" title="GPG密钥"></a>GPG密钥</h2><p>密钥是为了上传文件的加密和签名。如果有安装git，那么应该是已经安装GPG了，以下默认命令为Linux下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成密钥</span></span><br><span class="line">gpg --gen-key</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">gpg --list-key</span><br></pre></td></tr></table></figure></p>
 <p>其中姓名、邮箱和备注需要认真填写下，最后输入的Passphase，是密码，上传maven需要使用。</p>
 <blockquote>
-<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x68;&#x75;&#97;&#110;&#103;&#x6a;&#105;&#97;&#x6e;&#x72;&#x6f;&#x6e;&#x67;&#x32;&#x30;&#49;&#x30;&#x40;&#x67;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#109;">&#x68;&#x75;&#97;&#110;&#103;&#x6a;&#105;&#97;&#x6e;&#x72;&#x6f;&#x6e;&#x67;&#x32;&#x30;&#49;&#x30;&#x40;&#x67;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#109;</a><br>sub   2048R/2F11E234 2015-11-24</p>
+<p>pub   2048R/B53A8137 2015-11-24<br>uid                  hwangjr (Upload Modules For Maven By Sonatype.) <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#104;&#117;&#97;&#110;&#x67;&#106;&#105;&#97;&#x6e;&#114;&#111;&#x6e;&#x67;&#50;&#x30;&#x31;&#x30;&#64;&#x67;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;">&#104;&#117;&#97;&#110;&#x67;&#106;&#105;&#97;&#x6e;&#114;&#111;&#x6e;&#x67;&#50;&#x30;&#x31;&#x30;&#64;&#x67;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;</a><br>sub   2048R/2F11E234 2015-11-24</p>
 </blockquote>
 <p>B53A8137是KEY ID。上传公钥到服务器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --keyserver hkp://pool.sks-keyservers.net --send-keys B53A8137</span><br></pre></td></tr></table></figure></p>
 <h2 id="本地配置POM"><a href="#本地配置POM" class="headerlink" title="本地配置POM"></a>本地配置POM</h2><p>Chris Banes大神已经写完Gradle插件<a href="https://github.com/chrisbanes/gradle-mvn-push" target="_blank" rel="external">chrisbanes/gradle-mvn-push</a>，可直接使用<a href="https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle" target="_blank" rel="external">gradle-mvn-push.gradle</a>，上面有详细的配置和使用方式。简要步骤为：</p>
