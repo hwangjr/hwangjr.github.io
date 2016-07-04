@@ -44,7 +44,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="tech,Android," />
+  <meta name="keywords" content="HwangJR, HwangJR's Blog" />
 
 
 
@@ -62,16 +62,15 @@
 
 
 
-<meta name="description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Gradle查询/排除依赖">
-<meta property="og:url" content="https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/index.html">
+<meta name="description" content="Some stuff about tech etc..">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HwangJR's Blog">
+<meta property="og:url" content="https://hwangjr.github.io/archives/2016/07/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
-<meta property="og:updated_time" content="2015-10-23T10:30:16.389Z">
+<meta property="og:description" content="Some stuff about tech etc..">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Gradle查询/排除依赖">
-<meta name="twitter:description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
+<meta name="twitter:title" content="HwangJR's Blog">
+<meta name="twitter:description" content="Some stuff about tech etc..">
 
 
 
@@ -92,9 +91,9 @@
 
 
 
-  <link rel="canonical" href="https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/"/>
+  <link rel="canonical" href="https://hwangjr.github.io/archives/2016/07/"/>
 
-  <title> Gradle查询/排除依赖 | HwangJR's Blog </title>
+  <title> 归档 | HwangJR's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -124,7 +123,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-right page-post-detail ">
+  <div class="container one-collumn sidebar-position-right  page-archive  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -212,163 +211,65 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-collapse">
+    <span class="archive-move-on"></span>
+
+    <span class="archive-page-counter">
+      
+      
+       
+      
+      OK! 目前共计 39 篇日志。 继续努力。
+    </span>
+
     
 
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                Gradle查询/排除依赖
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-23T18:29:58+08:00" content="2015-10-23">
-              2015-10-23
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/23/Gradle查询-排除依赖/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/23/Gradle查询-排除依赖/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2015/10/23/Gradle查询-排除依赖/" class="leancloud_visitors" data-flag-title="Gradle查询/排除依赖">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
-      
-        <p>使用Gradle编译项目时，可使用此排查依赖包冲突。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查看项目库依赖</span></span><br><span class="line">gradle -q dependencies plugin_framework:dependencies —configuration compile</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    <div>
       
         
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/tech/" rel="tag">#tech</a>
-          
-            <a href="/tags/Android/" rel="tag">#Android</a>
-          
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
         </div>
       
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2015/10/23/CentOS6-5-配置Subversion/" rel="next" title="CentOS6.5 配置Subversion">
-                <i class="fa fa-chevron-left"></i> CentOS6.5 配置Subversion
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/10/23/阿里CentOS-6-iptables配置/" rel="prev" title="阿里CentOS 6 iptables配置">
-                阿里CentOS 6 iptables配置 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
 
       
-      
-    </footer>
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
+        
+            <a class="post-title-link" href="/2016/07/04/关于Target-SDK-Version/" itemprop="url">
+              
+                <span itemprop="name">关于Target SDK Version</span>
+              
+            </a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-07-04T17:18:21+08:00"
+              content="2016-07-04" >
+          07-04
+        </time>
+      </div>
+
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+    
+
+  </section>
+
+  
+
 
 
           </div>
@@ -376,17 +277,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -406,17 +296,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/author.jpg"
@@ -530,17 +411,6 @@
       </section>
 
       
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <p class="post-toc-empty">此文章未包含目录</p>
-            
-          </div>
-        </section>
-      
 
     </div>
   </aside>
@@ -643,9 +513,11 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
 
 
   
@@ -663,9 +535,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'HwangJR';
-      var disqus_identifier = '2015/10/23/Gradle查询-排除依赖/';
-      var disqus_title = "Gradle查询/排除依赖";
-      var disqus_url = 'https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/';
+      var disqus_identifier = 'archives/2016/07/index.html';
+      var disqus_title = "";
+      var disqus_url = '';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -676,8 +548,6 @@
       }
 
       run_disqus_script('count.js');
-      
-        run_disqus_script('embed.js');
       
     </script>
   

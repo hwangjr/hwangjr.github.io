@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hwangjr.github.io/"/>
-  <updated>2016-06-27T03:05:34.987Z</updated>
+  <updated>2016-07-04T09:20:10.153Z</updated>
   <id>https://hwangjr.github.io/</id>
   
   <author>
@@ -14,6 +14,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于Target SDK Version</title>
+    <link href="https://hwangjr.github.io/2016/07/04/%E5%85%B3%E4%BA%8ETarget-SDK-Version/"/>
+    <id>https://hwangjr.github.io/2016/07/04/关于Target-SDK-Version/</id>
+    <published>2016-07-04T09:18:21.000Z</published>
+    <updated>2016-07-04T09:20:10.153Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;Introduction&quot;&gt;&lt;a href=&quot;#Introduction&quot; class=&quot;headerlink&quot; title=&quot;Introduction&quot;&gt;&lt;/a&gt;Introduction&lt;/h1&gt;&lt;p&gt;在AS的&lt;code&gt;build.gradle&lt;/code&gt;中，会有&lt;code&gt;compileSdkVersion&lt;/code&gt;、&lt;code&gt;minSdkVersion&lt;/code&gt;以及&lt;code&gt;targetSdkVersion&lt;/code&gt;的设定，一般我们直接选择最低，然后其他默认。但是在默认情况下，其实是会有适配问题。&lt;/p&gt;
+&lt;h1 id=&quot;Meaning&quot;&gt;&lt;a href=&quot;#Meaning&quot; class=&quot;headerlink&quot; title=&quot;Meaning&quot;&gt;&lt;/a&gt;Meaning&lt;/h1&gt;&lt;p&gt;关于&lt;code&gt;compileSdkVersion&lt;/code&gt;和&lt;code&gt;minSdkVersion&lt;/code&gt;的含义很好理解，&lt;code&gt;compileSdkVersion&lt;/code&gt;表示编译的SDK版本，而&lt;code&gt;minSdkVersion&lt;/code&gt;则表示应用兼容的最低版本。相比而言，&lt;code&gt;targetSdkVersion&lt;/code&gt;则会更让人有歧义。&lt;/p&gt;
+&lt;h1 id=&quot;Target-SDK-Version&quot;&gt;&lt;a href=&quot;#Target-SDK-Version&quot; class=&quot;headerlink&quot; title=&quot;Target SDK Version&quot;&gt;&lt;/a&gt;Target SDK Version&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;targetSdkVersion&lt;/strong&gt; is the main way Android provides forward compatibility by not applying behavior changes unless the targetSdkVersion is updated. This allows you to use new APIs (as you did update your compileSdkVersion right?) prior to working through the behavior changes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Android系统升级，伴随API升级，而Target SDK Version则是针对应用提供了向前兼容的能力，即针对Target SDK Version没有更新之前，系用不会应用新的行为变化。&lt;/p&gt;
+&lt;p&gt;举个栗子：大家都知道在6.0之后，Android升级了其权限管理，应用了运行时权限模型。那么如果升级了Android系统到6.0之后，旧的应用是否都无法使用了？&lt;/p&gt;
+&lt;p&gt;答案自然是否定，这时Target SDK Version就发挥作用了，系统会读取应用的Target SDK Version，来决定接下来的行为，如果是旧的应用，则其Target SDK Version小于23（6.0），Android则不会应用新的运行时权限模型进行检查。&lt;/p&gt;
+&lt;p&gt;自然，你可以根据&lt;a href=&quot;https://medium.com/google-developers/picking-your-compilesdkversion-minsdkversion-targetsdkversion-a098a0341ebd#.ufwotvht8&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;原文&lt;/a&gt;提供的AlarmManager的&lt;code&gt;set()&lt;/code&gt;和&lt;code&gt;setRepeat()&lt;/code&gt;接口例子来进行验证（即在KITKAT之后在原有精确唤醒基础上，为了省电加入对齐唤醒机制）。应该可以看到源码对应用的&lt;code&gt;target sdk version&lt;/code&gt;进行判断：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;AlarmManager(IAlarmManager service, Context ctx) &amp;#123;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    mService = service;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    final int sdkVersion = ctx.getApplicationInfo().targetSdkVersion;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    mAlwaysExact = (sdkVersion &amp;lt; Build.VERSION_CODES.KITKAT);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;硬编码方式自然不好，不过好在我们可以有个&lt;a href=&quot;https://developer.android.com/about/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Check List&lt;/a&gt;可以查看。&lt;/p&gt;
+&lt;h1 id=&quot;Conclusion&quot;&gt;&lt;a href=&quot;#Conclusion&quot; class=&quot;headerlink&quot; title=&quot;Conclusion&quot;&gt;&lt;/a&gt;Conclusion&lt;/h1&gt;&lt;h2 id=&quot;Compile-SDK-Version&quot;&gt;&lt;a href=&quot;#Compile-SDK-Version&quot; class=&quot;headerlink&quot; title=&quot;Compile SDK Version&quot;&gt;&lt;/a&gt;Compile SDK Version&lt;/h2&gt;&lt;p&gt;用哪个版本来编译你的应用，正常来说，随你心情，但是最好还是使用最新发布版本。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;使用最新版本&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;会产生新的编译警告和编译错误（包括弃用的API等），正常需要针对这些警告和错误进行修正。&lt;/li&gt;
+&lt;li&gt;使用&lt;a href=&quot;http://developer.android.com/tools/support-library/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Support Library&lt;/a&gt;时，需要注意使用最新的SDK进行编译，一般会随着系统升级而升级，提供新的API和新特性的兼容。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;Min-SDK-Version&quot;&gt;&lt;a href=&quot;#Min-SDK-Version&quot; class=&quot;headerlink&quot; title=&quot;Min SDK Version&quot;&gt;&lt;/a&gt;Min SDK Version&lt;/h2&gt;&lt;p&gt;最低兼容版本，每个应用需求不同，目前普遍已经&lt;code&gt;15&lt;/code&gt;了。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;Lint&lt;/code&gt;检查时，会帮助检查是否使用了&lt;code&gt;min sdk version&lt;/code&gt;的接口&lt;/li&gt;
+&lt;li&gt;使用&lt;a href=&quot;http://developer.android.com/tools/support-library/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Support Library&lt;/a&gt;或者&lt;a href=&quot;https://developers.google.com/android/guides/overview&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Google Play Services&lt;/a&gt;时，他们有自身&lt;code&gt;min sdk version&lt;/code&gt;，自然， 你可以使用&lt;a href=&quot;http://tools.android.com/tech-docs/new-build-system/user-guide/manifest-merger&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;tools:overrideLibrary&lt;/a&gt;来强制使用，但是需要&lt;strong&gt;测试-测试-测试&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;Target-SDK-Version-1&quot;&gt;&lt;a href=&quot;#Target-SDK-Version-1&quot; class=&quot;headerlink&quot; title=&quot;Target SDK Version&quot;&gt;&lt;/a&gt;Target SDK Version&lt;/h2&gt;&lt;p&gt;最后这个Version，&lt;strong&gt;至关重要&lt;/strong&gt;，如果设置错误，会导致应用在高版本机器上&lt;strong&gt;崩溃&lt;/strong&gt;。如果没有兼容新的权限模型，建议设置为&lt;code&gt;18&lt;/code&gt;（&lt;code&gt;22&lt;/code&gt;即可降低为不兼容新权限模型，但是经过测试，&lt;code&gt;&amp;lt;uses-permission android:name=&amp;quot;android.permission.WRITE_SETTINGS&amp;quot; /&amp;gt;&lt;/code&gt;权限，在18以上都会&lt;strong&gt;雪崩&lt;/strong&gt;，如果要使用此权限，降低为&lt;code&gt;18&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;所以：&lt;code&gt;minSdkVersion &amp;lt;= targetSdkVersion &amp;lt;= compileSdkVersion&lt;/code&gt;，理想上为：&lt;code&gt;minSdkVersion (lowest possible) &amp;lt;= targetSdkVersion == compileSdkVersion (latest SDK)&lt;/code&gt;。&lt;strong&gt;用较低的minSdkVersion覆盖更多的人群，用最新的SDK设置Target和Compile版本来获得最好的支持。&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Refs&quot;&gt;&lt;a href=&quot;#Refs&quot; class=&quot;headerlink&quot; title=&quot;Refs&quot;&gt;&lt;/a&gt;Refs&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://medium.com/google-developers/picking-your-compilesdkversion-minsdkversion-targetsdkversion-a098a0341ebd#.ufwotvht8&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Picking your compileSdkVersion, minSdkVersion, targetSdkVersion — Google Developers&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://chinagdg.org/2016/01/picking-your-compilesdkversion-minsdkversion-targetsdkversion/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;如何选择 compileSdkVersion, minSdkVersion 和 targetSdkVersion&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      关于Target SDK Version及其兼容性的问题。
+    
+    </summary>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
+    
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
+    
+  </entry>
   
   <entry>
     <title>AI(Appreciative Inquiry / 欣赏式探询) 初探</title>
@@ -840,7 +888,7 @@
 &lt;h2 id=&quot;GPG密钥&quot;&gt;&lt;a href=&quot;#GPG密钥&quot; class=&quot;headerlink&quot; title=&quot;GPG密钥&quot;&gt;&lt;/a&gt;GPG密钥&lt;/h2&gt;&lt;p&gt;密钥是为了上传文件的加密和签名。如果有安装git，那么应该是已经安装GPG了，以下默认命令为Linux下。&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 生成密钥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gpg --gen-key&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 查看&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gpg --list-key&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;其中姓名、邮箱和备注需要认真填写下，最后输入的Passphase，是密码，上传maven需要使用。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;pub   2048R/B53A8137 2015-11-24&lt;br&gt;uid                  hwangjr (Upload Modules For Maven By Sonatype.) &lt;a href=&quot;&amp;#109;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#x74;&amp;#x6f;&amp;#58;&amp;#104;&amp;#117;&amp;#97;&amp;#110;&amp;#x67;&amp;#106;&amp;#105;&amp;#97;&amp;#x6e;&amp;#114;&amp;#111;&amp;#x6e;&amp;#x67;&amp;#50;&amp;#x30;&amp;#x31;&amp;#x30;&amp;#64;&amp;#x67;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&quot;&gt;&amp;#104;&amp;#117;&amp;#97;&amp;#110;&amp;#x67;&amp;#106;&amp;#105;&amp;#97;&amp;#x6e;&amp;#114;&amp;#111;&amp;#x6e;&amp;#x67;&amp;#50;&amp;#x30;&amp;#x31;&amp;#x30;&amp;#64;&amp;#x67;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;&lt;br&gt;sub   2048R/2F11E234 2015-11-24&lt;/p&gt;
+&lt;p&gt;pub   2048R/B53A8137 2015-11-24&lt;br&gt;uid                  hwangjr (Upload Modules For Maven By Sonatype.) &lt;a href=&quot;&amp;#109;&amp;#x61;&amp;#x69;&amp;#108;&amp;#116;&amp;#111;&amp;#x3a;&amp;#x68;&amp;#117;&amp;#97;&amp;#110;&amp;#x67;&amp;#106;&amp;#x69;&amp;#97;&amp;#x6e;&amp;#114;&amp;#111;&amp;#110;&amp;#103;&amp;#x32;&amp;#x30;&amp;#49;&amp;#48;&amp;#64;&amp;#103;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#108;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#x6d;&quot;&gt;&amp;#x68;&amp;#117;&amp;#97;&amp;#110;&amp;#x67;&amp;#106;&amp;#x69;&amp;#97;&amp;#x6e;&amp;#114;&amp;#111;&amp;#110;&amp;#103;&amp;#x32;&amp;#x30;&amp;#49;&amp;#48;&amp;#64;&amp;#103;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#108;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#x6d;&lt;/a&gt;&lt;br&gt;sub   2048R/2F11E234 2015-11-24&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;B53A8137是KEY ID。上传公钥到服务器：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;gpg --keyserver hkp://pool.sks-keyservers.net --send-keys B53A8137&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;h2 id=&quot;本地配置POM&quot;&gt;&lt;a href=&quot;#本地配置POM&quot; class=&quot;headerlink&quot; title=&quot;本地配置POM&quot;&gt;&lt;/a&gt;本地配置POM&lt;/h2&gt;&lt;p&gt;Chris Banes大神已经写完Gradle插件&lt;a href=&quot;https://github.com/chrisbanes/gradle-mvn-push&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;chrisbanes/gradle-mvn-push&lt;/a&gt;，可直接使用&lt;a href=&quot;https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;gradle-mvn-push.gradle&lt;/a&gt;，上面有详细的配置和使用方式。简要步骤为：&lt;/p&gt;
@@ -1215,32 +1263,6 @@
       <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
     
       <category term="Linux" scheme="https://hwangjr.github.io/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Gradle查询/排除依赖</title>
-    <link href="https://hwangjr.github.io/2015/10/23/Gradle%E6%9F%A5%E8%AF%A2-%E6%8E%92%E9%99%A4%E4%BE%9D%E8%B5%96/"/>
-    <id>https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/</id>
-    <published>2015-10-23T10:29:58.000Z</published>
-    <updated>2015-10-23T10:30:16.389Z</updated>
-    
-    <content type="html">&lt;p&gt;使用Gradle编译项目时，可使用此排查依赖包冲突。&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 查看项目库依赖&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gradle -q dependencies plugin_framework:dependencies —configuration compile&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-</content>
-    
-    <summary type="html">
-    
-      在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。
-    
-    </summary>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
-    
-    
-      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
     
   </entry>
   

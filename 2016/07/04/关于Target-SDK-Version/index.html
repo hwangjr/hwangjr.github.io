@@ -62,16 +62,16 @@
 
 
 
-<meta name="description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
+<meta name="description" content="关于Target SDK Version及其兼容性的问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Gradle查询/排除依赖">
-<meta property="og:url" content="https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/index.html">
+<meta property="og:title" content="关于Target SDK Version">
+<meta property="og:url" content="https://hwangjr.github.io/2016/07/04/关于Target-SDK-Version/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
-<meta property="og:updated_time" content="2015-10-23T10:30:16.389Z">
+<meta property="og:description" content="关于Target SDK Version及其兼容性的问题。">
+<meta property="og:updated_time" content="2016-07-04T09:20:10.153Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Gradle查询/排除依赖">
-<meta name="twitter:description" content="在使用Gradle编译项目时，时常遇到引用包冲突，可用此方法来进行排除。">
+<meta name="twitter:title" content="关于Target SDK Version">
+<meta name="twitter:description" content="关于Target SDK Version及其兼容性的问题。">
 
 
 
@@ -92,9 +92,9 @@
 
 
 
-  <link rel="canonical" href="https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/"/>
+  <link rel="canonical" href="https://hwangjr.github.io/2016/07/04/关于Target-SDK-Version/"/>
 
-  <title> Gradle查询/排除依赖 | HwangJR's Blog </title>
+  <title> 关于Target SDK Version | HwangJR's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -233,7 +233,7 @@
             
             
               
-                Gradle查询/排除依赖
+                关于Target SDK Version
               
             
           </h1>
@@ -245,8 +245,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-23T18:29:58+08:00" content="2015-10-23">
-              2015-10-23
+            <time itemprop="dateCreated" datetime="2016-07-04T17:18:21+08:00" content="2016-07-04">
+              2016-07-04
             </time>
           </span>
 
@@ -275,8 +275,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/10/23/Gradle查询-排除依赖/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/23/Gradle查询-排除依赖/" itemprop="commentsCount"></span>
+                <a href="/2016/07/04/关于Target-SDK-Version/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/04/关于Target-SDK-Version/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -286,7 +286,7 @@
 
           
           
-             <span id="/2015/10/23/Gradle查询-排除依赖/" class="leancloud_visitors" data-flag-title="Gradle查询/排除依赖">
+             <span id="/2016/07/04/关于Target-SDK-Version/" class="leancloud_visitors" data-flag-title="关于Target SDK Version">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -308,8 +308,30 @@
       
 
       
-        <p>使用Gradle编译项目时，可使用此排查依赖包冲突。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查看项目库依赖</span></span><br><span class="line">gradle -q dependencies plugin_framework:dependencies —configuration compile</span><br></pre></td></tr></table></figure>
+        <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在AS的<code>build.gradle</code>中，会有<code>compileSdkVersion</code>、<code>minSdkVersion</code>以及<code>targetSdkVersion</code>的设定，一般我们直接选择最低，然后其他默认。但是在默认情况下，其实是会有适配问题。</p>
+<h1 id="Meaning"><a href="#Meaning" class="headerlink" title="Meaning"></a>Meaning</h1><p>关于<code>compileSdkVersion</code>和<code>minSdkVersion</code>的含义很好理解，<code>compileSdkVersion</code>表示编译的SDK版本，而<code>minSdkVersion</code>则表示应用兼容的最低版本。相比而言，<code>targetSdkVersion</code>则会更让人有歧义。</p>
+<h1 id="Target-SDK-Version"><a href="#Target-SDK-Version" class="headerlink" title="Target SDK Version"></a>Target SDK Version</h1><blockquote>
+<p><strong>targetSdkVersion</strong> is the main way Android provides forward compatibility by not applying behavior changes unless the targetSdkVersion is updated. This allows you to use new APIs (as you did update your compileSdkVersion right?) prior to working through the behavior changes.</p>
+</blockquote>
+<p>Android系统升级，伴随API升级，而Target SDK Version则是针对应用提供了向前兼容的能力，即针对Target SDK Version没有更新之前，系用不会应用新的行为变化。</p>
+<p>举个栗子：大家都知道在6.0之后，Android升级了其权限管理，应用了运行时权限模型。那么如果升级了Android系统到6.0之后，旧的应用是否都无法使用了？</p>
+<p>答案自然是否定，这时Target SDK Version就发挥作用了，系统会读取应用的Target SDK Version，来决定接下来的行为，如果是旧的应用，则其Target SDK Version小于23（6.0），Android则不会应用新的运行时权限模型进行检查。</p>
+<p>自然，你可以根据<a href="https://medium.com/google-developers/picking-your-compilesdkversion-minsdkversion-targetsdkversion-a098a0341ebd#.ufwotvht8" target="_blank" rel="external">原文</a>提供的AlarmManager的<code>set()</code>和<code>setRepeat()</code>接口例子来进行验证（即在KITKAT之后在原有精确唤醒基础上，为了省电加入对齐唤醒机制）。应该可以看到源码对应用的<code>target sdk version</code>进行判断：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AlarmManager(IAlarmManager service, Context ctx) &#123;  </span><br><span class="line">    mService = service;</span><br><span class="line"></span><br><span class="line">    final int sdkVersion = ctx.getApplicationInfo().targetSdkVersion;</span><br><span class="line">    mAlwaysExact = (sdkVersion &lt; Build.VERSION_CODES.KITKAT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>硬编码方式自然不好，不过好在我们可以有个<a href="https://developer.android.com/about/index.html" target="_blank" rel="external">Check List</a>可以查看。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><h2 id="Compile-SDK-Version"><a href="#Compile-SDK-Version" class="headerlink" title="Compile SDK Version"></a>Compile SDK Version</h2><p>用哪个版本来编译你的应用，正常来说，随你心情，但是最好还是使用最新发布版本。</p>
+<p><strong>使用最新版本</strong></p>
+<ol>
+<li>会产生新的编译警告和编译错误（包括弃用的API等），正常需要针对这些警告和错误进行修正。</li>
+<li>使用<a href="http://developer.android.com/tools/support-library/index.html" target="_blank" rel="external">Support Library</a>时，需要注意使用最新的SDK进行编译，一般会随着系统升级而升级，提供新的API和新特性的兼容。</li>
+</ol>
+<h2 id="Min-SDK-Version"><a href="#Min-SDK-Version" class="headerlink" title="Min SDK Version"></a>Min SDK Version</h2><p>最低兼容版本，每个应用需求不同，目前普遍已经<code>15</code>了。</p>
+<ol>
+<li><code>Lint</code>检查时，会帮助检查是否使用了<code>min sdk version</code>的接口</li>
+<li>使用<a href="http://developer.android.com/tools/support-library/index.html" target="_blank" rel="external">Support Library</a>或者<a href="https://developers.google.com/android/guides/overview" target="_blank" rel="external">Google Play Services</a>时，他们有自身<code>min sdk version</code>，自然， 你可以使用<a href="http://tools.android.com/tech-docs/new-build-system/user-guide/manifest-merger" target="_blank" rel="external">tools:overrideLibrary</a>来强制使用，但是需要<strong>测试-测试-测试</strong>。</li>
+</ol>
+<h2 id="Target-SDK-Version-1"><a href="#Target-SDK-Version-1" class="headerlink" title="Target SDK Version"></a>Target SDK Version</h2><p>最后这个Version，<strong>至关重要</strong>，如果设置错误，会导致应用在高版本机器上<strong>崩溃</strong>。如果没有兼容新的权限模型，建议设置为<code>18</code>（<code>22</code>即可降低为不兼容新权限模型，但是经过测试，<code>&lt;uses-permission android:name=&quot;android.permission.WRITE_SETTINGS&quot; /&gt;</code>权限，在18以上都会<strong>雪崩</strong>，如果要使用此权限，降低为<code>18</code>）。</p>
+<p>所以：<code>minSdkVersion &lt;= targetSdkVersion &lt;= compileSdkVersion</code>，理想上为：<code>minSdkVersion (lowest possible) &lt;= targetSdkVersion == compileSdkVersion (latest SDK)</code>。<strong>用较低的minSdkVersion覆盖更多的人群，用最新的SDK设置Target和Compile版本来获得最好的支持。</strong></p>
+<h1 id="Refs"><a href="#Refs" class="headerlink" title="Refs"></a>Refs</h1><p><a href="https://medium.com/google-developers/picking-your-compilesdkversion-minsdkversion-targetsdkversion-a098a0341ebd#.ufwotvht8" target="_blank" rel="external">Picking your compileSdkVersion, minSdkVersion, targetSdkVersion — Google Developers</a><br><a href="http://chinagdg.org/2016/01/picking-your-compilesdkversion-minsdkversion-targetsdkversion/" target="_blank" rel="external">如何选择 compileSdkVersion, minSdkVersion 和 targetSdkVersion</a></p>
 
       
     </div>
@@ -342,17 +364,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/23/CentOS6-5-配置Subversion/" rel="next" title="CentOS6.5 配置Subversion">
-                <i class="fa fa-chevron-left"></i> CentOS6.5 配置Subversion
+              <a href="/2016/05/10/AI-Appreciative-Inquiry-欣赏式探询-初探/" rel="next" title="AI(Appreciative Inquiry / 欣赏式探询) 初探">
+                <i class="fa fa-chevron-left"></i> AI(Appreciative Inquiry / 欣赏式探询) 初探
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/10/23/阿里CentOS-6-iptables配置/" rel="prev" title="阿里CentOS 6 iptables配置">
-                阿里CentOS 6 iptables配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -536,7 +554,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Meaning"><span class="nav-number">2.</span> <span class="nav-text">Meaning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Target-SDK-Version"><span class="nav-number">3.</span> <span class="nav-text">Target SDK Version</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">4.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-SDK-Version"><span class="nav-number">4.1.</span> <span class="nav-text">Compile SDK Version</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Min-SDK-Version"><span class="nav-number">4.2.</span> <span class="nav-text">Min SDK Version</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Target-SDK-Version-1"><span class="nav-number">4.3.</span> <span class="nav-text">Target SDK Version</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Refs"><span class="nav-number">5.</span> <span class="nav-text">Refs</span></a></li></ol></div>
             
           </div>
         </section>
@@ -663,9 +681,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'HwangJR';
-      var disqus_identifier = '2015/10/23/Gradle查询-排除依赖/';
-      var disqus_title = "Gradle查询/排除依赖";
-      var disqus_url = 'https://hwangjr.github.io/2015/10/23/Gradle查询-排除依赖/';
+      var disqus_identifier = '2016/07/04/关于Target-SDK-Version/';
+      var disqus_title = "关于Target SDK Version";
+      var disqus_url = 'https://hwangjr.github.io/2016/07/04/关于Target-SDK-Version/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
