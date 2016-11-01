@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://hwangjr.github.io/"/>
-  <updated>2016-11-01T03:55:53.435Z</updated>
+  <updated>2016-11-01T06:17:32.435Z</updated>
   <id>https://hwangjr.github.io/</id>
   
   <author>
@@ -14,6 +14,116 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>GUI Architectures</title>
+    <link href="https://hwangjr.github.io/2016/10/20/GUI-Architectures/"/>
+    <id>https://hwangjr.github.io/2016/10/20/GUI-Architectures/</id>
+    <published>2016-10-20T07:37:11.000Z</published>
+    <updated>2016-11-01T06:17:32.435Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;进化历史&quot;&gt;&lt;a href=&quot;#进化历史&quot; class=&quot;headerlink&quot; title=&quot;进化历史&quot;&gt;&lt;/a&gt;进化历史&lt;/h1&gt;&lt;h2 id=&quot;Forms-and-Controls&quot;&gt;&lt;a href=&quot;#Forms-and-Controls&quot; class=&quot;headerlink&quot; title=&quot;Forms and Controls&quot;&gt;&lt;/a&gt;Forms and Controls&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;开发者使用通用控件在form中完成App特有逻辑&lt;/li&gt;
+&lt;li&gt;form描述了控件的布局&lt;/li&gt;
+&lt;li&gt;form观察控件，通过处理方法来回应感兴趣的事件&lt;/li&gt;
+&lt;li&gt;简单的数据编辑使用数据绑定来完成&lt;/li&gt;
+&lt;li&gt;复杂的变化使用form的事件处理方法来完成&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;MVC&quot;&gt;&lt;a href=&quot;#MVC&quot; class=&quot;headerlink&quot; title=&quot;MVC&quot;&gt;&lt;/a&gt;MVC&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;明确的分开表现层（view&amp;amp;controller）和领域层（model）- Separated Presentation&lt;/li&gt;
+&lt;li&gt;把 GUI widgets 分成 controller（用来处理用户输入） 和 view （用来展示model的状态）。Controller 和 view不应该（大部分情况下）直接的通信而是通过model。&lt;/li&gt;
+&lt;li&gt;让views（and controller）观察model 以便允许多个widget都可以更新而不需要直接通信 - Observer Synchronization。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Model-View-Controller 是一种把应用分离成领域、呈现、和用户输入的几种模块的方法。&lt;/p&gt;
+&lt;h3 id=&quot;MVC-Misconceptions&quot;&gt;&lt;a href=&quot;#MVC-Misconceptions&quot; class=&quot;headerlink&quot; title=&quot;MVC Misconceptions&quot;&gt;&lt;/a&gt;MVC Misconceptions&lt;/h3&gt;&lt;p&gt;一个常见的误解是Model-View-Controller三个模块之间的关系是Controller用来分离View和Model。尽管MVC模式确实分离了应用领域层和表现层，但是这是通过观察者模式完成的，而不是Controller。Controller是用户和应用之间的中介，而不是用来分离View和Model的。&lt;/p&gt;
+&lt;h2 id=&quot;Application-Model&quot;&gt;&lt;a href=&quot;#Application-Model&quot; class=&quot;headerlink&quot; title=&quot;Application Model&quot;&gt;&lt;/a&gt;Application Model&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;遵从MVC，使用了 Separated Presentation 和 Observer Synchronization 模式。&lt;/li&gt;
+&lt;li&gt;引入了中间的应用模型(ApplicatonModel) 来处理表现逻辑和状态 - 是Presentation Model 的一部分。&lt;/li&gt;
+&lt;li&gt;UI组件不再直接观察领域模型，而是观察应用模型。&lt;/li&gt;
+&lt;li&gt;大量使用属性对象来连接不同的层并通过观察者模式来实现细粒度的数据同步&lt;/li&gt;
+&lt;li&gt;在应用模型中操作UI组件并不是应用模型原有的设计，但是在复杂的情况下，这种使用非常普遍。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;MVP&quot;&gt;&lt;a href=&quot;#MVP&quot; class=&quot;headerlink&quot; title=&quot;MVP&quot;&gt;&lt;/a&gt;MVP&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;对比&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Form And Controls：MVP有底层model，Presenter会通过Observer Synchronization 模式操作model来更新view。尽管可以直接访问widget，但是这并不能成为除了使用model来更新之外的首选。&lt;/li&gt;
+&lt;li&gt;MVC:MVP使用一个Supervising Controller来操作model。Widgets会把用户操作转交给 Supervising Controller。Widget没有被分成 view和controllers。你可以把 Presenter看成是没有处理原始用户手势功能的controller。另外非常重要的是 presenter 是处在 form 层级的而不是 widget层级的，这是和MVC中Controller一个更大的不同。&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;ApplicationModel：views把事件转交给presenter这和ApplicationModel类似。但是view可以直接通过Model更新，presenter并不是Presentation Model的角色。另外，在不方面使用Observer Synchronization模式的行为中，presenter默认是可以直接访问widgets的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;用户手势（译注：现在认为应该译成动作）通过 widgets 被转移到 Supervising Controller&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;presenter 协调 domain model 中得变化&lt;/li&gt;
+&lt;li&gt;MVP的不同版本处理view的方式不同。从Observer Synchronization 到使用 presenter 来实现所有的更新。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;Humble-View&quot;&gt;&lt;a href=&quot;#Humble-View&quot; class=&quot;headerlink&quot; title=&quot;Humble View&quot;&gt;&lt;/a&gt;Humble View&lt;/h2&gt;&lt;p&gt;The Humble Dialog Box论文中使用了MVP模式，但是比原始的MVP模式更进一层。presenter不仅仅处理用户输入，同时负责数据填充，这样，widget不在需要知道model。它形成了被 presenter操作的 Passive View。&lt;/p&gt;
+&lt;p&gt;这不是唯一的使UI变得简单的方式。另外一种方式就是使用 Presentation Model，尽管这样还是需要在widget中做一些逻辑，但是对于widget来说已经足够把自己映射到 Presentation Model 了。&lt;/p&gt;
+&lt;p&gt;这两种方式的关键是测试presenter或者测试presenter model，你可以在不碰那些难以测试的widget之前测试到大部分的UI问题。&lt;/p&gt;
+&lt;p&gt;使用 Presentation Model 模式可以把大量真实的逻辑放在 Presentation Model 里面。所有的用户输入和现实逻辑都路由到 Presentation Model，这样所有的widget需要做的就是把自己映射到 Presentation Model 的属性上。然后你就可以测试Presentation Model 的大部分逻辑而不需要现实任何界面 - 唯一的风险存在于 widget映射。但是这些操作很简单可以不测。在这个例子中屏幕还是没有使用 Passive View 来的简单，但是区别也很小了。&lt;/p&gt;
+&lt;p&gt;因为 Passive View 使 widgets变得太简单了，甚至不存在映射，Passive View 甚至消除了 Presentation Model 模式中存在的风险。代价是你需要一个 Test Double 框架来模拟屏幕 - 这是你需要额外构建的机制。&lt;/p&gt;
+&lt;p&gt;在Supervising Controller模式中也存在这种折衷。让每个view做简单的映射会引入风险（和Presentation Model类似）但是带来的好处是可以简单明确的声明映射。在 Supervising Controller 中映射会比较少，因为在 Presentation Model 中还要处理复杂的更新问题。而 Supervising Controller 只要在内部操作widget就行了而不需要映射回去。&lt;/p&gt;
+&lt;h1 id=&quot;REF&quot;&gt;&lt;a href=&quot;#REF&quot; class=&quot;headerlink&quot; title=&quot;REF&quot;&gt;&lt;/a&gt;REF&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;http://www.martinfowler.com/eaaDev/uiArchs.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GUI Architectures&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://www.jianshu.com/p/d52e662db75c&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;UI 架构小史1（GUI Architectures） - 简书&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      There have been many different ways to organize the code for a rich client system. Here I discuss a selection of those that I feel have been the most influential and introduce how they relate to the patterns.
+    
+    </summary>
+    
+      <category term="Architecture" scheme="https://hwangjr.github.io/categories/Architecture/"/>
+    
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Architecture" scheme="https://hwangjr.github.io/tags/Architecture/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>技术面试指南</title>
+    <link href="https://hwangjr.github.io/2016/10/06/%E6%8A%80%E6%9C%AF%E9%9D%A2%E8%AF%95%E6%8C%87%E5%8D%97/"/>
+    <id>https://hwangjr.github.io/2016/10/06/技术面试指南/</id>
+    <published>2016-10-06T07:37:11.000Z</published>
+    <updated>2016-11-01T06:25:40.437Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;模式&quot;&gt;&lt;a href=&quot;#模式&quot; class=&quot;headerlink&quot; title=&quot;模式&quot;&gt;&lt;/a&gt;模式&lt;/h1&gt;&lt;h2 id=&quot;经验&quot;&gt;&lt;a href=&quot;#经验&quot; class=&quot;headerlink&quot; title=&quot;经验&quot;&gt;&lt;/a&gt;经验&lt;/h2&gt;&lt;p&gt;之前在哪里工作，主要用PHP做什么样的工作，平时有开发一些什么项目，有开源项目吗？&lt;/p&gt;
+&lt;h2 id=&quot;广度&quot;&gt;&lt;a href=&quot;#广度&quot; class=&quot;headerlink&quot; title=&quot;广度&quot;&gt;&lt;/a&gt;广度&lt;/h2&gt;&lt;p&gt;熟悉PHP的哪些框架，除了用PHP之外，还接触过什么，用什么，做过什么？&lt;/p&gt;
+&lt;p&gt;对WEB安全的认识？&lt;/p&gt;
+&lt;p&gt;之前做过的项目的运行环境，平时自己的开发环境&lt;/p&gt;
+&lt;p&gt;对高性能WEB架构的了解情况（缓存的认识）&lt;/p&gt;
+&lt;p&gt;对MySQL熟悉情况，慢查询查找和解决&lt;/p&gt;
+&lt;h2 id=&quot;深度&quot;&gt;&lt;a href=&quot;#深度&quot; class=&quot;headerlink&quot; title=&quot;深度&quot;&gt;&lt;/a&gt;深度&lt;/h2&gt;&lt;p&gt;PHP版本、LAMP/LNMP、性能调优、阅读源代码（开源项目源代码、PHP源代码）&lt;/p&gt;
+&lt;p&gt;分库表怎么做，主从同步、负载均衡&lt;/p&gt;
+&lt;p&gt;如果让你设计一张表结构，你会如何设计&lt;/p&gt;
+&lt;h2 id=&quot;思想&quot;&gt;&lt;a href=&quot;#思想&quot; class=&quot;headerlink&quot; title=&quot;思想&quot;&gt;&lt;/a&gt;思想&lt;/h2&gt;&lt;p&gt;解决问题的方法和思路&lt;/p&gt;
+&lt;h2 id=&quot;深度的问题&quot;&gt;&lt;a href=&quot;#深度的问题&quot; class=&quot;headerlink&quot; title=&quot;深度的问题&quot;&gt;&lt;/a&gt;深度的问题&lt;/h2&gt;&lt;p&gt;一个用户在浏览器上输入URL开始，到页面最终展示完成，其中都经历了哪些过程？&lt;/p&gt;
+&lt;p&gt;用户反馈你的网站打开太慢，请列出所有可能性和排查方法&lt;/p&gt;
+&lt;h1 id=&quot;原文&quot;&gt;&lt;a href=&quot;#原文&quot; class=&quot;headerlink&quot; title=&quot;原文&quot;&gt;&lt;/a&gt;原文&lt;/h1&gt;&lt;p&gt;1、工作经验&lt;br&gt;最近这次今年2月才入职，现在就要跳，为什么？&lt;/p&gt;
+&lt;p&gt;这几年来，自己做过的项目，觉得最满意的是什么，怎么做的，为什么？&lt;/p&gt;
+&lt;p&gt;这些年的项目团队管理过程中，管理多少人的项目团队，人员分配是怎样的，有什么心得体会，遇到过最棘手的问题是什么，怎么处理的？&lt;/p&gt;
+&lt;p&gt;2、技术方面&lt;br&gt;负责过项目的每天流量情况？架构是怎样的？&lt;/p&gt;
+&lt;p&gt;网站负载均衡用的是什么方案？有遇到什么坑吗？怎么解决的？&lt;/p&gt;
+&lt;p&gt;数据库主从怎么考量，怎么维护？有遇到过什么坑吗？怎么解决的？&lt;/p&gt;
+&lt;p&gt;有使用过什么缓存方案？对缓存好坏的指标，如何定义？Web过程中，有哪些缓存，是如何理解的？&lt;/p&gt;
+&lt;p&gt;Web安全，有做过哪些考量？有遇到过安全问题吗？怎么解决的？有遇到过慢查询问题吗？处理的过程是如何的？&lt;/p&gt;
+&lt;p&gt;3、个人能力和成长&lt;br&gt;除了LAMP/LNMP之外，还接触过什么？&lt;/p&gt;
+&lt;p&gt;有什么开源项目吗？Github有账号吗？&lt;/p&gt;
+&lt;p&gt;4、开放性问题&lt;br&gt;一个用户在浏览器上输入URL开始，到页面最终展示完成，其中都经历了哪些过程？&lt;/p&gt;
+&lt;p&gt;用户反映你的网站打开太慢，请列出所有可能性和排查方法&lt;/p&gt;
+&lt;p&gt;我一般，会从项目入手，通过项目，然后看技术，问下他熟悉的技术，是否研究透彻还是皮毛。开源问下，自我学习方法，等。一般关注点：1. 沟通交流是否顺畅，如果全部答非所问，基本PASS。2. 技术是否停留在用阶段，是否有继续深入学习，自我学习管理方法。3. 技术深入，肯定面就广，这时可以问面的问题，比如ANDROID是否有接触过jni、源码、开源项目源码等这类，设计模式如果觉得水平够，也会问，一般单例或者工厂，简单。4.基本上面如果顺畅的话，三官正不正，稳定性如何，可能会有最近离职原因、是否有女朋友之类的。以上！&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      总结面试指南，不定期更新。
+    
+    </summary>
+    
+      <category term="创业" scheme="https://hwangjr.github.io/categories/%E5%88%9B%E4%B8%9A/"/>
+    
+    
+      <category term="创业" scheme="https://hwangjr.github.io/tags/%E5%88%9B%E4%B8%9A/"/>
+    
+  </entry>
   
   <entry>
     <title>快速搭建GitLab (Docker)</title>
@@ -145,6 +255,45 @@
       <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
     
       <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>OpenSUSE 初始化</title>
+    <link href="https://hwangjr.github.io/2016/06/20/OpenSUSE-%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
+    <id>https://hwangjr.github.io/2016/06/20/OpenSUSE-初始化/</id>
+    <published>2016-06-20T07:37:11.000Z</published>
+    <updated>2016-11-01T06:20:28.467Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;添加源&quot;&gt;&lt;a href=&quot;#添加源&quot; class=&quot;headerlink&quot; title=&quot;添加源&quot;&gt;&lt;/a&gt;添加源&lt;/h1&gt;&lt;p&gt;添加三个源，中科大镜像、Packman镜像和openSUSE_zh：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ar -f http://mirrors.ustc.edu.cn/opensuse/distribution/leap/42.1/repo/oss/ ustc-leap-oss&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ar -f http://mirrors.ustc.edu.cn/opensuse/distribution/leap/42.1/repo/non-oss/ ustc-leap-non-oss&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# official website is: http://ftp.gwdg.de/pub/linux/packman/suse/openSUSE_Leap_42.1/&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ar -f http://mirrors.hust.edu.cn/packman/suse/openSUSE_Leap_42.1/ packman&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ar -f http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_Leap_42.1/ opensuse_zh&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;刷新：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ref&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;开启：&lt;strong&gt;&lt;code&gt;ALT + F2&lt;/code&gt; -&amp;gt; &lt;code&gt;yast&lt;/code&gt; -&amp;gt; &lt;code&gt;software repositories&lt;/code&gt; -&amp;gt; &lt;code&gt;enable and disable (u like)&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&quot;安装软件&quot;&gt;&lt;a href=&quot;#安装软件&quot; class=&quot;headerlink&quot; title=&quot;安装软件&quot;&gt;&lt;/a&gt;安装软件&lt;/h1&gt;&lt;h2 id=&quot;Thunderbird&quot;&gt;&lt;a href=&quot;#Thunderbird&quot; class=&quot;headerlink&quot; title=&quot;Thunderbird&quot;&gt;&lt;/a&gt;Thunderbird&lt;/h2&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in thunderbird&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;VirtualBox&quot;&gt;&lt;a href=&quot;#VirtualBox&quot; class=&quot;headerlink&quot; title=&quot;VirtualBox&quot;&gt;&lt;/a&gt;VirtualBox&lt;/h2&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in virtualbox&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;Konsole&quot;&gt;&lt;a href=&quot;#Konsole&quot; class=&quot;headerlink&quot; title=&quot;Konsole&quot;&gt;&lt;/a&gt;Konsole&lt;/h2&gt;&lt;p&gt;修改配色和文字大小：&lt;br&gt;&lt;code&gt;Settings&lt;/code&gt; -&amp;gt; &lt;code&gt;Manage Profiles&lt;/code&gt; -&amp;gt; &lt;code&gt;New Profiles&lt;/code&gt; -&amp;gt; &lt;code&gt;Custom the profiles and set to default&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;ALL DONE!&lt;/p&gt;
+&lt;h2 id=&quot;安装Chrome浏览器&quot;&gt;&lt;a href=&quot;#安装Chrome浏览器&quot; class=&quot;headerlink&quot; title=&quot;安装Chrome浏览器&quot;&gt;&lt;/a&gt;安装Chrome浏览器&lt;/h2&gt;&lt;p&gt;导入Google的Key：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;wget https://dl.google.com/linux/linux_signing_key.pub&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo rpm --import linux_signing_key.pub&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;添加源：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# 64 bit&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ar http://dl.google.com/linux/chrome/rpm/stable/x86_64 google-chrome&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ref&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in google-chrome-stable&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# 32 bit&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ar http://dl.google.com/linux/chrome/rpm/stable/i386 google-chrome&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper ref&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in  google-chrome-stable&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;安装其他版本：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in google-chrome-beta&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in google-chrome-unstable&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;安装开源&lt;code&gt;chromium&lt;/code&gt;：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in chromium&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Docker&quot;&gt;&lt;a href=&quot;#Docker&quot; class=&quot;headerlink&quot; title=&quot;Docker&quot;&gt;&lt;/a&gt;Docker&lt;/h2&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper in docker&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo systemctl start docker&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;sudo systemctl enable docker&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;Install latest version:&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;# try https://get.docker.com&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;curl -sSL https://get.docker.com/ | sh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;wget -qO- https://get.docker.com/ | sh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# or add repositories yourself&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# http://download.opensuse.org/repositories/Virtualization:/containers/openSUSE_Leap_42.1/   Virtualization:containers&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;Uninstall:&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo zypper rm docker&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rm -rf /var/lib/docker&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;媒体&quot;&gt;&lt;a href=&quot;#媒体&quot; class=&quot;headerlink&quot; title=&quot;媒体&quot;&gt;&lt;/a&gt;媒体&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://opensuse-community.org/codecs-kde.ymp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://opensuse-community.org/codecs-kde.ymp&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      OpenSUSE 初始化，包括源、软件等。
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://hwangjr.github.io/categories/Linux/"/>
+    
+    
+      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
+    
+      <category term="Linux" scheme="https://hwangjr.github.io/tags/Linux/"/>
     
   </entry>
   
@@ -987,168 +1136,6 @@
       <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
     
       <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>发布开源项目到Maven（Gradle + Sonatype）</title>
-    <link href="https://hwangjr.github.io/2015/11/24/%E5%8F%91%E5%B8%83%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%88%B0Maven%EF%BC%88Gradle-Sonatype%EF%BC%89/"/>
-    <id>https://hwangjr.github.io/2015/11/24/发布开源项目到Maven（Gradle-Sonatype）/</id>
-    <published>2015-11-24T10:43:22.000Z</published>
-    <updated>2015-11-24T10:43:47.007Z</updated>
-    
-    <content type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;最近整理Android开发工具，想跟其他人分享，就有了将其发布到maven想法，所以考虑将库发布到maven，目前Android官方使用jCenter，比这个简单，后续补充（jCenter会自动同步Maven Center中的库）。&lt;br&gt;顺带避免：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Download the source to use it as library project&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;流程&quot;&gt;&lt;a href=&quot;#流程&quot; class=&quot;headerlink&quot; title=&quot;流程&quot;&gt;&lt;/a&gt;流程&lt;/h2&gt;&lt;p&gt;整个流程很清晰：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;获取JIRA Ticket，简单说就是去&lt;a href=&quot;https://issues.sonatype.org/browse/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Issues Sonatype&lt;/a&gt;注册并提交issue&lt;/li&gt;
-&lt;li&gt;GPG密钥，要上传到maven，需要GPG密钥&lt;/li&gt;
-&lt;li&gt;本地配置POM，即配置项目信息&lt;/li&gt;
-&lt;li&gt;Gradle提交到Sonatype，通过脚本提交到Sonatype&lt;/li&gt;
-&lt;li&gt;发布版本，分为SNAPSHOT和Release版本&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;整个流程就是酱紫。OVER。&lt;/p&gt;
-&lt;h2 id=&quot;获取JIRA-Ticket&quot;&gt;&lt;a href=&quot;#获取JIRA-Ticket&quot; class=&quot;headerlink&quot; title=&quot;获取JIRA Ticket&quot;&gt;&lt;/a&gt;获取JIRA Ticket&lt;/h2&gt;&lt;h3 id=&quot;注册JIRA帐号&quot;&gt;&lt;a href=&quot;#注册JIRA帐号&quot; class=&quot;headerlink&quot; title=&quot;注册JIRA帐号&quot;&gt;&lt;/a&gt;注册JIRA帐号&lt;/h3&gt;&lt;p&gt;提交项目到Sonatype，首先需要注册。打开&lt;a href=&quot;https://issues.sonatype.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;(Issue Sonatype)&lt;/a&gt;注册JIRA帐号。&lt;/p&gt;
-&lt;h3 id=&quot;创建Issue&quot;&gt;&lt;a href=&quot;#创建Issue&quot; class=&quot;headerlink&quot; title=&quot;创建Issue&quot;&gt;&lt;/a&gt;创建Issue&lt;/h3&gt;&lt;p&gt;在导航上Create按钮，创建一个新的Issue。其中特别注意：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Issue Type默认是new Project，按照默认就好&lt;/li&gt;
-&lt;li&gt;Summer和Description填写你要创建项目的描述即可&lt;/li&gt;
-&lt;li&gt;Group id特别关键，最好创建顶级Group ID，比如我需要&lt;code&gt;com.hwangjr.xxx&lt;/code&gt;，那么Group ID填写为&lt;code&gt;com.hwangjr&lt;/code&gt;，这样其他的库也可发布&lt;/li&gt;
-&lt;li&gt;Project URL和SCM URL填GIT HUB项目地址即可&lt;/li&gt;
-&lt;li&gt;其他基本都懂&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;填写完毕，等待！工作人员会让你提交你的项目到Sonatype。&lt;/p&gt;
-&lt;h2 id=&quot;GPG密钥&quot;&gt;&lt;a href=&quot;#GPG密钥&quot; class=&quot;headerlink&quot; title=&quot;GPG密钥&quot;&gt;&lt;/a&gt;GPG密钥&lt;/h2&gt;&lt;p&gt;密钥是为了上传文件的加密和签名。如果有安装git，那么应该是已经安装GPG了，以下默认命令为Linux下。&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 生成密钥&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gpg --gen-key&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 查看&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gpg --list-key&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;其中姓名、邮箱和备注需要认真填写下，最后输入的Passphase，是密码，上传maven需要使用。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;pub   2048R/B53A8137 2015-11-24&lt;br&gt;uid                  hwangjr (Upload Modules For Maven By Sonatype.) &lt;a href=&quot;&amp;#109;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#x74;&amp;#x6f;&amp;#x3a;&amp;#104;&amp;#117;&amp;#x61;&amp;#110;&amp;#103;&amp;#106;&amp;#105;&amp;#97;&amp;#110;&amp;#x72;&amp;#111;&amp;#x6e;&amp;#x67;&amp;#50;&amp;#48;&amp;#49;&amp;#x30;&amp;#x40;&amp;#103;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#109;&quot;&gt;&amp;#104;&amp;#117;&amp;#x61;&amp;#110;&amp;#103;&amp;#106;&amp;#105;&amp;#97;&amp;#110;&amp;#x72;&amp;#111;&amp;#x6e;&amp;#x67;&amp;#50;&amp;#48;&amp;#49;&amp;#x30;&amp;#x40;&amp;#103;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#109;&lt;/a&gt;&lt;br&gt;sub   2048R/2F11E234 2015-11-24&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;B53A8137是KEY ID。上传公钥到服务器：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;gpg --keyserver hkp://pool.sks-keyservers.net --send-keys B53A8137&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;本地配置POM&quot;&gt;&lt;a href=&quot;#本地配置POM&quot; class=&quot;headerlink&quot; title=&quot;本地配置POM&quot;&gt;&lt;/a&gt;本地配置POM&lt;/h2&gt;&lt;p&gt;Chris Banes大神已经写完Gradle插件&lt;a href=&quot;https://github.com/chrisbanes/gradle-mvn-push&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;chrisbanes/gradle-mvn-push&lt;/a&gt;，可直接使用&lt;a href=&quot;https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;gradle-mvn-push.gradle&lt;/a&gt;，上面有详细的配置和使用方式。简要步骤为：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;项目，保证是可以用Gradle编译。&lt;/li&gt;
-&lt;li&gt;更新&lt;code&gt;HOME gradle.properties&lt;/code&gt;，修改&lt;code&gt;USER_HOME/.gradle/gradle.properties&lt;/code&gt;文件。&lt;/li&gt;
-&lt;li&gt;在项目根目录下，创建文件&lt;code&gt;gradle.properties&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;在想要上传的子模块下，分别创建&lt;code&gt;gradle.properties&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;在子模块下，应用Gradle插件，即在&lt;code&gt;build.gradle&lt;/code&gt;末尾加上&lt;code&gt;apply from: &amp;#39;https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle&amp;#39;&lt;/code&gt; 或者下载gradle-mvn-push.gradle文件，放到根目录的&lt;code&gt;gradle&lt;/code&gt;文件夹下，在&lt;code&gt;build.gradle&lt;/code&gt;末尾加上&lt;code&gt;apply from: rootProject.file(&amp;#39;gradle/gradle-mvn-push.gradle&amp;#39;)&lt;/code&gt;。&lt;/li&gt;
-&lt;li&gt;编译并上传&lt;code&gt;gradle clean build uploadArchives&lt;/code&gt;。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;其他属性：&lt;br&gt;&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;RELEASE_REPOSITORY_URL (defaults to Maven Central&#39;s staging server)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;SNAPSHOT_REPOSITORY_URL (defaults to Maven Central&#39;s snapshot server)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;USER_HOME/.gradle/gradle.properties文件新增，内容修改为自身用户名密码，下面的就是创建的GPG密钥：&lt;br&gt;&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;NEXUS_USERNAME=chrisbanes&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;NEXUS_PASSWORD=g00dtry&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;signing.keyId=ABCDEF12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;signing.password=n1c3try&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;signing.secretKeyRingFile=&lt;span class=&quot;regexp&quot;&gt;/home/u&lt;/span&gt;ser&lt;span class=&quot;regexp&quot;&gt;/.gnupg/&lt;/span&gt;secring.gpg&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;项目根目录下的gradle.properties文件内容为，需要根据具体项目情况进行修改：&lt;br&gt;&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;VERSION_NAME=0.9.2-SNAPSHOT&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;VERSION_CODE=92&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;GROUP=com.github.chrisbanes.actionbarpulltorefresh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_DESCRIPTION=A modern implementation of the pull-to-refresh for Android&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_URL=https://github.com/chrisbanes/ActionBar-PullToRefresh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_SCM_URL=https://github.com/chrisbanes/ActionBar-PullToRefresh&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_SCM_CONNECTION=scm:git@github.com:chrisbanes/ActionBar-PullToRefresh.git&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_SCM_DEV_CONNECTION=scm:git@github.com:chrisbanes/ActionBar-PullToRefresh.git&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_LICENCE_NAME=The Apache Software License, Version 2.0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_LICENCE_URL=http://www.apache.org/licenses/LICENSE-2.0.txt&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_LICENCE_DIST=repo&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_DEVELOPER_ID=chrisbanes&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_DEVELOPER_NAME=Chris Banes&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;子模块的gradle.properties文件内容为：&lt;br&gt;&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;POM_NAME=ActionBar-PullToRefresh Library&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_ARTIFACT_ID=library&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;POM_PACKAGING=aar&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;其中&lt;/strong&gt;VERSION_NAME后面如果带&lt;code&gt;SNAPSHOT&lt;/code&gt;会提交到&lt;a href=&quot;https://oss.sonatype.org/content/repositories/snapshots&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Snapshots&lt;/a&gt;，这个不需要同步即可下载jar和源码，如果不加则为RELEASE版本，会同步到MAVEN CENTER。&lt;/p&gt;
-&lt;h2 id=&quot;Gradle脚本提交到Sonatype&quot;&gt;&lt;a href=&quot;#Gradle脚本提交到Sonatype&quot; class=&quot;headerlink&quot; title=&quot;Gradle脚本提交到Sonatype&quot;&gt;&lt;/a&gt;Gradle脚本提交到Sonatype&lt;/h2&gt;&lt;p&gt;运行命令：&lt;br&gt;&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;gradle clean build uploadArchives&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;即会执行clean，并重新编译，上传到Sonatype。&lt;/p&gt;
-&lt;h2 id=&quot;发布版本&quot;&gt;&lt;a href=&quot;#发布版本&quot; class=&quot;headerlink&quot; title=&quot;发布版本&quot;&gt;&lt;/a&gt;发布版本&lt;/h2&gt;&lt;p&gt;版本分为&lt;code&gt;SNAPSHOT&lt;/code&gt;版本和&lt;code&gt;RELEASE&lt;/code&gt;版本。&lt;br&gt;如果&lt;code&gt;VERSION_NAME&lt;/code&gt;有加入&lt;code&gt;SNAPSHOT&lt;/code&gt;，即为&lt;code&gt;SNAPSHOT&lt;/code&gt;版本，不会同步到MAVEN。&lt;br&gt;如果没有&lt;code&gt;SNAPSHOT&lt;/code&gt;，则会同步到MAVEN。&lt;/p&gt;
-&lt;p&gt;首次提交之后，登陆&lt;a href=&quot;https://oss.sonatype.org/index.html#welcome&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Sonatype Nexus Professional&lt;/a&gt;，查看&lt;code&gt;Staging Repositories&lt;/code&gt;，找到提交的包，选择并close并Release，再到&lt;code&gt;issue sonatype&lt;/code&gt;上提交的JIRA TICKET后面评论告知版本已经staged并released，可以进行sync，工作人员会进行同步。&lt;br&gt;同步成功之后，即可在&lt;a href=&quot;http://search.maven.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;maven center&lt;/a&gt;搜索到项目，可通过gradle添加依赖。&lt;/p&gt;
-&lt;h2 id=&quot;常规发布步骤&quot;&gt;&lt;a href=&quot;#常规发布步骤&quot; class=&quot;headerlink&quot; title=&quot;常规发布步骤&quot;&gt;&lt;/a&gt;常规发布步骤&lt;/h2&gt;&lt;ol&gt;
-&lt;li&gt;发布&lt;code&gt;SNAPSHOT&lt;/code&gt;版本是否查看是否正常&lt;/li&gt;
-&lt;li&gt;发布&lt;code&gt;RELEASE&lt;/code&gt;版本到线上，并进行同步&lt;/li&gt;
-&lt;li&gt;修改为下个&lt;code&gt;SNAPSHOT&lt;/code&gt;版本&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&quot;TIPS&quot;&gt;&lt;a href=&quot;#TIPS&quot; class=&quot;headerlink&quot; title=&quot;TIPS&quot;&gt;&lt;/a&gt;TIPS&lt;/h2&gt;&lt;h3 id=&quot;发布JAR&quot;&gt;&lt;a href=&quot;#发布JAR&quot; class=&quot;headerlink&quot; title=&quot;发布JAR&quot;&gt;&lt;/a&gt;发布JAR&lt;/h3&gt;&lt;p&gt;如果想发布JAR，在&lt;a href=&quot;#本地配置POM&quot;&gt;本地配置POM&lt;/a&gt;时，修改&lt;a href=&quot;https://raw.githubusercontent.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;gradle-mvn-push.gradle&lt;/a&gt;，在脚本中加入：&lt;br&gt;``` gradle&lt;br&gt;artifacts {&lt;br&gt;    archives packageReleaseJar&lt;br&gt;}&lt;/p&gt;
-&lt;h3 id=&quot;发布时返回401&quot;&gt;&lt;a href=&quot;#发布时返回401&quot; class=&quot;headerlink&quot; title=&quot;发布时返回401&quot;&gt;&lt;/a&gt;发布时返回401&lt;/h3&gt;&lt;p&gt;401为没有权限错误，检查：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;用户名密码，可在gradle-mvn-push中打印日志查看用户名密码是否正确&lt;/li&gt;
-&lt;li&gt;检查Sonatype是否有权限&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&quot;REFS&quot;&gt;&lt;a href=&quot;#REFS&quot; class=&quot;headerlink&quot; title=&quot;REFS&quot;&gt;&lt;/a&gt;REFS&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://central.sonatype.org/pages/ossrh-guide.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;OSSRH Guide&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://www.ruanyifeng.com/blog/2013/07/gpg.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GPG入门教程&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://github.com/chrisbanes/gradle-mvn-push&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;gradle-mvn-push&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://oss.sonatype.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Sonatype Nexus Professional&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://afoo.me/posts/2013-07-18-publishing-oss-release-to-maven-central-repo.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;发布开源项目到Maven Central&lt;/a&gt;&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      在使用自己构建库的同时，是否有强烈的分享欲，那么，就开源上传到Maven Center让别人一起开森吧。
-    
-    </summary>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
-    
-    
-      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>应用内存泄露排查</title>
-    <link href="https://hwangjr.github.io/2015/11/13/%E5%BA%94%E7%94%A8%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%8E%92%E6%9F%A5/"/>
-    <id>https://hwangjr.github.io/2015/11/13/应用内存泄露排查/</id>
-    <published>2015-11-13T03:26:23.000Z</published>
-    <updated>2015-11-24T07:30:44.759Z</updated>
-    
-    <content type="html">&lt;h2 id=&quot;内存泄露&quot;&gt;&lt;a href=&quot;#内存泄露&quot; class=&quot;headerlink&quot; title=&quot;内存泄露&quot;&gt;&lt;/a&gt;内存泄露&lt;/h2&gt;&lt;p&gt;用到神器&lt;a href=&quot;https://github.com/square/leakcanary&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;square/leakcanary&lt;/a&gt;：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;A memory leak detection library for Android and Java.&lt;br&gt;“A small leak will sink a great ship.”    - Benjamin Franklin&lt;br&gt;千里之堤，毁于蚁穴。 – 《韩非子.喻老》&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&quot;LeakCanary完整集成&quot;&gt;&lt;a href=&quot;#LeakCanary完整集成&quot; class=&quot;headerlink&quot; title=&quot;LeakCanary完整集成&quot;&gt;&lt;/a&gt;LeakCanary完整集成&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;配置build.gradle&lt;/strong&gt;&lt;br&gt;&lt;figure class=&quot;highlight gradle&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;buildscript&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;repositories&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        jcenter()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;dependencies&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	    &lt;span class=&quot;keyword&quot;&gt;classpath&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;com.android.tools.build:gradle:1.2.3&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;apply plugin: &lt;span class=&quot;string&quot;&gt;&#39;android-library&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;allprojects&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;repositories&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;		jcenter()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;dependencies&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   debugCompile &lt;span class=&quot;string&quot;&gt;&#39;com.squareup.leakcanary:leakcanary-android:1.3.1&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   releaseCompile &lt;span class=&quot;string&quot;&gt;&#39;com.squareup.leakcanary:leakcanary-android-no-op:1.3.1&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;配置代码&lt;/strong&gt;&lt;br&gt;在你的APPLICATION中：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;public class ExampleApplication extends Application &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  @Override public void onCreate() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	super.onCreate();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	if (BuildConfig.DEBUG) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	    refWatcher = LeakCanary.install(this, LeakLogService.class,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	            AndroidExcludedRefs.createAndroidDefaults().build());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125; else &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	    refWatcher = RefWatcher.DISABLED;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	public static RefWatcher getRefWatcher(Context context) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        ExampleApplication application = (ExampleApplication) context.getApplicationContext();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        return application.refWatcher;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;之后在需要检测的地方进行监听即可：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;public abstract class BaseFragment extends Fragment &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  @Override public void onDestroy() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    super.onDestroy();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    RefWatcher refWatcher = ExampleApplication.getRefWatcher(getActivity());&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    refWatcher.watch(this);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h3 id=&quot;简易集成&quot;&gt;&lt;a href=&quot;#简易集成&quot; class=&quot;headerlink&quot; title=&quot;简易集成&quot;&gt;&lt;/a&gt;简易集成&lt;/h3&gt;&lt;p&gt;参考&lt;a href=&quot;https://github.com/GavinCT/SimpleLeakCanary&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GavinCT/SimpleLeakCanary&lt;/a&gt;。&lt;br&gt;拷贝库文件到项目下：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;AndroidWatchExecutor.java&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;GcTrigger.java&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;KeyedWeakReference.java&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;RefWatcher.java&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;在需要监听的地方添加监听代码：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;protected void onDestroy() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	super.onDestroy();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	getApplicationContext().getRefWatcher().watch(this);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;排查内存泄露&quot;&gt;&lt;a href=&quot;#排查内存泄露&quot; class=&quot;headerlink&quot; title=&quot;排查内存泄露&quot;&gt;&lt;/a&gt;排查内存泄露&lt;/h2&gt;&lt;p&gt;利用Eclipse的Memory Analyzer（&lt;a href=&quot;http://www.eclipse.org/mat/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Eclipse Memory Analyzer Open Source Project&lt;/a&gt;）可以方便的分析内存泄露原因。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;使用Studio帮助我们排查泄露&lt;/strong&gt;&lt;br&gt;通过Studio我们可以：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;查看内存堆栈情况&lt;/li&gt;
-&lt;li&gt;手动/强制垃圾回收，排除LeakCanary误报&lt;/li&gt;
-&lt;li&gt;导出Heap信息（Dump Java Heap）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;内存信息导出后，可用MAT打开.hprof文件进行分析，可能需要进行转换：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;hprof-conv source.hprof dist.hprof&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;打开QQL查询当前内存信息（快捷键CTRL + ENTER执行QQL语句）：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;select * from instanceof android.app.Activity&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;查看内存信息，如果有多个相同对象即为可疑泄露对象：&lt;br&gt;&lt;code&gt;右键 -&amp;gt; Merge Shortest Paths to GC Roots -&amp;gt; exclude all phantom/weak/soft etc. refrences&lt;/code&gt;&lt;br&gt;具体排查类，即可发现泄露对象。&lt;/p&gt;
-&lt;h2 id=&quot;解决内存泄露&quot;&gt;&lt;a href=&quot;#解决内存泄露&quot; class=&quot;headerlink&quot; title=&quot;解决内存泄露&quot;&gt;&lt;/a&gt;解决内存泄露&lt;/h2&gt;&lt;p&gt;针对可疑泄露对象，进行代码排查，即可解决。&lt;/p&gt;
-&lt;h2 id=&quot;避免内存泄露&quot;&gt;&lt;a href=&quot;#避免内存泄露&quot; class=&quot;headerlink&quot; title=&quot;避免内存泄露&quot;&gt;&lt;/a&gt;避免内存泄露&lt;/h2&gt;&lt;p&gt;良好编码习惯！&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;匿名内部类&lt;/li&gt;
-&lt;li&gt;非静态内部类&lt;/li&gt;
-&lt;li&gt;单例对象持有Activity或Context对象&lt;br&gt;ETC…&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&quot;REF&quot;&gt;&lt;a href=&quot;#REF&quot; class=&quot;headerlink&quot; title=&quot;REF&quot;&gt;&lt;/a&gt;REF&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://www.ibm.com/developerworks/cn/opensource/os-cn-ecl-ma/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;使用 Eclipse Memory Analyzer 进行堆转储文件分析&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://github.com/square/leakcanary&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;square/leakcanary&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://droidyue.com/blog/2014/11/02/note-for-google-io-memory-management-for-android-chinese-edition/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Google IO：Android内存管理主题演讲记录 - 技术小黑屋&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://jiajixin.cn/2015/01/06/memory_leak/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Android内存泄漏研究 | Jason’s Blog&lt;/a&gt;&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      调试内存泄露方法，监控应用是否正常使用内存并回收。
-    
-    </summary>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/categories/Android/"/>
-    
-    
-      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
-    
-      <category term="Android" scheme="https://hwangjr.github.io/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CentOS如何移除依赖</title>
-    <link href="https://hwangjr.github.io/2015/11/09/CentOS%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%E4%BE%9D%E8%B5%96/"/>
-    <id>https://hwangjr.github.io/2015/11/09/CentOS如何移除依赖/</id>
-    <published>2015-11-09T02:44:12.000Z</published>
-    <updated>2015-11-09T02:44:38.879Z</updated>
-    
-    <content type="html">&lt;h2 id=&quot;自带清除技能&quot;&gt;&lt;a href=&quot;#自带清除技能&quot; class=&quot;headerlink&quot; title=&quot;自带清除技能&quot;&gt;&lt;/a&gt;自带清除技能&lt;/h2&gt;&lt;p&gt;从Fedora 18之后，yum有自带清除：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;yum autoremove&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;yum autoremove &amp;lt;package&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 一般不用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;yum remove --setopt=clean_requerements_on_remove=1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;第三方技能&quot;&gt;&lt;a href=&quot;#第三方技能&quot; class=&quot;headerlink&quot; title=&quot;第三方技能&quot;&gt;&lt;/a&gt;第三方技能&lt;/h2&gt;&lt;p&gt;安装&lt;code&gt;yum-utils&lt;/code&gt;也是可以自动清理依赖：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;yum install yum-utils&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 清理&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;package-cleanup --leaves&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;package-cleanup --leaves --all&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;package-cleanup -q --leaves | xargs &lt;span class=&quot;_&quot;&gt;-l&lt;/span&gt;1 yum -y remove&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;回滚安装技能&quot;&gt;&lt;a href=&quot;#回滚安装技能&quot; class=&quot;headerlink&quot; title=&quot;回滚安装技能&quot;&gt;&lt;/a&gt;回滚安装技能&lt;/h2&gt;&lt;p&gt;自然，我们是在安装的时候安装了依赖，那如果我们回滚本次安装，也一样可以卸载这些依赖：&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;yum install &amp;lt;package&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;yum &lt;span class=&quot;built_in&quot;&gt;history&lt;/span&gt; list &amp;lt;package&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;yum &lt;span class=&quot;built_in&quot;&gt;history&lt;/span&gt; undo &amp;lt;ID&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h2&gt;&lt;p&gt;相比而言，现在对包管理还是简单方便的，当然更高深的还需要自己摸索。&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      在使用CentOS时，会安装很多软件，自动解析依赖并安装，然而在卸载时候，仅仅只是卸载当前包，如何清除包及其依赖呢？
-    
-    </summary>
-    
-      <category term="Linux" scheme="https://hwangjr.github.io/categories/Linux/"/>
-    
-    
-      <category term="tech" scheme="https://hwangjr.github.io/tags/tech/"/>
-    
-      <category term="Linux" scheme="https://hwangjr.github.io/tags/Linux/"/>
     
   </entry>
   
