@@ -1,0 +1,832 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tech,Git," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="HwangJR's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="从SVN迁移项目到GIT下面进行研发，但是由于团队原因，需要将GIT下面的提交也定期同步到SVN项目下，所以就有了这篇文章（git-svn）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitLab与SVN同时使用">
+<meta property="og:url" content="https://hwangjr.github.io/2016/06/11/GitLab与SVN同时使用/index.html">
+<meta property="og:site_name" content="HwangJR's Blog">
+<meta property="og:description" content="从SVN迁移项目到GIT下面进行研发，但是由于团队原因，需要将GIT下面的提交也定期同步到SVN项目下，所以就有了这篇文章（git-svn）。">
+<meta property="og:updated_time" content="2016-11-01T03:51:15.488Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GitLab与SVN同时使用">
+<meta name="twitter:description" content="从SVN迁移项目到GIT下面进行研发，但是由于团队原因，需要将GIT下面的提交也定期同步到SVN项目下，所以就有了这篇文章（git-svn）。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://hwangjr.github.io/2016/06/11/GitLab与SVN同时使用/"/>
+
+  <title> GitLab与SVN同时使用 | HwangJR's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-63911310-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HwangJR's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Life is wonderful!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                GitLab与SVN同时使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-11T11:49:04+08:00" content="2016-06-11">
+              2016-06-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/11/GitLab与SVN同时使用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/06/11/GitLab与SVN同时使用/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/06/11/GitLab与SVN同时使用/" class="leancloud_visitors" data-flag-title="GitLab与SVN同时使用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>将使用Git来进行研发，但是要定期同步到SVN上，所以需要进行协作。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>将使用<code>git-svn</code>工具进行同步，命令<code>git svn</code>，其中此命令有很多用法，这里只说明常用的几个。</p>
+<p>CentOS7中安装<code>git-svn</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install git-svn</span><br></pre></td></tr></table></figure></p>
+<p>解决错误信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git svn clone svn://domain/project</span><br><span class="line">git: ‘svn’ is not a git-command. See ‘git –help’.</span><br><span class="line"></span><br><span class="line"> Did you mean one of these?</span><br><span class="line">        fsck</span><br><span class="line">        show</span><br></pre></td></tr></table></figure></p>
+<h2 id="svn与git用户对照"><a href="#svn与git用户对照" class="headerlink" title="svn与git用户对照"></a>svn与git用户对照</h2><p>在Subversion中每个提交都有用户名，并在提交信息中展示，如果想让已经提交的信息更好的映射到Git中，需要从Subversion中导出提交的用户到Git，作为映射关系。因为Git是以邮箱来作为标识，所以需要建立一个<code>author</code>文件（或者其他你喜欢的名字），格式为：<code>svn作者 = 作者昵称&lt;邮箱地址&gt;</code>，示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">john = John&lt;john@gmail.com&gt;</span><br><span class="line">mike = Mike&lt;mike@gmail.com&gt;</span><br></pre></td></tr></table></figure></p>
+<p>可以简单使用脚本获取SVN提交作者（之后按照上面格式进行编辑即可）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn log --xml | grep &quot;^&lt;author&quot; | sort -u | awk -F &apos;\&lt;author\&gt;&apos; &apos;&#123;print $2&#125;&apos; | awk -F &apos;\&lt;/author\&gt;&apos; &apos;&#123;print $1&#125;&apos; &gt; author</span><br></pre></td></tr></table></figure></p>
+<p>如果SVN提交者和GIT用户一样，或者对于此对照不是很CARE，则可以省略此步骤。</p>
+<h2 id="Checkout-SVN到本地"><a href="#Checkout-SVN到本地" class="headerlink" title="Checkout SVN到本地"></a>Checkout SVN到本地</h2><p>用<code>git svn</code>命令将SVN项目Checkout到本地：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git svn clone svn://domain/project --authors-file=author project</span><br></pre></td></tr></table></figure></p>
+<p>如果不需要从头到尾的记录的话，则可以直接通过<code>-r</code>参数来控制导出的版本数（从xxx版本到head版本）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git svn clone svn://domain/project --authors-file=author -r xxx:head</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注明<code>--no-metadata</code>这个参数，此参数可说明不要SVN信息，比较适合在迁移的时候，而要共用的话，是需要这类信息。因为在Checkout下来时候，会针对SVN的提交做补丁，产生一个Git提交。</p>
+<p>如果没有使用<code>--no-metadata</code>来进行clone的话，在进行<code>git log</code>时候，可以看到git和svn的提交的关联关系，即<code>git-svn-id</code>属性。如果没有<code>git-svn-id</code>这个属性，是无法将git的记录提交到SVN。</p>
+<p>如果使用了<code>--no-metadata</code>的话，提交信息会变得更加简单且可读性更好，因为去掉了对应关系。</p>
+<p>简单说，如果需要想SVN提交信息，不要这个参数，如果只是迁移SVN记录到GIT，那么使用此参数。</p>
+<h2 id="Git配置"><a href="#Git配置" class="headerlink" title="Git配置"></a>Git配置</h2><p>配置Git远程地址及本地信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 设置git的提交用户名和邮箱</span><br><span class="line"># --global参数是全局设定，如果是想当前项目设置，那么去除这个参数</span><br><span class="line">git config --global user.name youname</span><br><span class="line">git config --global user.email email@email.com</span><br><span class="line"></span><br><span class="line">git remote add origin http://git.code.com/url/project-x.git</span><br></pre></td></tr></table></figure></p>
+<h2 id="SVN获取更新"><a href="#SVN获取更新" class="headerlink" title="SVN获取更新"></a>SVN获取更新</h2><p>需要不定期从SVN拉取更新记录，并同步到GIT上：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git svn fetch</span><br><span class="line">git checkout master</span><br><span class="line">git svn rebase</span><br></pre></td></tr></table></figure></p>
+<p>在这边通过检出<code>master</code>分支，然后对svn拉取的代码进行合并。当然，如果需要的话，可以在其他分支进行合并。之后用<code>rebase</code>将提交记录应用到分支上，构成线性提交记录。</p>
+<h2 id="提交到SVN"><a href="#提交到SVN" class="headerlink" title="提交到SVN"></a>提交到SVN</h2><p>如果在<code>feature</code>分支进行开发，之后需要提交到SVN上，有两个做法：</p>
+<ol>
+<li>保留<code>feature</code>分支的提交记录</li>
+<li>压缩<code>feature</code>分支的提交记录，变成一个提交记录</li>
+</ol>
+<h3 id="保留提交记录"><a href="#保留提交记录" class="headerlink" title="保留提交记录"></a>保留提交记录</h3><p>只需要<code>rebase</code>到svn的分支上，然后<code>dcommit</code>提交到svn服务器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># update svn code</span><br><span class="line">git svn fetch</span><br><span class="line">git checkout master</span><br><span class="line">git svn rebase</span><br><span class="line"></span><br><span class="line"># rebase feature to master</span><br><span class="line">git checkout feature</span><br><span class="line">git rebase master</span><br><span class="line">git checkout master</span><br><span class="line"># merge feature</span><br><span class="line">git merge feature</span><br><span class="line">git svn dcommit</span><br></pre></td></tr></table></figure></p>
+<h3 id="压缩提交"><a href="#压缩提交" class="headerlink" title="压缩提交"></a>压缩提交</h3><p>和上面区别就是，拉取feature之后，没有人在master上进行提交，直接使用merge进行fast-forward合并，然后提交到SVN服务器。</p>
+<p>如果你在master上面进行提交，而有人也在SVN上进行提交，这时GIT无法进行fast-forward合并，只能进行merge三方合并，之后把之前提交变成一个提交，推送到SVN服务器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line">git svn rebase</span><br><span class="line">git merge feature</span><br><span class="line">git svn dcommit</span><br></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>很麻烦，趁早用GIT吧！！！</p>
+<h1 id="REF"><a href="#REF" class="headerlink" title="REF"></a>REF</h1><p><a href="http://www.janosgyerik.com/practical-tips-for-using-git-with-large-subversion-repositories/" target="_blank" rel="external">Practical tips for using Git with large Subversion repositories</a><br><a href="https://git-scm.com/book/zh/v1/Git-%E4%B8%8E%E5%85%B6%E4%BB%96%E7%B3%BB%E7%BB%9F-%E8%BF%81%E7%A7%BB%E5%88%B0-Git" target="_blank" rel="external">Git - 迁移到 Git</a><br><a href="https://www.chenyudong.com/archives/git-and-svn-collaboration.html" target="_blank" rel="external">git与svn 共舞 | 东东东 陈煜东的博客</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tech/" rel="tag">#tech</a>
+          
+            <a href="/tags/Git/" rel="tag">#Git</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/10/AI-Appreciative-Inquiry-欣赏式探询-初探/" rel="next" title="AI(Appreciative Inquiry / 欣赏式探询) 初探">
+                <i class="fa fa-chevron-left"></i> AI(Appreciative Inquiry / 欣赏式探询) 初探
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/04/关于Target-SDK-Version/" rel="prev" title="关于Target SDK Version">
+                关于Target SDK Version <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/author.jpg"
+               alt="HwangJR" />
+          <p class="site-author-name" itemprop="name">HwangJR</p>
+          <p class="site-description motion-element" itemprop="description">Some stuff about tech etc..</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/HwangJR" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="huangjianrong2010@gmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://stackoverflow.com/users/4827228/hwang-jr" target="_blank" title="StackOverFlow">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>
+                  
+                  StackOverFlow
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://plus.google.com/u/0/+JianrongHuang" target="_blank" title="GooglePlus">
+                  
+                    <i class="fa fa-fw fa-google-plus-official"></i>
+                  
+                  GooglePlus
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hwangjr.com" title="HwangJR" target="_blank">HwangJR</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.hwangjr.com" title="HwangJR's Blog" target="_blank">HwangJR's Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/AndroidKnife/RxBus" title="RxBus" target="_blank">RxBus</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#工具"><span class="nav-number">2.1.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#svn与git用户对照"><span class="nav-number">2.2.</span> <span class="nav-text">svn与git用户对照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Checkout-SVN到本地"><span class="nav-number">2.3.</span> <span class="nav-text">Checkout SVN到本地</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git配置"><span class="nav-number">2.4.</span> <span class="nav-text">Git配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SVN获取更新"><span class="nav-number">2.5.</span> <span class="nav-text">SVN获取更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提交到SVN"><span class="nav-number">2.6.</span> <span class="nav-text">提交到SVN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保留提交记录"><span class="nav-number">2.6.1.</span> <span class="nav-text">保留提交记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩提交"><span class="nav-number">2.6.2.</span> <span class="nav-text">压缩提交</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#REF"><span class="nav-number">4.</span> <span class="nav-text">REF</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HwangJR</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'HwangJR';
+      var disqus_identifier = '2016/06/11/GitLab与SVN同时使用/';
+      var disqus_title = "GitLab与SVN同时使用";
+      var disqus_url = 'https://hwangjr.github.io/2016/06/11/GitLab与SVN同时使用/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E4RdA2t1IWUMTnpbUiYPLI2R-gzGzoHsz", "Az2eDtflRtdPhMbKQeXqDr7z");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
