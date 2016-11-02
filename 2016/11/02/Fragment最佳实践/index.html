@@ -62,16 +62,16 @@
 
 
 
-<meta name="description" content="使用Android Studio来管理SVN版本，进行协同工作。">
+<meta name="description" content="Fragment发展到今天，基本已经普及了，但是大家对于其用法还是有一定的错误，甚至代码都是从这边到那边，那么如何正确的使用Fragment呢？这边针对这个话题来展开，并写了常见的一些问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android Studio With SVN">
-<meta property="og:url" content="https://hwangjr.github.io/2015/07/08/Android-Studio-With-SVN/index.html">
+<meta property="og:title" content="Fragment最佳实践">
+<meta property="og:url" content="https://hwangjr.github.io/2016/11/02/Fragment最佳实践/index.html">
 <meta property="og:site_name" content="HwangJR's Blog">
-<meta property="og:description" content="使用Android Studio来管理SVN版本，进行协同工作。">
-<meta property="og:updated_time" content="2015-07-08T12:17:42.289Z">
+<meta property="og:description" content="Fragment发展到今天，基本已经普及了，但是大家对于其用法还是有一定的错误，甚至代码都是从这边到那边，那么如何正确的使用Fragment呢？这边针对这个话题来展开，并写了常见的一些问题。">
+<meta property="og:updated_time" content="2016-11-02T09:55:58.907Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android Studio With SVN">
-<meta name="twitter:description" content="使用Android Studio来管理SVN版本，进行协同工作。">
+<meta name="twitter:title" content="Fragment最佳实践">
+<meta name="twitter:description" content="Fragment发展到今天，基本已经普及了，但是大家对于其用法还是有一定的错误，甚至代码都是从这边到那边，那么如何正确的使用Fragment呢？这边针对这个话题来展开，并写了常见的一些问题。">
 
 
 
@@ -92,9 +92,9 @@
 
 
 
-  <link rel="canonical" href="https://hwangjr.github.io/2015/07/08/Android-Studio-With-SVN/"/>
+  <link rel="canonical" href="https://hwangjr.github.io/2016/11/02/Fragment最佳实践/"/>
 
-  <title> Android Studio With SVN | HwangJR's Blog </title>
+  <title> Fragment最佳实践 | HwangJR's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -233,7 +233,7 @@
             
             
               
-                Android Studio With SVN
+                Fragment最佳实践
               
             
           </h1>
@@ -245,8 +245,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-08T20:17:08+08:00" content="2015-07-08">
-              2015-07-08
+            <time itemprop="dateCreated" datetime="2016-11-02T17:55:32+08:00" content="2016-11-02">
+              2016-11-02
             </time>
           </span>
 
@@ -275,8 +275,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/07/08/Android-Studio-With-SVN/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/08/Android-Studio-With-SVN/" itemprop="commentsCount"></span>
+                <a href="/2016/11/02/Fragment最佳实践/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/02/Fragment最佳实践/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -286,7 +286,7 @@
 
           
           
-             <span id="/2015/07/08/Android-Studio-With-SVN/" class="leancloud_visitors" data-flag-title="Android Studio With SVN">
+             <span id="/2016/11/02/Fragment最佳实践/" class="leancloud_visitors" data-flag-title="Fragment最佳实践">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -308,19 +308,16 @@
       
 
       
-        <p>##环境<br>系统使用Ubuntu 12.04，SVN版本1.8.8，AS使用最新稳定1.2.2。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">svn, version 1.8.8 (r1568071)</span><br><span class="line">   compiled Aug 13 2014, 17:12:39 on x86_64-pc-linux-gnu</span><br></pre></td></tr></table></figure></p>
-<p>##配置AS<br>配置AS很简单。<br>1、配置SVN执行目录：<br>File -&gt; Settings -&gt; Version Control -&gt; Subversion -&gt; General Tab里面的Use command line client，如果你已经安装SVN，AS应该默认是配置好的。<br>2、上传你的文件到SVN：<br>VCS -&gt; Import into Version Control -&gt; Import into Subversion…之后就可在线上版本查看到文件已经同步。<br>3、为项目新增SVN管理：<br>VCS -&gt; Enable Version Control Integration… 简单配置，即可在面板上有UP和CI等版本操作的图标。<br>至此，AS配置完成。</p>
-<p>##设置SVN IGNORE<br>一直不知道SVN如何设置忽略命令，网上看的很多都是不准确或者理解有偏差。<br>1、设置全局忽略文件列表：<br>编辑~/.subversion/config文件，修改此文件中的global-ignores，里面也有提供实例。<br>当然，如果你想修改所有用户的ignore，文件目录在/etc/subversion/config。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo</span></span><br><span class="line"><span class="comment">#   *.rej *~ #*# .#* .*.swp .DS_Store</span></span><br></pre></td></tr></table></figure></p>
-<p>2、设置某目录svn ignore：<br>关键是使用svn的property set命令，此命令不可递归，只能设置当前目录下的ignore规则。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore path</span><br><span class="line"><span class="comment"># svn propedit svn:ignore path</span></span><br><span class="line">svn pd svn:ignore path</span><br><span class="line"><span class="comment"># svn propdel svn:ignore path</span></span><br><span class="line">svn ps svn:ignore path</span><br><span class="line"><span class="comment"># svn propset svn:ignore path</span></span><br></pre></td></tr></table></figure></p>
-<p>如果当前目录结构为：<br>.<br>|<br>|-Android<br>|   |<br>|   - trunk<br>|   - branches<br>|   - tags<br>|-iOS<br>想要过滤trunk目录下某些文件或目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn pe svn:ignore Android/trunk</span><br></pre></td></tr></table></figure></p>
-<p>之后会打开编辑窗口，输入下方文件即可：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>附带完整svn ignore命令（svn st命令，可以查看当前状态）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> project-path</span><br><span class="line">svn pe Android/trunk</span><br><span class="line">svn pe Android/trunk/.idea</span><br><span class="line">svn pe Android/trunk/app</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.gradle</span><br><span class="line">local.properties</span><br><span class="line">.DS_Store</span><br><span class="line">build</span><br><span class="line">captures</span><br><span class="line">proguard</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/.idea下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">workspace.xml</span><br><span class="line">libraries</span><br></pre></td></tr></table></figure></p>
-<p>Android/trunk/app下的ignore：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build</span><br></pre></td></tr></table></figure></p>
-<p>设置完成，使用svn ci -m ‘ignore files’即可。<br>附带.ignore文件为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Built application files</span></span><br><span class="line">*.apk</span><br><span class="line">*.ap_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Files for the Dalvik VM</span></span><br><span class="line">*.dex</span><br><span class="line"></span><br><span class="line"><span class="comment"># Java class files</span></span><br><span class="line">*.class</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generated files</span></span><br><span class="line">bin/</span><br><span class="line">gen/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Gradle files</span></span><br><span class="line">.gradle/</span><br><span class="line">build/</span><br><span class="line">/*/build/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local configuration file (sdk path, etc)</span></span><br><span class="line">local.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># Proguard folder generated by Eclipse</span></span><br><span class="line">proguard/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Log Files</span></span><br><span class="line">*.log</span><br><span class="line"></span><br><span class="line">/.idea/workspace.xml</span><br><span class="line">/.idea/libraries</span><br><span class="line">.DS_Store</span><br><span class="line">/capture</span><br></pre></td></tr></table></figure></p>
-<p>附带命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn <span class="built_in">export</span> dir dir_bak</span><br><span class="line">svn rm dir</span><br><span class="line">svn commit -m <span class="string">'delete dir'</span></span><br><span class="line">mv dir-bak dir</span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile'</span> dir</span><br><span class="line">svn up</span><br><span class="line">svn commit -m <span class="string">'ignore ignorefile'</span></span><br><span class="line"></span><br><span class="line">svn ps svn:ignore <span class="string">'ignorefile1</span><br><span class="line">ignorefile2</span><br><span class="line">ignorefile3'</span> dir</span><br></pre></td></tr></table></figure></p>
-<p>##SVN常用命令<br>Show The Code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">svn co svn://xxx</span><br><span class="line">svn checkout svn://</span><br><span class="line">svn <span class="built_in">export</span> [-r version] svn://</span><br><span class="line">svn add file</span><br><span class="line">svn commit -m <span class="string">''</span></span><br><span class="line">svn ci -m <span class="string">''</span></span><br><span class="line">svn up</span><br><span class="line">svn update</span><br><span class="line">svn update -r 200 file</span><br><span class="line">svn delete svn:// -m <span class="string">''</span></span><br><span class="line">svn delete file</span><br></pre></td></tr></table></figure></p>
+        <h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>使用静态方法<code>newInstance()</code>方法来实例化Fragment，避免创建Fragment黑盒问题，协同开发（Activity也提供<code>startActivity</code>方法，提供启动参数）。<br>另外，使用<code>setArguments</code>来进行参数传递，可以避免在横竖屏切换时，Fragment自动调用自身无参构造函数，导致数据丢失引发崩溃。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static SomeFragment newInstance(String params) &#123;</span><br><span class="line">    Bundle args = new Bundle();</span><br><span class="line">    args.putString(PARAMS, params);</span><br><span class="line">    SomeFragment fragment = new SomeFragment();</span><br><span class="line">    fragment.setArguments(args);</span><br><span class="line">    return fragment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>TIPS</strong><br>类似可以在每个Activity提供<code>startActivity</code>方法，过滤传入参数。</p>
+<h2 id="数据保存-恢复"><a href="#数据保存-恢复" class="headerlink" title="数据保存/恢复"></a>数据保存/恢复</h2><p><strong>区分Fragment和View的状态保存，不在Fragment中存储View的状态</strong><br>每个自定义View需要对自身状态进行负责，在视图销毁之前存储自身状态。一旦Fragment从后退栈中返回，它的<code>View</code>会被销毁，并重新创建。<br>Fragment没有restore方法，所以其保存和恢复的方法分别是<code>onSaveInstanceState</code>和<code>onActivityCreated</code>。Fragment在<code>onSaveInstanceState</code>的时候，调用<code>FragmentManager</code>的<code>saveAllState</code>方法，将Fragment数据存储在Parcelable变量中（<code>outState.putParcelable(FRAGMENTS_TAG, p)</code>，<code>FRAGMENTS_TAG = &quot;android:support:fragments&quot;;</code>），会自动搜集每个View（有实现保存/恢复内部方法）的状态，<code>restore</code>（没有<code>onRestoreInstanceState</code>方法，用<code>onActivityCreated</code>方法 - 或者其他有<code>savedInstanceState</code>变量方法）的时候，会自动将这些数据以<code>id</code>对应还原到相应view。其成员变量会直接销毁，所以需要手动保存/恢复它们。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class SomeView extends View &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Parcelable onSaveInstanceState() &#123;</span><br><span class="line">        Bundle bundle = new Bundle();</span><br><span class="line">        // save view state</span><br><span class="line">        return bundle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onRestoreInstanceState(Parcelable state) &#123;</span><br><span class="line">        super.onRestoreInstanceState(state);</span><br><span class="line">        // restore view state</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class SomeFragment extends Fragment &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onSaveInstanceState(Bundle outState) &#123;</span><br><span class="line">        super.onSaveInstanceState(outState);</span><br><span class="line">        // save state</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public void onActivityCreated(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onActivityCreated(savedInstanceState);</span><br><span class="line">        // restore state</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="键盘监听"><a href="#键盘监听" class="headerlink" title="键盘监听"></a>键盘监听</h2><p>目前测试较好方式是在<code>rootView</code>进行键盘监听（设置其<code>focus</code>和<code>touch</code>为<code>true</code>）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rootView.setFocusable(true);</span><br><span class="line">rootView.setFocusableOnTouchMode(true);</span><br><span class="line">rootView.setOnKeyListener((view, keyCode, event) -&gt; &#123;&#125;);</span><br></pre></td></tr></table></figure></p>
+<h2 id="Fragment-Or-Activity"><a href="#Fragment-Or-Activity" class="headerlink" title="Fragment Or Activity?"></a>Fragment Or Activity?</h2><p>旧项目有全部用单Activity的先例，遇到蛮多问题，相对也解决了很多问题，也对Fragment的一些坑进行研究，包括FragmentManager的一些bug等。<br>目前不建议采用单Activity来做项目，会导致复杂度上升，内存上升等。目前一个页面用Activity，里面采用Fragment来达到复用/多屏幕适配目的。<br>可以参考目前已经在多个项目实践过的开源项目：<a href="https://github.com/AndroidKnife/Tiger-Pro" target="_blank" rel="external">AndroidKnife/Tiger-Pro: Architecture and Libraries used in Tiger Application like MVP etc.</a></p>
+<h1 id="常见错误"><a href="#常见错误" class="headerlink" title="常见错误"></a>常见错误</h1><h2 id="Fragment视图重叠"><a href="#Fragment视图重叠" class="headerlink" title="Fragment视图重叠"></a>Fragment视图重叠</h2><p><strong>Fragment生命周期开始于<code>add</code>，结束于<code>remove</code>。</strong><br>此问题原因很简单，在<code>add</code>或者<code>replace</code>时候，调用含有TAG的方法，之后再<code>add</code>或<code>replace</code>，之前会被替换掉，也就不会有多个相同fragment。<br>但是从复用角度来说，这是一个资源的浪费，可以在<code>onActivityCreated</code>方法中判断<code>savedInstanceState</code>是否为空，不为空则查找fragment，若有此实例，则不进行创建，直接复用。</p>
+<p>其他方案：<br>1 重写Activity的<code>onSaveInstanceState</code>方法，将其置空（或将<code>&quot;android:support:fragments&quot;</code>置空）。此方式将其他的View数据也统一不保存，不是很合理。<br>2 曲线救国，给Fragment根View设置背景，拦截点击事件（<code>background</code>及<code>clickable</code>属性）。此方式虽然有两个Fragment同时存在，但是由于有了背景及点击事件拦截，此时就避免了事件穿透及视觉差。此方式可以解决视觉上差异，但是却仍然有两个实例，而且初始化网络/业务会执行两次。<br>3 用<code>replace</code>替代<code>show</code>/<code>hide</code>方法。<code>replace</code>会先移除Fragment，之后再添加此Fragment，所以不会出现重叠。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>1 每个View应内部实现状态的保存和恢复，即<code>onSaveInstanceState</code>和<code>onRestoreInstanceState</code>，且如果需要恢复需要设置<code>android:id</code>属性。<br>2 分开处理Fragment和View的状态。<br>3 ETC。</p>
+<h1 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h1><p><a href="http://stackoverflow.com/questions/18274732/android-fragments-overlapping-issue?answertab=active" target="_blank" rel="external">Android: fragments overlapping issue - Stack Overflow</a><br><a href="http://stackoverflow.com/questions/16189088/overlapping-hidden-fragments-after-application-gets-killed-and-restored" target="_blank" rel="external">android - Overlapping hidden fragments after application gets killed and restored - Stack Overflow</a><br><a href="http://stackoverflow.com/questions/13982192/when-using-an-android-bundle-why-does-a-serialised-stack-deserialise-as-an-arra" target="_blank" rel="external">serialization - When using an android bundle, why does a serialised stack deserialise as an ArrayList? - Stack Overflow</a><br><a href="https://inthecheesefactory.com/blog/fragment-state-saving-best-practices/en" target="_blank" rel="external">The Real Best Practices to Save/Restore Activity’s and Fragment’s state. (StatedFragment is now deprecated) :: The Cheese Factory</a><br><a href="https://zhuanlan.zhihu.com/p/22141193" target="_blank" rel="external">保存/恢复Activity和Fragment状态的最佳实践(译) - Code杂货铺 - 知乎专栏</a></p>
 
       
     </div>
@@ -353,17 +350,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/19/Android-Project-Templete/" rel="next" title="Android Project Templete">
-                <i class="fa fa-chevron-left"></i> Android Project Templete
+              <a href="/2016/10/20/GUI-Architectures/" rel="next" title="GUI Architectures">
+                <i class="fa fa-chevron-left"></i> GUI Architectures
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/07/10/Android-ToolBar-Widget-Usage/" rel="prev" title="Android ToolBar Widget Usage">
-                Android ToolBar Widget Usage <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -551,7 +544,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">1.</span> <span class="nav-text">最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建"><span class="nav-number">1.1.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据保存-恢复"><span class="nav-number">1.2.</span> <span class="nav-text">数据保存/恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#键盘监听"><span class="nav-number">1.3.</span> <span class="nav-text">键盘监听</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment-Or-Activity"><span class="nav-number">1.4.</span> <span class="nav-text">Fragment Or Activity?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见错误"><span class="nav-number">2.</span> <span class="nav-text">常见错误</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fragment视图重叠"><span class="nav-number">2.1.</span> <span class="nav-text">Fragment视图重叠</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ref"><span class="nav-number">4.</span> <span class="nav-text">Ref</span></a></li></ol></div>
             
           </div>
         </section>
@@ -678,9 +671,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'HwangJR';
-      var disqus_identifier = '2015/07/08/Android-Studio-With-SVN/';
-      var disqus_title = "Android Studio With SVN";
-      var disqus_url = 'https://hwangjr.github.io/2015/07/08/Android-Studio-With-SVN/';
+      var disqus_identifier = '2016/11/02/Fragment最佳实践/';
+      var disqus_title = "Fragment最佳实践";
+      var disqus_url = 'https://hwangjr.github.io/2016/11/02/Fragment最佳实践/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
